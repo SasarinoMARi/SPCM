@@ -1,21 +1,12 @@
 const app = require('express')();
-const session = require('express-session');
-const sha256 = require('./../sha256').SHA256
+const sha256 = require('./../common/sha256').SHA256
+const logger = require('./../common/logger')
+const tokenManager = require('./../common/token-manager')
 
 const remoteServer = require('./remoteServer')
 
-app.use(session({
- secret: '*HR:_!a+_Ut&ZxzA3w8sHu:%',
- resave: false,
- saveUninitialized: true
-}));
-
 function getIp(req) {
     return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress;
-}
-
-function log(ip, msg) {
-    console.log(`[${Date()}] ${ip} : ${msg}`);
 }
 
 function getKey() {
@@ -38,7 +29,9 @@ function unauthorized(res) {
 }
 
 function checkLoggedIn(req, res) {
-    if(req.session.loggedIn != true) {
+    let token = req.query.token;
+    logger.v("token: " + token);
+    if(!tokenManager.contains(token)) {
         unauthorized(res);
         return false;
     }
@@ -51,12 +44,12 @@ app.get('/establishment', function (req, res, next) {
     var result = { error : 0, message : ""}
     var key = req.query.key
     if(key === undefined || !checkKey(key)) {
-        log(ip, "establishment failed");
+        logger.v(`${ip} : establishment failed`);
         unauthorized(res);
     }
     else {
-        log(ip, "establishment successed");
-        req.session.loggedIn = true;
+        logger.v(`${ip} : establishment successed`);
+        result.token = tokenManager.new();
         res.json(result);
     }
 });

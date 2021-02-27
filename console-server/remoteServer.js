@@ -1,33 +1,31 @@
-function log(str) {
-    console.log(`[${Date()}] ${str}`)
-}
+
+const request = require('request');
+const logger = require("./../common/logger")
+baseUrl = "http://sasarinomar1.iptime.org:8080/";
 
 class remoteServer {
-    request = require('request');
-    baseUrl = "http://sasarinomar1.iptime.org:8080/";
-
-
     establishment(callback) {
-        log("api : establishment()");
+        logger.v("api : establishment()");
 
-        const key = require("./../sha256").SHA256(require("./../secret").key)
+        const key = require("../common/sha256").SHA256(require("../common/secret").key)
         const options = {
-            uri: this.baseUrl + "establishment",
-            qs: {
-                key: key
+            uri: baseUrl + "establishment",
+            headers: {
+              'key': key
             }
         };
 
-        this.request.get(options, function (error, response, body) {
+        request.get(options, function (error, response, body) {
             if (error) {
-                log("error : " + error);
+                logger.e("error : " + error);
             }
             else {
                 const statusCode = response && response.statusCode;
-                log("statusCode : " + statusCode);
+                logger.v("statusCode : " + statusCode);
 
                 if (statusCode == 200) {
-                    callback.success();
+                    let json = JSON.parse(body);
+                    callback.success(json.token);
                 }
                 else {
                     callback.error();
@@ -35,14 +33,90 @@ class remoteServer {
             }
         });
     };
+
+    lookup(callback) {
+        logger.d("api : lookup()");
+
+        const options = {
+            uri: baseUrl + "lookup"
+        };
+
+        request.get(options, function (error, response, body) {
+            if (error) {
+                logger.e("error : " + error);
+            }
+            else {
+                const statusCode = response && response.statusCode;
+                logger.d("statusCode : " + statusCode);
+
+                if (statusCode == 200) {
+                    let json = JSON.parse(body);
+                    logger.d("json result : " + json);
+                    callback.success(json);
+                }
+                else {
+                    callback.error();
+                }
+            }
+        });
+    }
+
+    __generalCall(path, callback) {
+        this.establishment({success : function(token) {
+            logger.d("api : " + path);
+
+            const options = {
+                uri: baseUrl + path,
+                headers: {
+                  'token': token
+                }
+            };
+    
+            request.get(options, function (error, response, body) {
+                if (error) {
+                    logger.e("error : " + error);
+                }
+                else {
+                    const statusCode = response && response.statusCode;
+                    logger.v("statusCode : " + statusCode);
+    
+                    if (statusCode == 200) {
+                        let json = JSON.parse(body);
+                        callback.success(json.token);
+                    }
+                    else {
+                        callback.error();
+                    }
+                }
+            });
+        }, failed: function () {
+            callback.error();
+        }});
+    }
+
+    sleep(callback) {
+        this.__generalCall("sleep", callback);
+    }
+    reboot(callback) {
+        this.__generalCall("reboot", callback);
+    }
+    shutdown(callback) {
+        this.__generalCall("shutdown", callback);
+    }
+    do(callback) {
+        this.__generalCall("do", callback);
+    }
+    logs(callback) {
+        this.__generalCall("logs", callback);
+    }
 };
 
-var rs = new remoteServer();
-rs.establishment({
-    success: function () { 
-        console.log("success!"); 
-    }, error: function () {
-        console.log("error!");
+new remoteServer().reboot({
+    success: function() {
+        logger.d("successed");
+    },
+    error: function() {
+        logger.d("failed");
     }
 });
 

@@ -1,13 +1,7 @@
 const app = require('express')();
-const sha256 = require('./../sha256').SHA256
-
-const session = require('express-session');
-
-app.use(session({
- secret: '*HR:_!a+_Ut&ZxzA3w8sHu:%',
- resave: false,
- saveUninitialized: true
-}));
+const sha256 = require('./../common/sha256').SHA256
+const logger = require('./../common/logger')
+const tokenManager = require('./../common/token-manager')
 
 function run(command) {
     const { exec } = require("child_process");
@@ -28,14 +22,11 @@ function getIp(req) {
     return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress;
 }
 
-function log(ip, msg) {
-    console.log(`[${Date()}] ${ip} : ${msg}`);
-}
-
 function checkKey(key) {
-    var k = require("./../sha256").SHA256(require("./../secret").key);
-    console.log(`input :\t${key}`)
-    console.log(`comp :\t${k}`)
+    var k = require("./../common/sha256").SHA256(require("../common/secret").key);
+
+    logger.v(`input :\t${key}`)
+    // logger.v(`comp :\t${k}`)
     return key === k;
 }
 
@@ -46,7 +37,9 @@ function unauthorized(res) {
 }
 
 function checkLoggedIn(req, res) {
-    if(req.session.loggedIn != true) {
+    let token = req.headers.token;
+    logger.v("token: " + token);
+    if(!tokenManager.contains(token)) {
         unauthorized(res);
         return false;
     }
@@ -57,14 +50,14 @@ app.get('/establishment', function (req, res, next) {
     const ip = getIp(req);
 
     var result = { error : 0, message : ""}
-    var key = req.query.key
+    var key = req.headers.key
     if(key === undefined || !checkKey(key)) {
-        log(ip, "establishment failed");
+        logger.v(`${ip} : establishment failed`);
         unauthorized(res);
     }
     else {
-        log(ip, "establishment successed");
-        req.session.loggedIn = true;
+        logger.v(`${ip} : establishment successed`);
+        result.token = tokenManager.new();
         res.json(result);
     }
 });
@@ -124,5 +117,5 @@ app.get('/logs', function (req, res, next) {
 
 var port = 4425
 var server = app.listen(port, function () {
-    console.log(`Server has started on port ${port}`);
+    logger.v(`Server has started on port ${port}`);
 });
