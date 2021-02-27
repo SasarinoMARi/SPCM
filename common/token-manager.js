@@ -31,7 +31,7 @@ class tokenManager {
      */
     __removeExpiredToken() {
         setTimeout(() => {
-            d = new Date();
+            let d = new Date();
             this.storage = this.storage.filter(function(t){
                 return t.expireDate - d > 0
             });

@@ -111,13 +111,4 @@ class remoteServer {
     }
 };
 
-new remoteServer().reboot({
-    success: function() {
-        logger.d("successed");
-    },
-    error: function() {
-        logger.d("failed");
-    }
-});
-
 module.exports = new remoteServer();

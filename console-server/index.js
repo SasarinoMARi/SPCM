@@ -9,8 +9,21 @@ function getIp(req) {
     return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress;
 }
 
+function getUTC9Date() {
+    const curr = new Date();
+    const utc = 
+        curr.getTime() + 
+        (curr.getTimezoneOffset() * 60 * 1000);
+
+    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+    const kr_curr = 
+        new Date(utc + (KR_TIME_DIFF));
+
+    return kr_curr;
+}
+
 function getKey() {
-    var d = new Date();
+    var d = getUTC9Date();
     var h = d.getHours();
     var m = d.getMinutes();
     var k = `s${(m+h)}`;
@@ -19,6 +32,9 @@ function getKey() {
 
 function checkKey(key) {
     var k = getKey();
+
+    logger.v(`input :\t${key}`)
+    logger.v(`comp :\t${k}`)
     return key === k;
 }
 
@@ -29,7 +45,7 @@ function unauthorized(res) {
 }
 
 function checkLoggedIn(req, res) {
-    let token = req.query.token;
+    let token = req.headers.token;
     logger.v("token: " + token);
     if(!tokenManager.contains(token)) {
         unauthorized(res);
@@ -42,7 +58,7 @@ app.get('/establishment', function (req, res, next) {
     const ip = getIp(req);
 
     var result = { error : 0, message : ""}
-    var key = req.query.key
+    var key = req.headers.key
     if(key === undefined || !checkKey(key)) {
         logger.v(`${ip} : establishment failed`);
         unauthorized(res);
@@ -62,7 +78,7 @@ app.get('/wakeup', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
 
     var result = { error : 0, message : ""}
-    
+    require("./iptime-wol").wakeup();
     res.json(result);
 });
 
@@ -96,7 +112,7 @@ app.get('/logs', function (req, res, next) {
     res.json(remoteServer.logs());
 });
 
-var port = 4424
+var port = process.env.PORT || 4424;
 var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
 });
