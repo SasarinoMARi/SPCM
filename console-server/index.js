@@ -71,7 +71,15 @@ app.get('/establishment', function (req, res, next) {
 });
 
 app.get('/lookup', function (req, res, next) {
-    res.json(remoteServer.lookup());
+    remoteServer.lookup({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
 });
 
 app.get('/wakeup', function (req, res, next) {
@@ -85,31 +93,78 @@ app.get('/wakeup', function (req, res, next) {
 app.get('/sleep', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
     
-    res.json(remoteServer.sleep());
+    remoteServer.sleep({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
 });
 
 app.get('/reboot', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
 
-    res.json(remoteServer.reboot());
+    remoteServer.reboot({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
 });
 
 app.get('/shutdown', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
 
-    res.json(remoteServer.shutdown());
+    remoteServer.shutdown({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
 });
 
 app.get('/do', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
 
-    res.json(remoteServer.do());
+    remoteServer.do({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
 });
 
 app.get('/logs', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
     
-    res.json(remoteServer.logs());
+    remoteServer.logs({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
+});
+
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+app.get('/', function (req, res, next) {
+    res.render("main");
 });
 
 var port = process.env.PORT || 4424;

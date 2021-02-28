@@ -167,7 +167,7 @@ function info(session) {
 }
 
 function wol_apply(session, mac) {
-    logger.d("api : wol_apply");
+    logger.d("api : wol_apply : " + mac);
 
     const options = {
         uri: baseUrl + "sess-bin/wol_apply.cgi",
@@ -180,7 +180,7 @@ function wol_apply(session, mac) {
         },
         qs: {
             'act':'wakeup',
-            'mac':'mac'
+            'mac':mac
         }
     };
 
