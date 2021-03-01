@@ -6,11 +6,13 @@ import retrofit2.Response
 import java.security.MessageDigest
 import java.util.*
 
-abstract interface APICall {
+abstract class APICall {
     abstract fun onError(message: String)
     abstract fun onMessage(message: String)
 
-    fun establishment(callback: (token: String) -> Unit) {
+    private var token: String? = null
+
+    fun establishment(callback: () -> Unit) {
         val c = Calendar.getInstance()
         val h = c.get(Calendar.HOUR_OF_DAY)
         val m = c.get(Calendar.MINUTE)
@@ -29,15 +31,25 @@ abstract interface APICall {
                     val result = response.body()!!
                     if (result.errorCode > 0) {
                         onError(result.message)
-                    } else callback(result.token)
+                    } else {
+                        token = result.token
+                        callback()
+                    }
                 }
 
             }
         })
     }
 
-    fun shutdown(token: String) {
-        val call = APIInterface.api.shutdown(token)
+    fun shutdown() {
+        if (token == null) {
+            establishment {
+                shutdown()
+            }
+            return
+        }
+
+        val call = APIInterface.api.shutdown(token!!)
         call.enqueue(object : Callback<ResultModel> {
             override fun onFailure(call: Call<ResultModel>, t: Throwable) {
                 onError(t.toString())
@@ -49,19 +61,28 @@ abstract interface APICall {
                     if (result.errorCode > 0) {
                         onError(result.message)
                     } else {
-                        onMessage("종료 요청을 보냈습니다.")
+                        onMessage("시스템 종료 요청을 보냈습니다.")
                     }
-                }
-                else {
-                    // TODO: Http Response 처리
-                    onMessage("권한이 없습니다.")
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            shutdown()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
                 }
             }
         })
     }
 
-    fun sleep(token: String) {
-        val call = APIInterface.api.sleep(token)
+    fun sleep() {
+        if (token == null) {
+            establishment {
+                sleep()
+            }
+            return
+        }
+
+        val call = APIInterface.api.sleep(token!!)
         call.enqueue(object : Callback<ResultModel> {
             override fun onFailure(call: Call<ResultModel>, t: Throwable) {
                 onError(t.toString())
@@ -73,19 +94,28 @@ abstract interface APICall {
                     if (result.errorCode > 0) {
                         onError(result.message)
                     } else {
-                        onMessage("절전 요청을 보냈습니다.")
+                        onMessage("시스템 절전 요청을 보냈습니다.")
                     }
-                }
-                else {
-                    // TODO: Http Response 처리
-                    onMessage("권한이 없습니다.")
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            sleep()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
                 }
             }
         })
     }
 
-    fun wakeup(token: String) {
-        val call = APIInterface.api.wakeup(token)
+    fun wakeup() {
+        if (token == null) {
+            establishment {
+                wakeup()
+            }
+            return
+        }
+
+        val call = APIInterface.api.wakeup(token!!)
         call.enqueue(object : Callback<ResultModel> {
             override fun onFailure(call: Call<ResultModel>, t: Throwable) {
                 onError(t.toString())
@@ -97,12 +127,14 @@ abstract interface APICall {
                     if (result.errorCode > 0) {
                         onError(result.message)
                     } else {
-                        onMessage("부팅 요청을 보냈습니다.")
+                        onMessage("시스템 부팅 요청을 보냈습니다.")
                     }
-                }
-                else {
-                    // TODO: Http Response 처리
-                    onMessage("권한이 없습니다.")
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            wakeup()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
                 }
             }
         })
@@ -113,12 +145,14 @@ abstract interface APICall {
         fun onDead()
         fun onLive()
     }
+
     fun lookup(i: lookupInterface) {
         val call = APIInterface.api.lookup()
         call.enqueue(object : Callback<ResultModel> {
             private fun dead() {
                 i.onDead()
             }
+
             private fun live() {
                 i.onLive()
             }
@@ -135,8 +169,7 @@ abstract interface APICall {
                     } else {
                         live()
                     }
-                }
-                else {
+                } else {
                     // TODO: Http Response 처리
                     dead()
                 }

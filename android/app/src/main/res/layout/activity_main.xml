@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
     tools:context=".MainActivity">
 
     <include
@@ -11,28 +12,101 @@
         layout="@layout/loading_cover"
         android:visibility="gone" />
 
-    <Button
-        android:id="@+id/button_lookup"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lookup" />
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_wakeup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wakeup" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_sleep"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sleep" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_sans_light"
+                android:text="현재 시스템 상태"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
 
-    <Button
-        android:id="@+id/button_shutdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Shutdown" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
-</LinearLayout>
+                <ImageView
+                    android:id="@+id/status_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/power_standby"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/nunito_sans_semibold"
+                    android:text="@string/Loading"
+                    android:textColor="#fff"
+                    android:textSize="30sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.ornach.nobobutton.NoboButton
+            android:id="@+id/button_wakeup"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            app:nb_backgroundColor="#00A889"
+            app:nb_borderColor="#FFFFFF"
+            app:nb_borderWidth="2dp"
+            app:nb_focusColor="#47C2DE"
+            app:nb_fontIcon="&#xf00c;"
+            app:nb_radius="5dp"
+            app:nb_text="@string/Wakeup"
+            app:nb_textColor="#FFF"
+            app:nb_textSize="16sp" />
+
+        <com.ornach.nobobutton.NoboButton
+            android:id="@+id/button_shutdown"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            app:nb_backgroundColor="#EF3D56"
+            app:nb_borderColor="#FFFFFF"
+            app:nb_borderWidth="2dp"
+            app:nb_focusColor="#B83CC3"
+            app:nb_fontIcon="&#xf011;"
+            app:nb_radius="5dp"
+            app:nb_text="@string/Shutdown"
+            app:nb_textColor="#FFF"
+            app:nb_textSize="16sp" />
+
+        <com.ornach.nobobutton.NoboButton
+            android:id="@+id/button_sleep"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            app:nb_backgroundColor="#D9A22E"
+            app:nb_borderColor="#FFFFFF"
+            app:nb_borderWidth="2dp"
+            app:nb_focusColor="#E67925"
+            app:nb_fontIcon="&#xf186;"
+            app:nb_radius="5dp"
+            app:nb_text="@string/Sleep"
+            app:nb_textColor="#FFF"
+            app:nb_textSize="16sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

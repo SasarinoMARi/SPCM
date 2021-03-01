@@ -43,8 +43,10 @@ dependencies {
 
     // retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.8.1'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.0" // 세션 유지용
+//    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.0" // 세션 유지용
+
+    implementation 'com.ornach.nobobutton:nobobutton:1.6' // 예쁜 버튼 라이브러리
 }
