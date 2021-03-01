@@ -23,8 +23,6 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startStatusChecker()
-
         button_wakeup.setOnClickListener {
             api.wakeup()
         }

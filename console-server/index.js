@@ -70,16 +70,12 @@ app.get('/establishment', function (req, res, next) {
     }
 });
 
-app.get('/lookup', function (req, res, next) {
-    remoteServer.lookup({
-        success : function () {
+app.get('/lookup', async function(req, res, next) {
+    var json = { error : 0, message : ""};
 
-        },
-        error : function () {
-
-        }
-    });
-    res.json({ error : 0, message : ""});
+    var result = await remoteServer.lookup();
+    if(result === null) json.error = 1
+    res.json(json);
 });
 
 app.get('/wakeup', function (req, res, next) {

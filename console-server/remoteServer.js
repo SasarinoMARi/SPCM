@@ -34,14 +34,29 @@ class remoteServer {
         });
     };
 
-    lookup(callback) {
+    async lookup(callback) {
         logger.d("api : lookup()");
 
         const options = {
-            uri: baseUrl + "lookup"
+            uri: baseUrl + "lookup",
+            timeout: 1000 * 5
         };
 
-        request.get(options, function (error, response, body) {
+        let request = require("./await-request")
+        
+        var result = null;
+        try {
+            result = await request(options);
+            console.log(result);
+        }
+        catch (err) {
+            console.error(err);
+        }
+
+        return result;
+
+        /*
+        request.get(options), function (error, response, body) {
             if (error) {
                 logger.e("error : " + error);
             }
@@ -59,6 +74,7 @@ class remoteServer {
                 }
             }
         });
+        */
     }
 
     __generalCall(path, callback) {
