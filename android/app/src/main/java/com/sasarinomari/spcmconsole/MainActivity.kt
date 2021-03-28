@@ -1,14 +1,16 @@
 package com.sasarinomari.spcmconsole
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), APICall.lookupInterface {
+class MainActivity : Activity(), APICall.lookupInterface {
     private val api = object : APICall() {
         override fun onError(message: String) {
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
@@ -21,7 +23,9 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
         setContentView(R.layout.activity_main)
+
 
         button_wakeup.setOnClickListener {
             api.wakeup()
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
     var focused = true
     override fun onResume() {
         super.onResume()
+        setStatusToLoading()
         focused = true
         startStatusChecker()
     }
@@ -55,7 +60,16 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         super.onPause()
         focused = false
     }
-
+    private fun setWindowFlag(bits: Int, on: Boolean) {
+        val win = window ?: return
+        val winParams = win.attributes
+        if (on) {
+            winParams.flags = winParams.flags or bits
+        } else {
+            winParams.flags = winParams.flags and bits.inv()
+        }
+        win.attributes = winParams
+    }
 
     override fun onDead() {
         status_text.text = getString(R.string.Offline)
@@ -67,6 +81,13 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
     override fun onLive() {
         status_text.text = getString(R.string.Online)
         val c = Color.parseColor("#00A889")
+        status_text.setTextColor(c)
+        status_icon.setColorFilter(c)
+    }
+
+    fun setStatusToLoading() {
+        status_text.text = getString(R.string.Loading)
+        val c = Color.parseColor("#ffffff")
         status_text.setTextColor(c)
         status_icon.setColorFilter(c)
     }

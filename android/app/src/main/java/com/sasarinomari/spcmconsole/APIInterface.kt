@@ -29,7 +29,7 @@ interface APIInterface {
 
 
     companion object {
-        private val BASE_URL = "https://spcmc.herokuapp.com"
+        private val BASE_URL = "http://sasarinomar1.iptime.org:4425"
 
         private val gson = GsonBuilder()
             .setLenient()

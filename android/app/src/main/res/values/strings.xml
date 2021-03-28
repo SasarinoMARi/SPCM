@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">SPCMConsole</string>
+    <string name="app_name">Spcm</string>
     <string name="Online">온라인</string>
     <string name="Offline">오프라인</string>
 
     <string name="Lookup">새로고침</string>
+    <string name="Wakeup">시스템 부팅</string>
     <string name="Shutdown">시스템 종료</string>
-    <string name="Sleep">절전 모드 설정</string>
-    <string name="Wakeup">시스템 시작</string>
+    <string name="Sleep">시스템 절전</string>
     <string name="Loading">불러오는 중..</string>
 </resources>
