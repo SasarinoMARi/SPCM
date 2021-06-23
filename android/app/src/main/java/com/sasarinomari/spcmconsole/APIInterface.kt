@@ -27,6 +27,13 @@ interface APIInterface {
     fun wakeup(@Header("token") token:String): Call<ResultModel>
 
 
+    @GET("start-fs")
+    fun start_fs(@Header("token") token:String): Call<ResultModel>
+
+    @GET("stop-fs")
+    fun stop_fs(@Header("token") token:String): Call<ResultModel>
+
+
 
     companion object {
         private val BASE_URL = "http://sasarinomar1.iptime.org:4425"

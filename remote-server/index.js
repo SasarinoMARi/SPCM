@@ -17,6 +17,20 @@ function run(command) {
         console.log(`stdout: ${stdout}`);
     });
 }
+function runFile(command) {
+    const { execFile } = require("child_process");
+    execFile(command, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
+}
 
 function getIp(req) {
     return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress;
@@ -107,10 +121,21 @@ app.get('/do', function (req, res, next) {
     res.json(result);
 });
 
-app.get('/logs', function (req, res, next) {
+
+app.get('/start-fs', function (req, res, next) {
     if(!checkLoggedIn(req, res)) return;
     
     var result = { error : 0, message : ""}
+    path_webshare = "D:/SasarinoMARi/OneDrive/프로그램/[서버]/Berryz WebShare v0.952 rev1187/WebShare.exe"
+    runFile(path_webshare);
+    
+    res.json(result);
+});
+app.get('/stop-fs', function (req, res, next) {
+    if(!checkLoggedIn(req, res)) return;
+    
+    var result = { error : 0, message : ""}
+    run("taskkill /f /im webshare.exe");
     
     res.json(result);
 });

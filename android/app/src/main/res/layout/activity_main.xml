@@ -137,13 +137,13 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/button_sleep"
+                android:id="@+id/button_more"
                 android:layout_width="200dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
                 android:background="#D9A22E"
                 android:fontFamily="@font/nunito_sans_regular"
-                android:text="@string/Sleep"
+                android:text="@string/More"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 

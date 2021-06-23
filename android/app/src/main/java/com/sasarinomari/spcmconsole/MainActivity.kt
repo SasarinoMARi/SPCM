@@ -1,14 +1,18 @@
 package com.sasarinomari.spcmconsole
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.ContextMenu.ContextMenuInfo
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : Activity(), APICall.lookupInterface {
     private val api = object : APICall() {
@@ -35,8 +39,25 @@ class MainActivity : Activity(), APICall.lookupInterface {
             api.shutdown()
         }
 
-        button_sleep.setOnClickListener {
-            api.sleep()
+        button_more.setOnClickListener {
+            val info = arrayOf<CharSequence>(
+                getString(R.string.Sleep),
+                getString(R.string.StartFileServer),
+                getString(R.string.StopFileServer)
+            )
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.MoreContextTitle))
+            builder.setItems(info) { dialog, which ->
+                when (which) {
+                    0 -> api.sleep()
+                    1 -> api.start_fs()
+                    2 -> api.stop_fs()
+                }
+                dialog.dismiss()
+            }
+
+            builder.show()
+
         }
     }
 
@@ -91,4 +112,5 @@ class MainActivity : Activity(), APICall.lookupInterface {
         status_text.setTextColor(c)
         status_icon.setColorFilter(c)
     }
+
 }

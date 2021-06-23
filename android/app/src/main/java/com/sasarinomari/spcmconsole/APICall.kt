@@ -177,6 +177,72 @@ abstract class APICall {
         })
     }
 
+    fun start_fs() {
+        if (token == null) {
+            establishment {
+                start_fs()
+            }
+            return
+        }
+
+        val call = APIInterface.api.start_fs(token!!)
+        call.enqueue(object : Callback<ResultModel> {
+            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result.errorCode > 0) {
+                        onError(result.message)
+                    } else {
+                        onMessage("파일 서버 시작 요청을 보냈습니다.")
+                    }
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            start_fs()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun stop_fs() {
+        if (token == null) {
+            establishment {
+                stop_fs()
+            }
+            return
+        }
+
+        val call = APIInterface.api.stop_fs(token!!)
+        call.enqueue(object : Callback<ResultModel> {
+            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result.errorCode > 0) {
+                        onError(result.message)
+                    } else {
+                        onMessage("파일 서버 중지 요청을 보냈습니다.")
+                    }
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            stop_fs()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
     private fun sha256(param: String): String {
         val HEX_CHARS = "0123456789ABCDEF"
         val bytes = MessageDigest

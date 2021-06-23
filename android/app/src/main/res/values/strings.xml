@@ -8,4 +8,8 @@
     <string name="Shutdown">시스템 종료</string>
     <string name="Sleep">시스템 절전</string>
     <string name="Loading">불러오는 중..</string>
+    <string name="More">더보기</string>
+    <string name="MoreContextTitle">실행할 동작을 선탁하세요</string>
+    <string name="StartFileServer">파일 서버 시작</string>
+    <string name="StopFileServer">파일 서버 중지</string>
 </resources>

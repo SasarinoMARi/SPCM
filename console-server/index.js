@@ -156,6 +156,37 @@ app.get('/logs', function (req, res, next) {
     res.json({ error : 0, message : ""});
 });
 
+
+
+app.get('/start-fs', function (req, res, next) {
+    if(!checkLoggedIn(req, res)) return;
+
+    remoteServer.start_fs({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
+});
+
+
+app.get('/stop-fs', function (req, res, next) {
+    if(!checkLoggedIn(req, res)) return;
+
+    remoteServer.stop_fs({
+        success : function () {
+
+        },
+        error : function () {
+
+        }
+    });
+    res.json({ error : 0, message : ""});
+});
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 

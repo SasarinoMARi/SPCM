@@ -125,6 +125,12 @@ class remoteServer {
     logs(callback) {
         this.__generalCall("logs", callback);
     }
+    start_fs(callback) {
+        this.__generalCall("start-fs", callback);
+    }
+    stop_fs(callback) {
+        this.__generalCall("stop-fs", callback);
+    }
 };
 
 module.exports = new remoteServer();
