@@ -12,28 +12,25 @@ import java.net.CookieManager
 
 interface APIInterface {
     @GET("establishment")
-    fun establishment(@Header("key") key:String): Call<TokenModel>
+    fun establishment(@Header("key") key:String): Call<String>
 
     @GET("lookup")
-    fun lookup(): Call<ResultModel>
+    fun lookup(): Call<String>
 
     @GET("shutdown")
-    fun shutdown(@Header("token") token:String): Call<ResultModel>
+    fun shutdown(@Header("token") token:String): Call<String>
 
     @GET("sleep")
-    fun sleep(@Header("token") token:String): Call<ResultModel>
+    fun sleep(@Header("token") token:String): Call<String>
 
     @GET("wakeup")
-    fun wakeup(@Header("token") token:String): Call<ResultModel>
-
+    fun wakeup(@Header("token") token:String): Call<String>
 
     @GET("start-fs")
-    fun start_fs(@Header("token") token:String): Call<ResultModel>
+    fun start_fs(@Header("token") token:String): Call<String>
 
     @GET("stop-fs")
-    fun stop_fs(@Header("token") token:String): Call<ResultModel>
-
-
+    fun stop_fs(@Header("token") token:String): Call<String>
 
     companion object {
         private val BASE_URL = "http://sasarinomar1.iptime.org:9999"
@@ -59,22 +56,3 @@ interface APIInterface {
         }
     }
 }
-
-class TokenModel(
-    @SerializedName("error")
-    val errorCode: Long,
-
-    @SerializedName("message")
-    val message: String,
-
-    @SerializedName("token")
-    val token: String
-)
-
-class ResultModel(
-    @SerializedName("error")
-    val errorCode: Long,
-
-    @SerializedName("message")
-    val message: String
-)

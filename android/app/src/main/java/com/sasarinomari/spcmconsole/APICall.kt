@@ -21,20 +21,15 @@ abstract class APICall {
 
         // Log.d("MainActivity", "key: $key")
         val call = APIInterface.api.establishment(key.toLowerCase(Locale.getDefault()))
-        call.enqueue(object : Callback<TokenModel> {
-            override fun onFailure(call: Call<TokenModel>, t: Throwable) {
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<TokenModel>, response: Response<TokenModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        onError(result.message)
-                    } else {
-                        token = result.token
-                        callback()
-                    }
+                    token = result
                 }
 
             }
@@ -50,18 +45,18 @@ abstract class APICall {
         }
 
         val call = APIInterface.api.shutdown(token!!)
-        call.enqueue(object : Callback<ResultModel> {
-            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        onError(result.message)
-                    } else {
+                    if (result == "OK") {
                         onMessage("시스템 종료 요청을 보냈습니다.")
+                    } else {
+                        onError("시스템 종료 요청 실패")
                     }
                 } else {
                     if (response.code() == 403) {
@@ -83,18 +78,18 @@ abstract class APICall {
         }
 
         val call = APIInterface.api.sleep(token!!)
-        call.enqueue(object : Callback<ResultModel> {
-            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        onError(result.message)
-                    } else {
+                    if (result == "OK") {
                         onMessage("시스템 절전 요청을 보냈습니다.")
+                    } else {
+                        onError("시스템 절전 요청 실패")
                     }
                 } else {
                     if (response.code() == 403) {
@@ -116,18 +111,18 @@ abstract class APICall {
         }
 
         val call = APIInterface.api.wakeup(token!!)
-        call.enqueue(object : Callback<ResultModel> {
-            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        onError(result.message)
-                    } else {
+                    if (result == "OK") {
                         onMessage("시스템 부팅 요청을 보냈습니다.")
+                    } else {
+                        onError("시스템 부팅 요청 실패")
                     }
                 } else {
                     if (response.code() == 403) {
@@ -148,7 +143,7 @@ abstract class APICall {
 
     fun lookup(i: lookupInterface) {
         val call = APIInterface.api.lookup()
-        call.enqueue(object : Callback<ResultModel> {
+        call.enqueue(object : Callback<String> {
             private fun dead() {
                 i.onDead()
             }
@@ -157,17 +152,17 @@ abstract class APICall {
                 i.onLive()
             }
 
-            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 dead()
             }
 
-            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        dead()
-                    } else {
+                    if (result == "Online") {
                         live()
+                    } else {
+                        dead()
                     }
                 } else {
                     // TODO: Http Response 처리
@@ -186,18 +181,18 @@ abstract class APICall {
         }
 
         val call = APIInterface.api.start_fs(token!!)
-        call.enqueue(object : Callback<ResultModel> {
-            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        onError(result.message)
-                    } else {
+                    if (result == "OK") {
                         onMessage("파일 서버 시작 요청을 보냈습니다.")
+                    } else {
+                        onError("파일 서버 중단 요청 실패")
                     }
                 } else {
                     if (response.code() == 403) {
@@ -219,18 +214,18 @@ abstract class APICall {
         }
 
         val call = APIInterface.api.stop_fs(token!!)
-        call.enqueue(object : Callback<ResultModel> {
-            override fun onFailure(call: Call<ResultModel>, t: Throwable) {
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<ResultModel>, response: Response<ResultModel>) {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result.errorCode > 0) {
-                        onError(result.message)
+                    if (result == "OK") {
+                        onMessage("파일 서버 중단 요청을 보냈습니다.")
                     } else {
-                        onMessage("파일 서버 중지 요청을 보냈습니다.")
+                        onError("파일 서버 중단 요청 실패")
                     }
                 } else {
                     if (response.code() == 403) {

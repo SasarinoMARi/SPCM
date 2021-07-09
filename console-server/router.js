@@ -55,7 +55,7 @@ function unauthorized(res) {
 // 로그인 유효성 검사 함수
 function checkLoggedIn(req, res) {
     let token = req.headers.token;
-    logger.v("token: " + token);
+    // logger.v("token: " + token);
     if(!tokenManager.contains(token)) {
         unauthorized(res);
         return false;
