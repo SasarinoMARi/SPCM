@@ -63,10 +63,6 @@ function checkLoggedIn(req, res) {
     else return true;
 }
 
-function onError(error) {
-    console.log(error);
-}
-
 var lookup_ips = [];
 module.exports = {
     default: function (req, res, next) {

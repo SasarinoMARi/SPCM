@@ -10,28 +10,28 @@ function run(command) {
     const { exec } = require("child_process");
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.log(`error: ${error.message}`);
+            logger.e(`error: ${error.message}`);
             return;
         }
         if (stderr) {
-            console.log(`stderr: ${stderr}`);
+            logger.e(`stderr: ${stderr}`);
             return;
         }
-        console.log(`stdout: ${stdout}`);
+        logger.v(`stdout: ${stdout}`);
     });
 }
 function runFile(command) {
     const { execFile } = require("child_process");
     execFile(command, (error, stdout, stderr) => {
         if (error) {
-            console.log(`error: ${error.message}`);
+            logger.e(`error: ${error.message}`);
             return;
         }
         if (stderr) {
-            console.log(`stderr: ${stderr}`);
+            logger.e(`stderr: ${stderr}`);
             return;
         }
-        console.log(`stdout: ${stdout}`);
+        logger.v(`stdout: ${stdout}`);
     });
 }
 
@@ -64,10 +64,6 @@ function checkLoggedIn(req, res) {
     else return true;
 }
 
-function onError(error) {
-    console.log(error);
-}
-
 var lookup_ips = [];
 module.exports = {
     establishment: function (req, res, next) {
@@ -86,16 +82,26 @@ module.exports = {
         }
     },
     lookup: function (req, res, next) {
+        var ip = getIp(req);
+        if(!lookup_ips.includes(ip)) {
+            logger.v(`/lookup from ${ip}`);
+            lookup_ips.push(ip);
+        }
+
         var result = { error : 0, message : ""}
         res.json(result);
     },
     wakeup: function (req, res, next) {
+        logger.v(`/wakeup from ${getIp(req)}`);
+
         if(!checkLoggedIn(req, res)) return;
     
         var result = { error : 0, message : ""}
         res.json(result);
     },
     sleep: function (req, res, next) {
+        logger.v(`/sleep from ${getIp(req)}`);
+    
         if(!checkLoggedIn(req, res)) return;
         
         var result = { error : 0, message : ""}
@@ -103,6 +109,8 @@ module.exports = {
         res.json(result);
     },
     reboot: function (req, res, next) {
+        logger.v(`/reboot from ${getIp(req)}`);
+    
         if(!checkLoggedIn(req, res)) return;
     
         var result = { error : 0, message : ""}
@@ -110,6 +118,8 @@ module.exports = {
         res.json(result);
     },
     shutdown: function (req, res, next) {
+        logger.v(`/shutdown from ${getIp(req)}`);
+    
         if(!checkLoggedIn(req, res)) return;
     
         var result = { error : 0, message : ""}
@@ -117,6 +127,8 @@ module.exports = {
         res.json(result);
     },
     do: function (req, res, next) {
+        logger.v(`/do from ${getIp(req)}`);
+        
         if(!checkLoggedIn(req, res)) return;
     
         var result = { error : 0, message : ""}
@@ -124,6 +136,8 @@ module.exports = {
         res.json(result);
     },
     start_fs: function (req, res, next) {
+        logger.v(`/start-fs from ${getIp(req)}`);
+    
         if(!checkLoggedIn(req, res)) return;
         
         var result = { error : 0, message : ""}
@@ -133,6 +147,8 @@ module.exports = {
         res.json(result);
     },
     stop_fs: function (req, res, next) {
+        logger.v(`/stop-fs from ${getIp(req)}`);
+        
         if(!checkLoggedIn(req, res)) return;
         
         var result = { error : 0, message : ""}
