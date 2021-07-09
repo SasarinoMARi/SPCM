@@ -1,3 +1,7 @@
+/*
+ * 비동기 요청 수행 라이브러리
+ */
+
 const request = require('request')
 
 module.exports = async (value) => 

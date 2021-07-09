@@ -1,7 +1,10 @@
+/*
+ * 목적지 서버 API 정의 파일
+ */
 
 const request = require('request');
-const logger = require("./../common/logger")
 baseUrl = "http://sasarinomar1.iptime.org:8080/";
+const logger = require("../common/logger")
 
 class remoteServer {
     establishment(callback) {

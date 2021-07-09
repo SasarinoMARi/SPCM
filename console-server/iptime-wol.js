@@ -1,3 +1,7 @@
+/*
+ * IpTime 공유기 API 파일
+ */
+
 const request = require('request');
 const logger = require("./../common/logger")
 
