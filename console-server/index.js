@@ -1,12 +1,21 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const sha256 = require('./../common/sha256').SHA256
 const logger = require('./../common/logger')
 const tokenManager = require('./../common/token-manager')
 
+/*
+ * EJS 렌더링 설정 및 공용 디렉터리 호스팅
+ */
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.use(express.static(__dirname + '/public'));
+
 const remoteServer = require('./remoteServer')
 
 function getIp(req) {
-    return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress;
+    // return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress; // 프록시 중첩 헤더
+    return req.connection.remoteAddress;
 }
 
 function getUTC9Date() {
@@ -187,11 +196,9 @@ app.get('/stop-fs', function (req, res, next) {
     res.json({ error : 0, message : ""});
 });
 
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
 
 app.get('/', function (req, res, next) {
-    res.render("main");
+    res.render("main.ejs");
 });
 
 var port = process.env.PORT || 4424;

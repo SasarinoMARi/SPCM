@@ -36,7 +36,7 @@ interface APIInterface {
 
 
     companion object {
-        private val BASE_URL = "http://sasarinomar1.iptime.org:4425"
+        private val BASE_URL = "http://sasarinomar1.iptime.org:9999"
 
         private val gson = GsonBuilder()
             .setLenient()

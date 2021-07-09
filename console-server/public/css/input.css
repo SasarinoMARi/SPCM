@@ -1,0 +1,16 @@
+/* https://codepen.io/thebabydino/pen/mRrPwB */
+input {
+	width: 150px;
+	/* width: 10.5ch; */
+	display: block;
+	margin: 2em auto;
+	border: none;
+	background: repeating-linear-gradient(90deg, dimgrey 0, dimgrey 1ch, transparent 0, transparent 1.5ch) 0 100%/ 140px 2px no-repeat;
+	font: 5ch droid sans mono, consolas, monospace;
+	letter-spacing: 0.5ch;
+	color: white;
+}
+input:focus {
+	outline: none;
+	color: dodgerblue;
+}
