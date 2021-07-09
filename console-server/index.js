@@ -79,7 +79,14 @@ app.get('/establishment', function (req, res, next) {
     }
 });
 
+var lookup_ips = [];
 app.get('/lookup', async function(req, res, next) {
+    var ip = getIp(req);
+    if(!lookup_ips.includes(ip)) {
+        logger.v(`/lookup from ${ip}`);
+        lookup_ips.push(ip);
+    }
+
     var json = { error : 0, message : ""};
 
     var result = await remoteServer.lookup();
@@ -88,6 +95,8 @@ app.get('/lookup', async function(req, res, next) {
 });
 
 app.get('/wakeup', function (req, res, next) {
+    logger.v(`/wakeup from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
 
     var result = { error : 0, message : ""}
@@ -96,6 +105,8 @@ app.get('/wakeup', function (req, res, next) {
 });
 
 app.get('/sleep', function (req, res, next) {
+    logger.v(`/sleep from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
     
     remoteServer.sleep({
@@ -110,6 +121,8 @@ app.get('/sleep', function (req, res, next) {
 });
 
 app.get('/reboot', function (req, res, next) {
+    logger.v(`/reboot from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
 
     remoteServer.reboot({
@@ -124,6 +137,8 @@ app.get('/reboot', function (req, res, next) {
 });
 
 app.get('/shutdown', function (req, res, next) {
+    logger.v(`/shutdown from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
 
     remoteServer.shutdown({
@@ -138,6 +153,8 @@ app.get('/shutdown', function (req, res, next) {
 });
 
 app.get('/do', function (req, res, next) {
+    logger.v(`/do from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
 
     remoteServer.do({
@@ -152,6 +169,8 @@ app.get('/do', function (req, res, next) {
 });
 
 app.get('/logs', function (req, res, next) {
+    logger.v(`/logs from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
     
     remoteServer.logs({
@@ -168,6 +187,8 @@ app.get('/logs', function (req, res, next) {
 
 
 app.get('/start-fs', function (req, res, next) {
+    logger.v(`/start-fs from ${getIp(req)}`);
+
     if(!checkLoggedIn(req, res)) return;
 
     remoteServer.start_fs({
@@ -183,6 +204,8 @@ app.get('/start-fs', function (req, res, next) {
 
 
 app.get('/stop-fs', function (req, res, next) {
+    logger.v(`/stop-fs from ${getIp(req)}`);
+    
     if(!checkLoggedIn(req, res)) return;
 
     remoteServer.stop_fs({

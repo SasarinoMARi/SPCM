@@ -35,8 +35,6 @@ class remoteServer {
     };
 
     async lookup(callback) {
-        logger.d("api : lookup()");
-
         const options = {
             uri: baseUrl + "lookup",
             timeout: 1000 * 5
@@ -47,10 +45,9 @@ class remoteServer {
         var result = null;
         try {
             result = await request(options);
-            console.log(result);
         }
         catch (err) {
-            console.error(err);
+            logger.e(err);
         }
 
         return result;

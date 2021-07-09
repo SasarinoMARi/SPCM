@@ -5,7 +5,7 @@ let host = "sasarinomar1.iptime.org:80";
 let baseUrl = `http://${host}/`;
 
 function checkup() {
-    logger.d("api : checkup");
+    logger.d("wol: checkup");
 
     const options = {
         uri: baseUrl + "checkup",
@@ -18,7 +18,7 @@ function checkup() {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("error : " + error);
+            logger.e("checkup error : " + error);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -26,14 +26,14 @@ function checkup() {
                 version(body);
             }
             else {
-                logger.e("statusCode : " + statusCode);
+                logger.e("checkup statusCode : " + statusCode);
             }
         }
     });
 }
 
 function version() {
-    logger.d("api : version");
+    logger.d("wol : version");
 
     const options = {
         uri: baseUrl + "version",
@@ -47,7 +47,7 @@ function version() {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("error : " + error);
+            logger.e("version error : " + error);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -55,14 +55,14 @@ function version() {
                 hostinfo(body);
             }
             else {
-                logger.e("statusCode : " + statusCode);
+                logger.e("version statusCode : " + statusCode);
             }
         }
     });
 }
 
 function hostinfo() {
-    logger.d("api : hostinfo");
+    logger.d("wol : hostinfo");
 
     const options = {
         uri: baseUrl + "login/hostinfo.cgi",
@@ -79,7 +79,7 @@ function hostinfo() {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("error : " + error);
+            logger.e("hostinfo error : " + error);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -87,14 +87,14 @@ function hostinfo() {
                 login_handler(body);
             }
             else {
-                logger.e("statusCode : " + statusCode);
+                logger.e("hostinfo statusCode : " + statusCode);
             }
         }
     });
 }
 
 function login_handler() {
-    logger.d("api : login_handler");
+    logger.d("wol : login_handler");
 
     const postData = {
         'username': 'MARi',
@@ -118,7 +118,7 @@ function login_handler() {
 
     request.post(options, function (error, response, body) {
         if (error) {
-            logger.e("error : " + error);
+            logger.e("login_handler error : " + error);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -126,14 +126,14 @@ function login_handler() {
                 info(body);
             }
             else {
-                logger.e("statusCode : " + statusCode);
+                logger.e("login_handler statusCode : " + statusCode);
             }
         }
     });
 }
 
 function info(session) {
-    logger.d("api : info");
+    logger.d("wol : info");
 
     const options = {
         uri: baseUrl + "sess-bin/info.cgi",
@@ -151,7 +151,7 @@ function info(session) {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("error : " + error);
+            logger.e("info error : " + error);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -160,14 +160,14 @@ function info(session) {
                 wol_apply(session, mac);
             }
             else {
-                logger.e("statusCode : " + statusCode);
+                logger.e("info statusCode : " + statusCode);
             }           
         }
     });
 }
 
 function wol_apply(session, mac) {
-    logger.d("api : wol_apply : " + mac);
+    logger.d("wol : wol_apply : " + mac);
 
     const options = {
         uri: baseUrl + "sess-bin/wol_apply.cgi",
@@ -186,7 +186,7 @@ function wol_apply(session, mac) {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("error : " + error);
+            logger.e("wol_apply error : " + error);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -195,14 +195,14 @@ function wol_apply(session, mac) {
                 else logger.e("body: " + body);
             }
             else {
-                logger.e("statusCode : " + statusCode);
+                logger.e("wol_apply statusCode : " + statusCode);
             }           
         }
     });
 }
 
 function done() {
-    logger.v('done!!');
+    logger.v('Wake On Lan Success.');
 }
 
 module.exports = {
