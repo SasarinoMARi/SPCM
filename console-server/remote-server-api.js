@@ -98,38 +98,38 @@ class remoteServer {
     
                     if (statusCode == 200) {
                         let json = JSON.parse(body);
-                        callback.success(json.token);
+                        //callback.success(json.token);
                     }
                     else {
-                        callback.error();
+                        //callback.error();
                     }
                 }
             });
         }, failed: function () {
-            callback.error();
+            //callback.error();
         }});
     }
 
-    sleep(callback) {
-        this.__generalCall("sleep", callback);
+    sleep() {
+        this.__generalCall("sleep");
     }
-    reboot(callback) {
-        this.__generalCall("reboot", callback);
+    reboot() {
+        this.__generalCall("reboot");
     }
-    shutdown(callback) {
-        this.__generalCall("shutdown", callback);
+    shutdown() {
+        this.__generalCall("shutdown");
     }
-    do(callback) {
-        this.__generalCall("do", callback);
+    do() {
+        this.__generalCall("do");
     }
-    logs(callback) {
-        this.__generalCall("logs", callback);
+    logs() {
+        this.__generalCall("logs");
     }
-    start_fs(callback) {
-        this.__generalCall("start-fs", callback);
+    start_fs(calback) {
+        this.__generalCall("start-fs");
     }
-    stop_fs(callback) {
-        this.__generalCall("stop-fs", callback);
+    stop_fs() {
+        this.__generalCall("stop-fs");
     }
 };
 

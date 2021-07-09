@@ -2,7 +2,7 @@
  * 프로그램 진입점 파일
  */
 
-const PORT = 4426
+const PORT = 4425
 
 const app = require('express')();
 const router = require('./router');

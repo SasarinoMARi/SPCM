@@ -94,94 +94,57 @@ module.exports = {
             lookup_ips.push(ip);
         }
     
-        var json = { error : 0, message : ""};
-    
-        var result = await api.lookup();
-        if(result === null) json.error = 1
-        res.json(json);
+        var result = "Online";
+        var lookup_result = await api.lookup();
+        if(lookup_result === null) result = "Offline";
+        res.send(result);
     },
     wakeup: function (req, res, next) {
         logger.v(`/wakeup from ${getIp(req)}`);
     
         if(!checkLoggedIn(req, res)) return;
     
-        var result = { error : 0, message : ""}
         require("./iptime-wol").wakeup();
-        res.json(result);
+        res.send("OK");
     },
     sleep: function (req, res, next) {
         logger.v(`/sleep from ${getIp(req)}`);
     
         if(!checkLoggedIn(req, res)) return;
         
-        api.sleep({
-            success : function () {
-    
-            },
-            error : function () {
-    
-            }
-        });
-        res.json({ error : 0, message : ""});
+        api.sleep();
+        res.send("OK");
     },
     reboot: function (req, res, next) {
         logger.v(`/reboot from ${getIp(req)}`);
     
         if(!checkLoggedIn(req, res)) return;
     
-        api.reboot({
-            success : function () {
-    
-            },
-            error : function () {
-    
-            }
-        });
-        res.json({ error : 0, message : ""});
+        api.reboot();
+        res.send("OK");
     },
     shutdown: function (req, res, next) {
         logger.v(`/shutdown from ${getIp(req)}`);
     
         if(!checkLoggedIn(req, res)) return;
     
-        api.shutdown({
-            success : function () {
-    
-            },
-            error : function () {
-    
-            }
-        });
-        res.json({ error : 0, message : ""});
+        api.shutdown();
+        res.send("OK");
     }, 
     start_fs: function (req, res, next) {
         logger.v(`/start-fs from ${getIp(req)}`);
     
         if(!checkLoggedIn(req, res)) return;
     
-        api.start_fs({
-            success : function () {
-    
-            },
-            error : function () {
-    
-            }
-        });
-        res.json({ error : 0, message : ""});
+        api.start_fs();
+        res.send("OK");
     },
     stop_fs: function (req, res, next) {
         logger.v(`/stop-fs from ${getIp(req)}`);
         
         if(!checkLoggedIn(req, res)) return;
     
-        api.stop_fs({
-            success : function () {
-    
-            },
-            error : function () {
-    
-            }
-        });
-        res.json({ error : 0, message : ""});
+        api.stop_fs();
+        res.send("OK");
     }
 }
