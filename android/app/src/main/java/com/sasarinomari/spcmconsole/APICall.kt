@@ -30,6 +30,7 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     token = result
+                    callback()
                 }
 
             }
