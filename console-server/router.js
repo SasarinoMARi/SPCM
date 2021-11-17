@@ -71,7 +71,6 @@ module.exports = {
     establishment: function (req, res, next) {
         const ip = getIp(req);
     
-        var result = { error : 0, message : ""}
         var key = req.headers.key
         if(key === undefined || !checkKey(key)) {
             logger.v(`${ip} : establishment failed`);
@@ -79,8 +78,8 @@ module.exports = {
         }
         else {
             logger.v(`${ip} : establishment successed`);
-            result.token = tokenManager.new();
-            res.json(result);
+            var token = tokenManager.new();
+            res.send(token);
         }
     },
     lookup: async function(req, res, next) {
