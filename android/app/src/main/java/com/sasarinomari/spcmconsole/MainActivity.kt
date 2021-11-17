@@ -32,16 +32,15 @@ class MainActivity : Activity(), APICall.lookupInterface {
 
 
         button_wakeup.setOnClickListener {
-            api.wakeup()
+            confirm("원격 컴퓨터 전원을 켤까요?") { api.wakeup() }
         }
 
         button_shutdown.setOnClickListener {
-            api.shutdown()
+            confirm("원격 컴퓨터 전원을 끌까요?") { api.shutdown() }
         }
 
         button_more.setOnClickListener {
             val info = arrayOf<CharSequence>(
-                getString(R.string.Sleep),
                 getString(R.string.StartFileServer),
                 getString(R.string.StopFileServer)
             )
@@ -49,9 +48,8 @@ class MainActivity : Activity(), APICall.lookupInterface {
             builder.setTitle(getString(R.string.MoreContextTitle))
             builder.setItems(info) { dialog, which ->
                 when (which) {
-                    0 -> api.sleep()
-                    1 -> api.start_fs()
-                    2 -> api.stop_fs()
+                    0 -> confirm("파일 서버를 시작할까요?") { api.start_fs() }
+                    1 -> confirm("파일 서버를 끌까요?") { api.stop_fs() }
                 }
                 dialog.dismiss()
             }
@@ -59,6 +57,20 @@ class MainActivity : Activity(), APICall.lookupInterface {
             builder.show()
 
         }
+    }
+
+    private fun confirm(text: String, action: ()-> Unit) {
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setMessage(text)
+            .setCancelable(true)
+            .setPositiveButton(android.R.string.yes) { d, id ->
+                action()
+            }
+            .setNegativeButton(android.R.string.no) { d, id ->
+                d.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
     }
 
     private fun startStatusChecker() {
