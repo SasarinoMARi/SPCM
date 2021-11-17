@@ -141,5 +141,13 @@ module.exports = {
     
         api.stop_fs();
         res.send("OK");
+    },
+    start_tv: function (req, res, next) {
+        logger.v(`/start-tv from ${getIp(req)}`);
+    
+        if(!checkLoggedIn(req, res)) return;
+    
+        api.start_tv();
+        res.send("OK");
     }
 }

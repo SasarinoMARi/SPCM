@@ -17,6 +17,7 @@ app.get('/shutdown', router.shutdown);
 app.get('/do', router.do);
 app.get('/start-fs', router.start_fs);
 app.get('/stop-fs', router.stop_fs);
+app.get('/start-tv', router.start_tv);
 
 var server = app.listen(PORT, function () {
     console.log(`Server has started on port ${PORT}`);
