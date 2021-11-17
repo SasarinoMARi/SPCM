@@ -239,6 +239,41 @@ abstract class APICall {
         })
     }
 
+
+
+    fun start_tv() {
+        if (token == null) {
+            establishment {
+                start_tv()
+            }
+            return
+        }
+
+        val call = APIInterface.api.start_tv(token!!)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") {
+                        onMessage("Teamviewer 시작 요청을 보냈습니다.")
+                    } else {
+                        onError("Teamviewr 시작 요청 실패")
+                    }
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            start_fs()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
     private fun sha256(param: String): String {
         val HEX_CHARS = "0123456789ABCDEF"
         val bytes = MessageDigest

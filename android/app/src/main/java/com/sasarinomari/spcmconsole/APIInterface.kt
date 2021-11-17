@@ -32,6 +32,9 @@ interface APIInterface {
     @GET("stop-fs")
     fun stop_fs(@Header("token") token:String): Call<String>
 
+    @GET("start-tv")
+    fun start_tv(@Header("token") token:String): Call<String>
+
     companion object {
         private val BASE_URL = "http://sasarinomar1.iptime.org:9999"
 

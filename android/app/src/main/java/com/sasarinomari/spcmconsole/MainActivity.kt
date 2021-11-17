@@ -42,7 +42,8 @@ class MainActivity : Activity(), APICall.lookupInterface {
         button_more.setOnClickListener {
             val info = arrayOf<CharSequence>(
                 getString(R.string.StartFileServer),
-                getString(R.string.StopFileServer)
+                getString(R.string.StopFileServer),
+                "팀뷰어 서버 시작"
             )
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.MoreContextTitle))
@@ -50,6 +51,7 @@ class MainActivity : Activity(), APICall.lookupInterface {
                 when (which) {
                     0 -> confirm("파일 서버를 시작할까요?") { api.start_fs() }
                     1 -> confirm("파일 서버를 끌까요?") { api.stop_fs() }
+                    2 -> confirm("팀뷰어 서버를 시작할까요?") { api.start_tv() }
                 }
                 dialog.dismiss()
             }
