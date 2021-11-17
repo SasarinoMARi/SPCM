@@ -155,5 +155,16 @@ module.exports = {
         run("taskkill /f /im webshare.exe");
         
         res.json(result);
+    },
+    start_tv: function(req, res, next) {
+        logger.v(`/start-tv from ${getIp(req)}`);
+
+        if(!checkLoggedIn(req, res)) return;
+        
+        var result = { error : 0, message : ""}
+        path_webshare = "C:/Program Files (x86)/TeamViewer/TeamViewer.exe";
+        runFile(path_webshare);
+        
+        res.json(result);
     }
 }

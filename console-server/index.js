@@ -23,6 +23,7 @@ app.get('/reboot', router.reboot);
 app.get('/shutdown', router.shutdown);
 app.get('/start-fs', router.start_fs);
 app.get('/stop-fs', router.stop_fs);
+app.get('/start-tv', router.start_tv);
 
 var port = process.env.PORT || 4424;
 var server = app.listen(port, function () {
