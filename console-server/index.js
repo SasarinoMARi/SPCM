@@ -24,6 +24,8 @@ app.get('/shutdown', router.shutdown);
 app.get('/start-fs', router.start_fs);
 app.get('/stop-fs', router.stop_fs);
 app.get('/start-tv', router.start_tv);
+app.get('/reboot-pi', router.reboot_pi);
+app.get('/hetzer', router.hetzer);
 
 var port = process.env.PORT || 4424;
 var server = app.listen(port, function () {

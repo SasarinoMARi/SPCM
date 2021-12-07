@@ -5,6 +5,7 @@
 const request = require('request');
 baseUrl = "http://sasarinomar1.iptime.org:8080/";
 const logger = require("../common/logger")
+var shell = require('shelljs');
 
 class remoteServer {
     establishment(callback) {
@@ -130,6 +131,15 @@ class remoteServer {
     }
     stop_fs() {
         this.__generalCall("stop-fs");
+    }
+    start_tv(calback) {
+        this.__generalCall("start-tv");
+    }
+    reboot_pi() {        
+        shell.exec('sudo reboot');
+    }
+    hetzer() {
+        shell.exec('sh /git/tweeter/hetzer.sh');
     }
 };
 

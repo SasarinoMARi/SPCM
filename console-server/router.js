@@ -149,5 +149,21 @@ module.exports = {
     
         api.start_tv();
         res.send("OK");
+    },
+    reboot_pi: function(req, res, next) {
+        logger.v(`/reboot_pi from ${getIp(req)}`);
+        
+        if(!checkLoggedIn(req, res)) return;
+    
+        api.reboot_pi();
+        res.send("OK");
+    },
+    hetzer: function(req, res, next) {
+        logger.v(`/hetzer from ${getIp(req)}`);
+        
+        if(!checkLoggedIn(req, res)) return;
+    
+        api.hetzer();
+        res.send("OK");
     }
 }
