@@ -43,7 +43,9 @@ class MainActivity : Activity(), APICall.lookupInterface {
             val info = arrayOf<CharSequence>(
                 getString(R.string.StartFileServer),
                 getString(R.string.StopFileServer),
-                "팀뷰어 서버 시작"
+                "팀뷰어 서버 시작",
+                "파이 서버 재부팅",
+                "트윗 청소기 시작"
             )
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.MoreContextTitle))
@@ -52,6 +54,8 @@ class MainActivity : Activity(), APICall.lookupInterface {
                     0 -> confirm("파일 서버를 시작할까요?") { api.start_fs() }
                     1 -> confirm("파일 서버를 끌까요?") { api.stop_fs() }
                     2 -> confirm("팀뷰어 서버를 시작할까요?") { api.start_tv() }
+                    3 -> confirm("정말 파이 서버를 재부팅할까요?") {api.reboot_pi()}
+                    4 -> confirm("정말 트윗청소기를 시작할까요?") {api.hetzer()}
                 }
                 dialog.dismiss()
             }

@@ -273,6 +273,72 @@ abstract class APICall {
             }
         })
     }
+    
+    fun reboot_pi() {
+        if (token == null) {
+            establishment {
+                start_tv()
+            }
+            return
+        }
+
+        val call = APIInterface.api.reboot_pi(token!!)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") {
+                        onMessage("pi 서버 리부트")
+                    } else {
+                        onError("pi 서버 리부트 실패")
+                    }
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            reboot_pi()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+    
+    fun hetzer() {
+        if (token == null) {
+            establishment {
+                start_tv()
+            }
+            return
+        }
+
+        val call = APIInterface.api.hetzer(token!!)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") {
+                        onMessage("트윗 청소기 시작")
+                    } else {
+                        onError("트윗 청소기 시작 실패")
+                    }
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            hetzer()
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
 
     private fun sha256(param: String): String {
         val HEX_CHARS = "0123456789ABCDEF"

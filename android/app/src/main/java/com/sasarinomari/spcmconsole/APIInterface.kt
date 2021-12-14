@@ -35,6 +35,12 @@ interface APIInterface {
     @GET("start-tv")
     fun start_tv(@Header("token") token:String): Call<String>
 
+    @GET("reboot-pi")
+    fun reboot_pi(@Header("token") token:String): Call<String>
+
+    @GET("hetzer")
+    fun hetzer(@Header("token") token:String): Call<String>
+
     companion object {
         private val BASE_URL = "http://sasarinomar1.iptime.org:9999"
 
