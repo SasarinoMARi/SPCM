@@ -1,12 +1,13 @@
 package com.sasarinomari.spcmconsole
 
+import android.content.Context
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.security.MessageDigest
 import java.util.*
 
-abstract class APICall {
+abstract class APICall(private val context: Context) {
     abstract fun onError(message: String)
     abstract fun onMessage(message: String)
 
@@ -55,9 +56,9 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("시스템 종료 요청을 보냈습니다.")
+                        onMessage(context.getString(R.string.pc_stop))
                     } else {
-                        onError("시스템 종료 요청 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -90,7 +91,7 @@ abstract class APICall {
                     if (result == "OK") {
                         onMessage("시스템 절전 요청을 보냈습니다.")
                     } else {
-                        onError("시스템 절전 요청 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -121,9 +122,9 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("시스템 부팅 요청을 보냈습니다.")
+                        onMessage(context.getString(R.string.pc_start))
                     } else {
-                        onError("시스템 부팅 요청 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -191,9 +192,9 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("파일 서버 시작 요청을 보냈습니다.")
+                        onMessage(context.getString(R.string.fserver_start))
                     } else {
-                        onError("파일 서버 중단 요청 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -226,7 +227,7 @@ abstract class APICall {
                     if (result == "OK") {
                         onMessage("파일 서버 중단 요청을 보냈습니다.")
                     } else {
-                        onError("파일 서버 중단 요청 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -259,9 +260,9 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("Teamviewer 시작 요청을 보냈습니다.")
+                        onMessage(context.getString(R.string.rdpserver_start))
                     } else {
-                        onError("Teamviewr 시작 요청 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -292,9 +293,9 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("pi 서버 리부트")
+                        onMessage(context.getString(R.string.rdpserver_start))
                     } else {
-                        onError("pi 서버 리부트 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
@@ -325,9 +326,9 @@ abstract class APICall {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("트윗 청소기 시작")
+                        onMessage(context.getString(R.string.hetzer_start))
                     } else {
-                        onError("트윗 청소기 시작 실패")
+                        onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {

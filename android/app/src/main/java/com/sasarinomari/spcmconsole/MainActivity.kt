@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : Activity(), APICall.lookupInterface {
-    private val api = object : APICall() {
+    private val api = object : APICall(this) {
         override fun onError(message: String) {
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
         }
@@ -33,11 +33,11 @@ class MainActivity : Activity(), APICall.lookupInterface {
 
 
         button_wakeup.setOnClickListener {
-            confirm("원격 컴퓨터 전원을 켭니다.") { api.wakeup() }
+            confirm(getString(R.string.pc_start)) { api.wakeup() }
         }
 
         button_shutdown.setOnClickListener {
-            confirm("원격 컴퓨터를 종료합니다.") { api.shutdown() }
+            confirm(getString(R.string.pc_stop)) { api.shutdown() }
         }
 
         button_more.setOnClickListener {
@@ -46,16 +46,16 @@ class MainActivity : Activity(), APICall.lookupInterface {
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when(menuItem.itemId) {
                     R.id.action_fserver_start -> {
-                        confirm("파일 공유 서버를 시작합니다.") { api.start_fs() }
+                        confirm(getString(R.string.fserver_start)) { api.start_fs() }
                     }
                     R.id.action_rdpserver_start -> {
-                        confirm("원격 데스크탑 서버를 시작합니다.") { api.start_tv() }
+                        confirm(getString(R.string.rdpserver_start)) { api.start_tv() }
                     }
                     R.id.action_raspi_reboot -> {
-                        confirm("라즈베리 파이 서버를 재부팅합니다.") { api.reboot_pi() }
+                        confirm(getString(R.string.raspi_reboot)) { api.reboot_pi() }
                     }
                     R.id.action_hetzer_start -> {
-                        confirm("정기 트윗 청소를 수동으로 시작합니다.") {api.hetzer()}
+                        confirm(getString(R.string.hetzer_start)) {api.hetzer()}
                     }
                     else -> {
 
