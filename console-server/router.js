@@ -163,7 +163,7 @@ module.exports = {
         
         if(!checkLoggedIn(req, res)) return;
     
+        res.send("OK"); // 트청 끝난 후에 반환하면 타임아웃남
         api.hetzer();
-        res.send("OK");
     }
 }
