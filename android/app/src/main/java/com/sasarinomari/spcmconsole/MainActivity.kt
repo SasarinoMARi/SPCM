@@ -10,6 +10,7 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.PopupMenu
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -32,36 +33,37 @@ class MainActivity : Activity(), APICall.lookupInterface {
 
 
         button_wakeup.setOnClickListener {
-            confirm("원격 컴퓨터 전원을 켤까요?") { api.wakeup() }
+            confirm("원격 컴퓨터 전원을 켭니다.") { api.wakeup() }
         }
 
         button_shutdown.setOnClickListener {
-            confirm("원격 컴퓨터 전원을 끌까요?") { api.shutdown() }
+            confirm("원격 컴퓨터를 종료합니다.") { api.shutdown() }
         }
 
         button_more.setOnClickListener {
-            val info = arrayOf<CharSequence>(
-                getString(R.string.StartFileServer),
-                getString(R.string.StopFileServer),
-                "팀뷰어 서버 시작",
-                "파이 서버 재부팅",
-                "트윗 청소기 시작"
-            )
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-            builder.setTitle(getString(R.string.MoreContextTitle))
-            builder.setItems(info) { dialog, which ->
-                when (which) {
-                    0 -> confirm("파일 서버를 시작할까요?") { api.start_fs() }
-                    1 -> confirm("파일 서버를 끌까요?") { api.stop_fs() }
-                    2 -> confirm("팀뷰어 서버를 시작할까요?") { api.start_tv() }
-                    3 -> confirm("정말 파이 서버를 재부팅할까요?") {api.reboot_pi()}
-                    4 -> confirm("정말 트윗청소기를 시작할까요?") {api.hetzer()}
+            val popupMenu = PopupMenu(this@MainActivity, it)
+            menuInflater.inflate(R.menu.menu_main_actions, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when(menuItem.itemId) {
+                    R.id.action_fserver_start -> {
+                        confirm("파일 공유 서버를 시작합니다.") { api.start_fs() }
+                    }
+                    R.id.action_rdpserver_start -> {
+                        confirm("원격 데스크탑 서버를 시작합니다.") { api.start_tv() }
+                    }
+                    R.id.action_raspi_reboot -> {
+                        confirm("라즈베리 파이 서버를 재부팅합니다.") { api.reboot_pi() }
+                    }
+                    R.id.action_hetzer_start -> {
+                        confirm("정기 트윗 청소를 수동으로 시작합니다.") {api.hetzer()}
+                    }
+                    else -> {
+
+                    }
                 }
-                dialog.dismiss()
+                return@setOnMenuItemClickListener false
             }
-
-            builder.show()
-
+            popupMenu.show()
         }
     }
 
