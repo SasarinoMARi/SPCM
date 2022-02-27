@@ -1,6 +1,5 @@
 package com.sasarinomari.spcmconsole
 
-import android.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -52,6 +51,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         builder.setContentTitle(title)
             .setContentText(body)
+            .setSmallIcon(R.mipmap.ic_launcher)
 
         val notification: Notification = builder.build()
         notificationManager.notify(1, notification)
