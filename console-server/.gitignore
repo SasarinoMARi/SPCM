@@ -2,3 +2,4 @@ node_modules/
 logs/
 .env
 fcm_id
+firebaseAccountKey.json
