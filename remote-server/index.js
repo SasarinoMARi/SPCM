@@ -1,9 +1,7 @@
 /*
  * 프로그램 진입점 파일
  */
-
-const PORT = 4425
-
+require("dotenv").config();
 const app = require('express')();
 const router = require('./router');
 
@@ -19,6 +17,7 @@ app.get('/start-fs', router.start_fs);
 app.get('/stop-fs', router.stop_fs);
 app.get('/start-tv', router.start_tv);
 
-var server = app.listen(PORT, function () {
-    console.log(`Server has started on port ${PORT}`);
+var port = process.env.PORT;
+var server = app.listen(port, function () {
+    console.log(`Server has started on port ${port}`);
 });
