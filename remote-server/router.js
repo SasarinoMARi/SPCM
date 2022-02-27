@@ -2,7 +2,7 @@
  * 라우팅 테이블 정의 파일
  */
 
-const sha256 = require('./../common/sha256').SHA256
+const secret = require('../common/secret');
 const logger = require('./../common/logger')
 const tokenManager = require('./../common/token-manager')
 
@@ -40,14 +40,6 @@ function getIp(req) {
     return req.connection.remoteAddress;
 }
 
-function checkKey(key) {
-    var k = require("./../common/sha256").SHA256(require("../common/secret").key);
-
-    logger.v(`input :\t${key}`)
-    // logger.v(`comp :\t${k}`)
-    return key === k;
-}
-
 function unauthorized(res) {
     res.statusCode = 403
     res.message = "인증 정보가 잘못되었습니다."
@@ -70,15 +62,14 @@ module.exports = {
         const ip = getIp(req);
     
         var result = { error : 0, message : ""}
-        var key = req.headers.key
-        if(key === undefined || !checkKey(key)) {
-            logger.v(`${ip} : establishment failed`);
-            unauthorized(res);
-        }
-        else {
+        if(secret.check(req.headers.key)) {
             logger.v(`${ip} : establishment successed`);
             result.token = tokenManager.new();
             res.json(result);
+        }
+        else {
+            logger.v(`${ip} : establishment failed`);
+            unauthorized(res);
         }
     },
     lookup: function (req, res, next) {

@@ -2,10 +2,11 @@
  * IpTime 공유기 API 파일
  */
 
+require("dotenv").config();
 const request = require('request');
 const logger = require("./../common/logger")
 
-let host = "sasarinomar1.iptime.org:80";
+let host = process.env.IPTIME_CONSOLE;
 let baseUrl = `http://${host}/`;
 
 function checkup() {

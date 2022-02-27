@@ -2,9 +2,11 @@
  * 목적지 서버 API 정의 파일
  */
 
+require("dotenv").config();
 const request = require('request');
-baseUrl = "http://sasarinomar1.iptime.org:8080/";
+baseUrl = `${process.env.REMOTE_COMPUTER}/`;
 const logger = require("../common/logger")
+var shell = require('shelljs');
 
 class remoteServer {
     establishment(callback) {
@@ -130,6 +132,15 @@ class remoteServer {
     }
     stop_fs() {
         this.__generalCall("stop-fs");
+    }
+    start_tv(calback) {
+        this.__generalCall("start-tv");
+    }
+    reboot_pi() {        
+        shell.exec('sudo reboot');
+    }
+    hetzer() {
+        shell.exec('sh /git/tweeter/hetzer.sh');
     }
 };
 

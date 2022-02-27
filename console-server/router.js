@@ -2,7 +2,7 @@
  * 라우팅 테이블 정의 파일
  */
 
-const sha256 = require('./../common/sha256').SHA256
+const secret = require('../common/secret');
 const logger = require('./../common/logger')
 const tokenManager = require('./../common/token-manager')
 const api = require('./remote-server-api');
@@ -11,38 +11,6 @@ const api = require('./remote-server-api');
 function getIp(req) {
     // return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress; // 프록시 중첩 헤더
     return req.connection.remoteAddress;
-}
-
-// 한국시 반환 함수
-function getUTC9Date() {
-    const curr = new Date();
-    const utc = 
-        curr.getTime() + 
-        (curr.getTimezoneOffset() * 60 * 1000);
-
-    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-    const kr_curr = 
-        new Date(utc + (KR_TIME_DIFF));
-
-    return kr_curr;
-}
-
-// 올바른 인증 키 반환 함수
-function getKey() {
-    var d = getUTC9Date();
-    var h = d.getHours();
-    var m = d.getMinutes();
-    var k = `s${(m+h)}`;
-    return sha256(k);
-}
-
-// 키 검증 함수
-function checkKey(key) {
-    var k = getKey();
-
-    logger.v(`input :\t${key}`)
-    logger.v(`comp :\t${k}`)
-    return key === k;
 }
 
 // 인증 실패시 호출하는 함수
@@ -71,15 +39,14 @@ module.exports = {
     establishment: function (req, res, next) {
         const ip = getIp(req);
     
-        var key = req.headers.key
-        if(key === undefined || !checkKey(key)) {
-            logger.v(`${ip} : establishment failed`);
-            unauthorized(res);
-        }
-        else {
+        if(secret.check(req.headers.key)) {
             logger.v(`${ip} : establishment successed`);
             var token = tokenManager.new();
             res.send(token);
+        }
+        else {
+            logger.v(`${ip} : establishment failed`);
+            unauthorized(res);
         }
     },
     lookup: async function(req, res, next) {
@@ -149,5 +116,21 @@ module.exports = {
     
         api.start_tv();
         res.send("OK");
+    },
+    reboot_pi: function(req, res, next) {
+        logger.v(`/reboot_pi from ${getIp(req)}`);
+        
+        if(!checkLoggedIn(req, res)) return;
+    
+        api.reboot_pi();
+        res.send("OK");
+    },
+    hetzer: function(req, res, next) {
+        logger.v(`/hetzer from ${getIp(req)}`);
+        
+        if(!checkLoggedIn(req, res)) return;
+    
+        res.send("OK"); // 트청 끝난 후에 반환하면 타임아웃남
+        api.hetzer();
     }
 }
