@@ -12,7 +12,7 @@ class remoteServer {
     establishment(callback) {
         logger.v("api : establishment()");
 
-        const key = require("../common/sha256").SHA256(require("../common/secret").key)
+        const key = require("../common/secret").cr_key
         const options = {
             uri: baseUrl + "establishment",
             headers: {
@@ -107,7 +107,8 @@ class remoteServer {
                     }
                 }
             });
-        }, failed: function () {
+        }, error: function () {
+            console.log(error);
             //callback.error();
         }});
     }

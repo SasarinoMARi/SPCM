@@ -62,7 +62,7 @@ module.exports = {
         const ip = getIp(req);
     
         var result = { error : 0, message : ""}
-        if(secret.check(req.headers.key)) {
+        if(secret.cr_key === req.headers.key) {
             logger.v(`${ip} : establishment successed`);
             result.token = tokenManager.new();
             res.json(result);
