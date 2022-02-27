@@ -147,7 +147,8 @@ module.exports = {
             },
             error: function(msg) {
                 logger.e(msg);
-                res.statusCode(500)
+                res.statusCode = 500;
+                res.send("");
             }
         })
     },

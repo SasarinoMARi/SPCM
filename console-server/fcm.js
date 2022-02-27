@@ -7,44 +7,37 @@ const request = require('request');
 const fs = require('fs');
 const idFilePath = './fcm_id'
 
+var admin = require("firebase-admin");
+var serviceAccount = require("./firebaseAccountKey.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 module.exports = {
     send : function (title, content, callback) {
         if(!fs.existsSync(idFilePath)) {
             callback.error("FCM ID가 정의되지 않았습니다.");
         }
+        const deviceToken = fs.readFileSync(idFilePath, 'utf-8');
 
-        const id = fs.readFileSync(idFilePath, 'utf-8');
-        const options = {
-            uri: `https://fcm.googleapis.com/fcm/send/`,
-            headers: {
-              'Authorization': process.env.FCM_TOKEN
-            },
-            body: {
-                to: id,
-                priority: 'high',
-                notification: {
-                    title: title,
-                    body: content
-                }
+        const message = {
+            token: deviceToken,
+            notification: {
+                title: title,
+                body: content
             }
         };
 
-        request.post(options, function (error, response, body) {
-            if (error) {
-                logger.e("fcm error : " + error);
-            }
-            else {
-                const statusCode = response && response.statusCode;
-
-                if (statusCode == 200) {
-                    let json = JSON.parse(body);
-                    callback.success(json.token);
-                }
-                else {
-                    callback.error();
-                }
-            }
-        });
+        admin
+          .messaging()
+          .send(message)
+          .then(function(response) {
+              console.log(response);
+            callback.success(response);
+          })
+          .catch(function(err) {
+            callback.error(err);
+          });
     },
     update_id : function(id) {
         fs.writeFileSync(idFilePath, id, 'utf8');
