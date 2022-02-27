@@ -17,8 +17,7 @@ abstract class APICall(private val context: Context) {
         val c = Calendar.getInstance()
         val h = c.get(Calendar.HOUR_OF_DAY)
         val m = c.get(Calendar.MINUTE)
-        val key = sha256("s${h + m}")
-        // val key = sha256("*Mkgj**oVC_VRb@#pM>iy^4H*T&,o)Gf&vjPN-]+oNufE2V,2Bs+TWqntq,H.8e,")
+        val key = sha256("KEY${h + m}")
 
         // Log.d("MainActivity", "key: $key")
         val call = APIInterface.api.establishment(key.toLowerCase(Locale.getDefault()))

@@ -42,7 +42,7 @@ interface APIInterface {
     fun hetzer(@Header("token") token:String): Call<String>
 
     companion object {
-        private val BASE_URL = "http://sasarinomar1.iptime.org:9999"
+        private val BASE_URL = ""
 
         private val gson = GsonBuilder()
             .setLenient()
