@@ -6,6 +6,7 @@ const secret = require('../common/secret');
 const logger = require('./../common/logger')
 const tokenManager = require('./../common/token-manager')
 const api = require('./remote-server-api');
+const fcm = require('./fcm');
 
 // 요청자 ip 반환 함수
 function getIp(req) {
@@ -132,5 +133,31 @@ module.exports = {
     
         res.send("OK"); // 트청 끝난 후에 반환하면 타임아웃남
         api.hetzer();
+    },
+    fcm_send: function(req, res, next) {
+        logger.v(`/fcm_send from ${getIp(req)}`);
+        
+        if(!checkLoggedIn(req, res)) return;
+    
+        var title = req.body.title;
+        var body = req.body.body;
+        fcm.send(title, body, {
+            success: function() {
+                res.send("OK");
+            },
+            error: function(msg) {
+                logger.e(msg);
+                res.statusCode(500)
+            }
+        })
+    },
+    fcm_update_token: function(req, res, next) {
+        logger.v(`/fcm_update_token from ${getIp(req)}`);
+
+        if(!checkLoggedIn(req, res)) return;
+
+        var token = req.body.token;
+        fcm.update_id(token);
+        res.send("OK");
     }
 }

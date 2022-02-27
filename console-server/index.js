@@ -16,6 +16,12 @@ app.set('view engine', 'html');
 app.use(express.static(__dirname + '/public'));
 */
 
+/*
+ * Request Body를 json으로 파싱하기 위한 설정
+ */
+app.use(express.urlencoded({extended: true}));
+app.use(express.json())
+
 /* 라우팅 테이블 정의 */
 app.get('/', router.default);
 app.get('/establishment', router.establishment);
@@ -29,6 +35,8 @@ app.get('/stop-fs', router.stop_fs);
 app.get('/start-tv', router.start_tv);
 app.get('/reboot-pi', router.reboot_pi);
 app.get('/hetzer', router.hetzer);
+app.post('/fcm_send', router.fcm_send);
+app.post('/fcm_update_token', router.fcm_update_token);
 
 var port = process.env.PORT;
 var server = app.listen(port, function () {
