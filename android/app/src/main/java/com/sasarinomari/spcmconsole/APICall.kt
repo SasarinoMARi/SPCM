@@ -17,10 +17,10 @@ abstract class APICall(private val context: Context) {
         val c = Calendar.getInstance()
         val h = c.get(Calendar.HOUR_OF_DAY)
         val m = c.get(Calendar.MINUTE)
-        val key = sha256("KEY${h + m}")
+        val key = ""
 
         // Log.d("MainActivity", "key: $key")
-        val call = APIInterface.api.establishment(key.toLowerCase(Locale.getDefault()))
+        val call = APIInterface.api.establishment(key)
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
