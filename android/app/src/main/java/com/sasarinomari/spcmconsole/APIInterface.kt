@@ -41,6 +41,13 @@ interface APIInterface {
     @GET("hetzer")
     fun hetzer(@Header("token") token:String): Call<String>
 
+    @POST("fcm_send")
+    fun sendFcm(@Header("token") token:String, @Body body: sendFcmParam): Call<String>
+    class sendFcmParam(val title: String, val body: String)
+    @POST("fcm_update_token")
+    fun updateFcmToken(@Header("token") token:String, @Body body: updateFcmTokenParam): Call<String>
+    class updateFcmTokenParam(val token: String)
+
     companion object {
         private val BASE_URL = ""
 

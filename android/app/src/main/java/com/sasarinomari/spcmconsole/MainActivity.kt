@@ -2,16 +2,12 @@ package com.sasarinomari.spcmconsole
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.ContextMenu.ContextMenuInfo
-import android.view.MenuItem
-import android.view.View
 import android.view.WindowManager
 import android.widget.PopupMenu
 import android.widget.Toast
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -30,7 +26,6 @@ class MainActivity : Activity(), APICall.lookupInterface {
         super.onCreate(savedInstanceState)
         setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
         setContentView(R.layout.activity_main)
-
 
         button_wakeup.setOnClickListener {
             confirm(getString(R.string.pc_start)) { api.wakeup() }
@@ -64,6 +59,11 @@ class MainActivity : Activity(), APICall.lookupInterface {
                 return@setOnMenuItemClickListener false
             }
             popupMenu.show()
+        }
+
+        // FCM 토큰 갱신
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            api.updateFcmToken(it) { }
         }
     }
 

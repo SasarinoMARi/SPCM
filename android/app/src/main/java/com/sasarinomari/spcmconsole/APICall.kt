@@ -1,6 +1,8 @@
 package com.sasarinomari.spcmconsole
 
 import android.content.Context
+import android.util.Log
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -352,5 +354,55 @@ abstract class APICall(private val context: Context) {
             result.append(HEX_CHARS[i and 0x0f])
         }
         return result.toString()
+    }
+
+    fun sendFcm(title: String, content: String, callback: ()->Unit) {
+        if (token == null) {
+            establishment {
+                sendFcm(title, content, callback)
+            }
+            return
+        }
+
+        val data = APIInterface.sendFcmParam(title, content)
+        val call = APIInterface.api.sendFcm(token!!, data)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback()
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+        })
+    }
+
+    fun updateFcmToken(fcmid: String, callback: ()->Unit) {
+        if (token == null) {
+            establishment {
+                updateFcmToken(fcmid, callback)
+            }
+            return
+        }
+
+        val data = APIInterface.updateFcmTokenParam(fcmid)
+        val call = APIInterface.api.updateFcmToken(token!!, data)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback()
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+        })
     }
 }
