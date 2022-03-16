@@ -37,6 +37,7 @@ app.get('/reboot-pi', router.reboot_pi);
 app.get('/hetzer', router.hetzer);
 app.post('/fcm_send', router.fcm_send);
 app.post('/fcm_update_token', router.fcm_update_token);
+app.post('/mail_send', router.mail_send);
 
 var port = process.env.PORT;
 var server = app.listen(port, function () {

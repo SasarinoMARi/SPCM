@@ -7,6 +7,7 @@ const logger = require('./../common/logger')
 const tokenManager = require('./../common/token-manager')
 const api = require('./remote-server-api');
 const fcm = require('./fcm');
+const mail = require('./email');
 
 // 요청자 ip 반환 함수
 function getIp(req) {
@@ -160,5 +161,15 @@ module.exports = {
         var token = req.body.token;
         fcm.update_id(token);
         res.send("OK");
-    }
+    },
+    mail_send: function(req, res, next) {
+        logger.v(`/mail_send from ${getIp(req)}`);
+        
+        if(!checkLoggedIn(req, res)) return;
+    
+        var title = req.body.title;
+        var body = req.body.body;
+        mail.send(title, body);
+        res.send("OK");
+    },
 }
