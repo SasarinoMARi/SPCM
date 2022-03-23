@@ -26,4 +26,5 @@ app.get('/do', router.do);
 var port = process.env.PORT;
 var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
+    require('./notification').sendFcm("알림", "PC가 부팅되었습니다.");
 });

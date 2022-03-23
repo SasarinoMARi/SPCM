@@ -27,7 +27,7 @@ function establishment(callback) {
 }
 function sendFcm(token, title, content) {
     const options = {
-        uri: `${process.env.PI_SERVER}/fcm_send`,
+        uri: `${process.env.PI_SERVER}/noti/send_fcm`,
         headers: {
           'token': token
         },
@@ -56,7 +56,7 @@ function sendFcm(token, title, content) {
 
 function sendMail(token, title, content) {
     const options = {
-        uri: `${process.env.PI_SERVER}/mail_send`,
+        uri: `${process.env.PI_SERVER}/noti/send_mail`,
         headers: {
           'token': token
         },
@@ -83,7 +83,15 @@ function sendMail(token, title, content) {
     });
 }
 
-establishment(function(token) {
-    sendFcm(token, "알림 테스트!", "데스크탑에서 보내는 겁니다..");
-    sendMail(token, "알림 테스트!", "데스크탑에서 보내는 겁니다..");
-});
+module.exports = {
+    sendFcm : function(title, content) {
+        establishment(function(token) {
+            sendFcm(token, title, content);
+        });
+    },
+    sendMail : function(title, content) {
+        establishment(function(token) {
+            sendMail(token, title, content);
+        });
+    }
+}
