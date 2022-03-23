@@ -6,7 +6,6 @@ require("dotenv").config();
 const request = require('request');
 baseUrl = `${process.env.REMOTE_COMPUTER}/`;
 const logger = require("../common/logger")
-var shell = require('shelljs');
 
 class remoteServer {
     establishment(callback) {
@@ -79,7 +78,13 @@ class remoteServer {
         */
     }
 
-    __generalCall(path, callback) {
+    /**
+     * establishment 후 api 실행하는 함수
+     * @param {string} path : api endpoint
+     * @param {string} headerPair : 헤더 쌍
+     * @param {function} callback : 콜백 함수
+     */
+    __generalCall(path, headerPair, callback) {
         this.establishment({success : function(token) {
             logger.d("api : " + path);
 
@@ -89,6 +94,7 @@ class remoteServer {
                   'token': token
                 }
             };
+            Object.assign(options.headers, headerPair);
     
             request.get(options, function (error, response, body) {
                 if (error) {
@@ -99,11 +105,11 @@ class remoteServer {
                     logger.v("statusCode : " + statusCode);
     
                     if (statusCode == 200) {
-                        let json = JSON.parse(body);
-                        //callback.success(json.token);
+                        if(body == "OK") callback?.success("OK");
+                        else callback?.error(body);
                     }
                     else {
-                        //callback.error();
+                        callback?.error(body);
                     }
                 }
             });
@@ -113,36 +119,14 @@ class remoteServer {
         }});
     }
 
-    sleep() {
-        this.__generalCall("sleep");
-    }
-    reboot() {
-        this.__generalCall("reboot");
-    }
-    shutdown() {
-        this.__generalCall("shutdown");
-    }
-    do() {
-        this.__generalCall("do");
-    }
-    logs() {
-        this.__generalCall("logs");
-    }
-    start_fs(calback) {
-        this.__generalCall("start-fs");
-    }
-    stop_fs() {
-        this.__generalCall("stop-fs");
-    }
-    start_tv(calback) {
-        this.__generalCall("start-tv");
-    }
-    reboot_pi() {        
-        shell.exec('sudo reboot');
-    }
-    hetzer() {
-        shell.exec('sh /git/tweeter/hetzer.sh');
-    }
+    reboot() { this.__generalCall("power/reboot"); }
+    shutdown() { this.__generalCall("power/shutdown"); }
+    startFileServer() { this.__generalCall("file_server/start"); }
+    stopFileServer() { this.__generalCall("file_server/stop"); }
+    startRdpServer() { this.__generalCall("rdp_server/start"); }
+    volume(amount) { this.__generalCall("media/volume", {"amount": amount} ); }
+    mute(option) { this.__generalCall("media/mute", {"option": option} ); }
+    play(src) { this.__generalCall("media/play", {"src": src}); }
 };
 
 module.exports = new remoteServer();
