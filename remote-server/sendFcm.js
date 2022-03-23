@@ -54,6 +54,36 @@ function sendFcm(token, title, content) {
     });
 }
 
+function sendMail(token, title, content) {
+    const options = {
+        uri: `${process.env.PI_SERVER}/mail_send`,
+        headers: {
+          'token': token
+        },
+        form: {
+            title: title,
+            body: content
+        }
+    };
+
+    request.post(options, function (error, response, body) {
+        if (error) {
+            console.log("error : " + error);
+        }
+        else {
+            const statusCode = response && response.statusCode;
+
+            if (statusCode == 200) {
+                console.log("success");
+            }
+            else {
+                console.log("error: " + statusCode);
+            }
+        }
+    });
+}
+
 establishment(function(token) {
     sendFcm(token, "알림 테스트!", "데스크탑에서 보내는 겁니다..");
+    sendMail(token, "알림 테스트!", "데스크탑에서 보내는 겁니다..");
 });

@@ -3,159 +3,188 @@
  */
 
 const secret = require('../common/secret');
-const logger = require('./../common/logger')
-const tokenManager = require('./../common/token-manager')
+const logger = require('./../common/logger');
+const tokenManager = require('./../common/token-manager');
+const path = require('./path.json');
+const audio = require('win-audio').speaker;
 
-function run(command) {
+// 명령어 실행
+function command(command) {
     const { exec } = require("child_process");
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            logger.e(`error: ${error.message}`);
+            logger.e(`command error: ${error.message}`);
             return;
         }
         if (stderr) {
-            logger.e(`stderr: ${stderr}`);
+            logger.e(`command stderr: ${stderr}`);
             return;
         }
-        logger.v(`stdout: ${stdout}`);
-    });
-}
-function runFile(command) {
-    const { execFile } = require("child_process");
-    execFile(command, (error, stdout, stderr) => {
-        if (error) {
-            logger.e(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            logger.e(`stderr: ${stderr}`);
-            return;
-        }
-        logger.v(`stdout: ${stdout}`);
+        logger.v(`command stdout: ${stdout}`);
     });
 }
 
-function getIp(req) {
+// 파일 실행
+function execute(command) {
+    const { execFile } = require("child_process");
+    execFile(command, (error, stdout, stderr) => {
+        if (error) {
+            logger.e(`execute error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            logger.e(`execute stderr: ${stderr}`);
+            return;
+        }
+        logger.v(`execute stdout: ${stdout}`);
+    });
+}
+
+// 접속자의 ipv4 주소를 반환
+function ipv4(req) {
     // return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress; // 프록시 중첩 헤더
     return req.connection.remoteAddress;
 }
 
-function unauthorized(res) {
-    res.statusCode = 403
-    res.message = "인증 정보가 잘못되었습니다."
-    res.json();
-}
-
-function checkLoggedIn(req, res) {
+// 로그인 유효성 검사
+function authorize(req, res) {
     let token = req.headers.token;
-    logger.v("token: " + token);
+    logger.v(`new token: ${token.slice(0, 20)}...`);
     if(!tokenManager.contains(token)) {
-        unauthorized(res);
+        res.statusCode = 403;
+        res.send("Unauthorized");
         return false;
     }
     else return true;
 }
 
-var lookup_ips = [];
+var lookup_ips = [];                                        // lookup을 요청한 사용자의 ip 수집
+
+
 module.exports = {
-    establishment: function (req, res, next) {
-        const ip = getIp(req);
-    
-        var result = { error : 0, message : ""}
-        if(secret.cr_key === req.headers.key) {
-            logger.v(`${ip} : establishment successed`);
-            result.token = tokenManager.new();
-            res.json(result);
-        }
-        else {
-            logger.v(`${ip} : establishment failed`);
-            unauthorized(res);
-        }
-    },
-    lookup: function (req, res, next) {
-        var ip = getIp(req);
-        if(!lookup_ips.includes(ip)) {
-            logger.v(`/lookup from ${ip}`);
-            lookup_ips.push(ip);
-        }
 
-        var result = { error : 0, message : ""}
-        res.json(result);
-    },
-    wakeup: function (req, res, next) {
-        logger.v(`/wakeup from ${getIp(req)}`);
-
-        if(!checkLoggedIn(req, res)) return;
-    
-        var result = { error : 0, message : ""}
-        res.json(result);
-    },
-    sleep: function (req, res, next) {
-        logger.v(`/sleep from ${getIp(req)}`);
-    
-        if(!checkLoggedIn(req, res)) return;
+    // spcm 제어
+    system: {
+        // 연결 수립
+        establishment: function (req, res, next) {
+            const ip = ipv4(req);
         
-        var result = { error : 0, message : ""}
-        run("rundll32.exe powrprof.dll SetSuspendState");
-        res.json(result);
+            var result = { error : 0, message : ""}
+            if(secret.cr_key === req.headers.key) {
+                logger.v(`${ip} : establishment successed`);
+                result.token = tokenManager.new();
+                res.json(result);
+            }
+            else {
+                logger.v(`${ip} : establishment failed`);
+                res.statusCode = 403;
+                res.send("Unauthorized");
+            }
+        },
+        // 업타임 체크
+        lookup: function (req, res, next) {
+            var ip = ipv4(req);
+            if(!lookup_ips.includes(ip)) {
+                logger.v(`/lookup from ${ip}`);
+                lookup_ips.push(ip);
+            }
+            res.send("OK");
+        }
     },
-    reboot: function (req, res, next) {
-        logger.v(`/reboot from ${getIp(req)}`);
-    
-        if(!checkLoggedIn(req, res)) return;
-    
-        var result = { error : 0, message : ""}
-        run("shutdown /r /f");
-        res.json(result);
+
+    // 전원 제어
+    power: {
+        reboot: function (req, res, next) {
+            logger.v(`/reboot from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            command("shutdown /r /f");
+            res.send("OK");
+        },
+        shutdown: function (req, res, next) {
+            logger.v(`/shutdown from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            command("shutdown /a");
+            command("shutdown /s /f");
+            res.send("OK");
+        }
     },
-    shutdown: function (req, res, next) {
-        logger.v(`/shutdown from ${getIp(req)}`);
-    
-        if(!checkLoggedIn(req, res)) return;
-    
-        var result = { error : 0, message : ""}
-        run("shutdown /s /f");
-        res.json(result);
-    },
+
+    // 명령어 수행 요청
     do: function (req, res, next) {
-        logger.v(`/do from ${getIp(req)}`);
-        
-        if(!checkLoggedIn(req, res)) return;
-    
-        var result = { error : 0, message : ""}
-    
-        res.json(result);
+        logger.v(`/do from ${ipv4(req)}`);
+        if(!authorize(req, res)) return;
+        // TODO: 구현
+        res.send("OK");
     },
-    start_fs: function (req, res, next) {
-        logger.v(`/start-fs from ${getIp(req)}`);
-    
-        if(!checkLoggedIn(req, res)) return;
-        
-        var result = { error : 0, message : ""}
-        path_webshare = "D:/SasarinoMARi/OneDrive/프로그램/[서버]/Berryz WebShare v0.952 rev1187/WebShare.exe"
-        runFile(path_webshare);
-        
-        res.json(result);
-    },
-    stop_fs: function (req, res, next) {
-        logger.v(`/stop-fs from ${getIp(req)}`);
-        
-        if(!checkLoggedIn(req, res)) return;
-        
-        var result = { error : 0, message : ""}
-        run("taskkill /f /im webshare.exe");
-        
-        res.json(result);
-    },
-    start_tv: function(req, res, next) {
-        logger.v(`/start-tv from ${getIp(req)}`);
 
-        if(!checkLoggedIn(req, res)) return;
-        
-        var result = { error : 0, message : ""}
-        path_webshare = "C:/Program Files (x86)/TeamViewer/TeamViewer.exe";
-        runFile(path_webshare);
-        
-        res.json(result);
+    // 파일 서버 제어
+    file_server: {
+        start: function (req, res, next) {
+            logger.v(`/start-fs from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            execute(path.webshare);
+            res.send("OK");
+        },
+        stop: function (req, res, next) {
+            logger.v(`/stop-fs from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            command("taskkill /f /im webshare.exe");
+            res.send("OK");
+        }
+    },
+
+    // rdp 서버 제어
+    rdp_server: {
+        start: function(req, res, next) {
+            logger.v(`/start-tv from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            execute(path.teamviewer);
+            res.send("OK");
+        }
+    },
+
+    media: {
+        volume: function(req, res, next) {
+            logger.v(`/volume from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            var volume = req.headers.amount;
+            if(volume===undefined) {
+                res.statusCode = 400;
+                res.send("Bad Request");
+                return;
+            };
+            volume = Number(volume);
+            logger.v(`Set system volume to ${volume}`);
+            audio.set(volume);
+            res.send("OK");
+        },
+        // 음소거 설정/해제, 0일때 해제, 1일때 뮤트, 이외는 토글
+        mute: function(req, res, next) {
+            logger.v(`/mute from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            var option = req.headers.option;
+            if(option===undefined) {
+                res.statusCode = 400;
+                res.send("Bad Request");
+                return;
+            };
+            if(option == 0) audio.unmute();
+            else if(option == 1) audio.mute();
+            else if(audio.isMuted()) audio.unmute(); else audio.mute();
+            res.send("OK");
+        },
+        play: function(req, res, next) {
+            logger.v(`/play from ${ipv4(req)}`);
+            if(!authorize(req, res)) return;
+            let src = req.headers.src;
+            if(src===undefined) {
+                res.statusCode = 400;
+                res.send("Bad Request");
+                return;
+            };
+            command(`"${path.chrome}" ${src}`);
+            logger.d(`play ${src}`);
+            res.send("OK");
+        }
     }
 }

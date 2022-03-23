@@ -10,71 +10,50 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#90000000" />
-
-    <include
-        android:id="@+id/loadingCover"
-        layout="@layout/loading_cover"
-        android:visibility="gone" />
+        android:background="#70000000" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:gravity="center"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/monitor"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/nunito_sans_semibold"
-                android:text="SasarinoMARi"
-                android:textColor="#ffffff"
-                android:textSize="27sp" />
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
-            android:background="#080808"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="15dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="현재 시스템 상태"
-                android:textColor="#ffffff"
-                android:textSize="13sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="90dp"
-                android:layout_height="1dp"
-                android:layout_margin="3dp"
-                android:background="#ffffff" />
+            android:orientation="horizontal"
+            android:paddingStart="16sp"
+            android:paddingEnd="16sp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/monitor"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/nunito_sans_semibold"
+                    android:text="SasarinoMARi"
+                    android:textSize="25sp"
+                    android:textColor="#eee"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center">
 
                 <ImageView
@@ -91,65 +70,40 @@
                     android:layout_marginStart="3dp"
                     android:fontFamily="@font/nunito_sans_semibold"
                     android:text="@string/Loading"
-                    android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="25sp"
+                    android:textColor="#eee" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="#10ffffff"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:orientation="horizontal">
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:fontFamily="@font/nunito_sans_regular"
-                android:text="원격 컴퓨터에서 실행할 명령을 선택하세요."
-                android:textColor="#ffffff" />
-
-            <Button
+            <ImageView
+                android:id="@+id/button_launch_memoboard"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/icon_memoboard"/>
+            <ImageView
+                android:id="@+id/button_launch_diary"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/icon_diary"/>
+            <ImageView
                 android:id="@+id/button_wakeup"
-                android:layout_width="200dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:background="#00A889"
-                android:fontFamily="@font/nunito_sans_regular"
-                android:text="@string/Wakeup"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/button_shutdown"
-                android:layout_width="200dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:background="#EF3D56"
-                android:fontFamily="@font/nunito_sans_regular"
-                android:text="@string/Shutdown"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/button_more"
-                android:layout_width="200dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:background="#D9A22E"
-                android:fontFamily="@font/nunito_sans_regular"
-                android:text="@string/More"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@mipmap/ic_launcher"/>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
+    </LinearLayout>
 
 </RelativeLayout>

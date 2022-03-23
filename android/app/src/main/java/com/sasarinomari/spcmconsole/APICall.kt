@@ -1,8 +1,6 @@
 package com.sasarinomari.spcmconsole
 
 import android.content.Context
-import android.util.Log
-import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,7 +55,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.pc_stop))
+                        onMessage(context.getString(R.string.Confirm_Shutdown))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -80,7 +78,7 @@ abstract class APICall(private val context: Context) {
             return
         }
 
-        val call = APIInterface.api.sleep(token!!)
+        val call = APIInterface.api.reboot(token!!)
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -123,7 +121,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.pc_start))
+                        onMessage(context.getString(R.string.Confirm_Wakeup))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -183,7 +181,7 @@ abstract class APICall(private val context: Context) {
             return
         }
 
-        val call = APIInterface.api.start_fs(token!!)
+        val call = APIInterface.api.startFileServer(token!!)
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -193,7 +191,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.fserver_start))
+                        onMessage(context.getString(R.string.Confirm_FileServer))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -208,40 +206,6 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun stop_fs() {
-        if (token == null) {
-            establishment {
-                stop_fs()
-            }
-            return
-        }
-
-        val call = APIInterface.api.stop_fs(token!!)
-        call.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                onError(t.toString())
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    val result = response.body()!!
-                    if (result == "OK") {
-                        onMessage("파일 서버 중단 요청을 보냈습니다.")
-                    } else {
-                        onError(context.getString(R.string.server_error))
-                    }
-                } else {
-                    if (response.code() == 403) {
-                        establishment {
-                            stop_fs()
-                        }
-                    } else onMessage("${response.code()} : ${response.message()}")
-                }
-            }
-        })
-    }
-
-
 
     fun start_tv() {
         if (token == null) {
@@ -251,7 +215,7 @@ abstract class APICall(private val context: Context) {
             return
         }
 
-        val call = APIInterface.api.start_tv(token!!)
+        val call = APIInterface.api.startRdpServer(token!!)
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -261,7 +225,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.rdpserver_start))
+                        onMessage(context.getString(R.string.Confirm_RdpServer))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -294,7 +258,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.rdpserver_start))
+                        onMessage(context.getString(R.string.Confirm_RdpServer))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -327,7 +291,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.hetzer_start))
+                        onMessage(context.getString(R.string.Confirm_Hetzer))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -402,6 +366,78 @@ abstract class APICall(private val context: Context) {
 
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
+            }
+        })
+    }
+
+
+    fun volume(amount: Int) {
+        if (token == null) {
+            establishment { volume(amount) }
+            return
+        }
+
+        val call = APIInterface.api.volume(token!!, amount)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") {   }
+                    else { onError(context.getString(R.string.server_error)) }
+                } else {
+                    if (response.code() == 403) { establishment { volume(amount) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun play(src: String) {
+        if (token == null) {
+            establishment { play(src) }
+            return
+        }
+
+        val call = APIInterface.api.play(token!!, src)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) { onError(t.toString()) }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") { onMessage(context.getString(R.string.Confirm_Play)) }
+                    else { onError(context.getString(R.string.server_error)) }
+                } else {
+                    if (response.code() == 403) { establishment { play(src) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun mute(option: Int = 2) {
+        if (token == null) {
+            establishment { mute(option) }
+            return
+        }
+
+        val call = APIInterface.api.mute(token!!, option)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) { onError(t.toString()) }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") { onMessage(context.getString(R.string.Confirm_Mute)) }
+                    else { onError(context.getString(R.string.server_error)) }
+                } else {
+                    if (response.code() == 403) { establishment { mute(option) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
             }
         })
     }

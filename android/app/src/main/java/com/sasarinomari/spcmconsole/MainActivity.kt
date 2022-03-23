@@ -1,17 +1,15 @@
 package com.sasarinomari.spcmconsole
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.view.WindowManager
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : Activity(), APICall.lookupInterface {
+class MainActivity : AppCompatActivity(), APICall.lookupInterface {
     private val api = object : APICall(this) {
         override fun onError(message: String) {
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
@@ -24,42 +22,22 @@ class MainActivity : Activity(), APICall.lookupInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
         setContentView(R.layout.activity_main)
 
+        button_launch_memoboard.setOnClickListener {
+            val launchIntent = packageManager.getLaunchIntentForPackage("com.sasarinomari.memoboard")
+            launchIntent?.let { startActivity(it) }
+        }
+        button_launch_diary.setOnClickListener {
+            val launchIntent = packageManager.getLaunchIntentForPackage("com.sasarinomari.diary")
+            launchIntent?.let { startActivity(it) }
+        }
+
         button_wakeup.setOnClickListener {
-            confirm(getString(R.string.pc_start)) { api.wakeup() }
+            confirm(getString(R.string.Confirm_Wakeup)) { api.wakeup() }
         }
 
-        button_shutdown.setOnClickListener {
-            confirm(getString(R.string.pc_stop)) { api.shutdown() }
-        }
-
-        button_more.setOnClickListener {
-            val popupMenu = PopupMenu(this@MainActivity, it)
-            menuInflater.inflate(R.menu.menu_main_actions, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId) {
-                    R.id.action_fserver_start -> {
-                        confirm(getString(R.string.fserver_start)) { api.start_fs() }
-                    }
-                    R.id.action_rdpserver_start -> {
-                        confirm(getString(R.string.rdpserver_start)) { api.start_tv() }
-                    }
-                    R.id.action_raspi_reboot -> {
-                        confirm(getString(R.string.raspi_reboot)) { api.reboot_pi() }
-                    }
-                    R.id.action_hetzer_start -> {
-                        confirm(getString(R.string.hetzer_start)) {api.hetzer()}
-                    }
-                    else -> {
-
-                    }
-                }
-                return@setOnMenuItemClickListener false
-            }
-            popupMenu.show()
-        }
+        buildAdapter()
 
         // FCM 토큰 갱신
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
@@ -101,16 +79,6 @@ class MainActivity : Activity(), APICall.lookupInterface {
         super.onPause()
         focused = false
     }
-    private fun setWindowFlag(bits: Int, on: Boolean) {
-        val win = window ?: return
-        val winParams = win.attributes
-        if (on) {
-            winParams.flags = winParams.flags or bits
-        } else {
-            winParams.flags = winParams.flags and bits.inv()
-        }
-        win.attributes = winParams
-    }
 
     override fun onDead() {
         status_text.text = getString(R.string.Offline)
@@ -131,6 +99,38 @@ class MainActivity : Activity(), APICall.lookupInterface {
         val c = Color.parseColor("#ffffff")
         status_text.setTextColor(c)
         status_icon.setColorFilter(c)
+    }
+
+    private fun buildAdapter(): ListAdapter? {
+        val commandList = arrayOf(
+            getString(R.string.Run_Shutdown),
+            getString(R.string.Run_Hetzer),
+            getString(R.string.Run_RdpServer),
+            getString(R.string.Run_FileServer),
+            getString(R.string.Run_PiReboot),
+            getString(R.string.Run_Volume)
+        )
+        val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
+        for (i in commandList.indices) {
+            val hashMap: HashMap<String, String> = HashMap()
+            hashMap["text"] =commandList[i]
+            arrayList.add(hashMap)
+        }
+        val from = arrayOf("text")
+        val to = intArrayOf(R.id.text_command_name)
+        val adapter = SimpleAdapter(this, arrayList, R.layout.item_command, from, to)
+        listview.adapter = adapter
+        listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+            when(i) {
+                0 -> { confirm(getString(R.string.Confirm_Shutdown)) { api.shutdown() } }
+                1 -> { confirm(getString(R.string.Confirm_Hetzer)) {api.hetzer()} }
+                2 -> { confirm(getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
+                3 -> { confirm(getString(R.string.Confirm_FileServer)) { api.start_fs() } }
+                4 -> { confirm(getString(R.string.Confirm_PiReboot)) { api.reboot_pi() } }
+                5 -> { VolumeFragmentDialog(api).show(supportFragmentManager, "Volume Control") }
+            }
+        }
+        return adapter
     }
 
 }
