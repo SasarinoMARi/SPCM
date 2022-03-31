@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
+import com.sasarinomari.spcmconsole.Memoboard.CreateTaskFragmentDialog
+import com.sasarinomari.spcmconsole.Memoboard.TaskModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -108,7 +110,8 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
             getString(R.string.Run_RdpServer),
             getString(R.string.Run_FileServer),
             getString(R.string.Run_PiReboot),
-            getString(R.string.Run_Volume)
+            getString(R.string.Run_Volume),
+            getString(R.string.Run_CreateTask)
         )
         val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
         for (i in commandList.indices) {
@@ -128,6 +131,7 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
                 3 -> { confirm(getString(R.string.Confirm_FileServer)) { api.start_fs() } }
                 4 -> { confirm(getString(R.string.Confirm_PiReboot)) { api.reboot_pi() } }
                 5 -> { VolumeFragmentDialog(api).show(supportFragmentManager, "Volume Control") }
+                6 -> { CreateTaskFragmentDialog(api).show(supportFragmentManager, "Create Task") }
             }
         }
         return adapter

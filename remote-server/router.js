@@ -104,7 +104,7 @@ module.exports = {
             logger.v(`/shutdown from ${ipv4(req)}`);
             if(!authorize(req, res)) return;
             command("shutdown /a");
-            command("shutdown /s /f");
+            command("shutdown /s /f -t 5");
             res.send("OK");
         }
     },

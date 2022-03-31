@@ -1,6 +1,8 @@
 package com.sasarinomari.spcmconsole
 
 import android.content.Context
+import android.util.Log
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,6 +14,8 @@ abstract class APICall(private val context: Context) {
     abstract fun onMessage(message: String)
 
     private var token: String? = null
+    private var mb_token = "8]&Ynz#?)K&3h:"
+
 
     fun establishment(callback: () -> Unit) {
         val c = Calendar.getInstance()
@@ -438,6 +442,28 @@ abstract class APICall(private val context: Context) {
                     if (response.code() == 403) { establishment { mute(option) } }
                     else onMessage("${response.code()} : ${response.message()}")
                 }
+            }
+        })
+    }
+
+    /**
+     * 2022-03-31 최종 커밋 기준 복붙
+     */
+    fun createTask(task: com.sasarinomari.spcmconsole.Memoboard.TaskModel, callback: () -> Unit) {
+        val call = com.sasarinomari.spcmconsole.Memoboard.APIInterface.api.task_create(mb_token, task)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    Log.d("API_NEW_TASK", result.toString())
+                    callback()
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                onError(t.toString())
             }
         })
     }
