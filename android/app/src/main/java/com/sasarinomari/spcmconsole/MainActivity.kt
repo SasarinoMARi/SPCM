@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        layout_remote_status.setOnClickListener {
+            RemotePowerManagementFragmentDialog(api).show(supportFragmentManager, "Remote Power Management")
+        }
+
         button_launch_memoboard.setOnClickListener {
             val launchIntent = packageManager.getLaunchIntentForPackage("com.sasarinomari.memoboard")
             launchIntent?.let { startActivity(it) }
@@ -36,7 +40,6 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         }
 
         button_wakeup.setOnClickListener {
-            confirm(getString(R.string.Confirm_Wakeup)) { api.wakeup() }
         }
 
         buildAdapter()
@@ -105,8 +108,6 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
 
     private fun buildAdapter(): ListAdapter? {
         val commandList = arrayOf(
-            getString(R.string.Run_Shutdown),
-            getString(R.string.Run_Hetzer),
             getString(R.string.Run_RdpServer),
             getString(R.string.Run_FileServer),
             getString(R.string.Run_PiReboot),
@@ -125,13 +126,11 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         listview.adapter = adapter
         listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
             when(i) {
-                0 -> { confirm(getString(R.string.Confirm_Shutdown)) { api.shutdown() } }
-                1 -> { confirm(getString(R.string.Confirm_Hetzer)) {api.hetzer()} }
-                2 -> { confirm(getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
-                3 -> { confirm(getString(R.string.Confirm_FileServer)) { api.start_fs() } }
-                4 -> { confirm(getString(R.string.Confirm_PiReboot)) { api.reboot_pi() } }
-                5 -> { VolumeFragmentDialog(api).show(supportFragmentManager, "Volume Control") }
-                6 -> { CreateTaskFragmentDialog(api).show(supportFragmentManager, "Create Task") }
+                0 -> { confirm(getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
+                1 -> { confirm(getString(R.string.Confirm_FileServer)) { api.start_fs() } }
+                2 -> { confirm(getString(R.string.Confirm_PiReboot)) { api.reboot_pi() } }
+                3 -> { VolumeFragmentDialog(api).show(supportFragmentManager, "Volume Control") }
+                4 -> { CreateTaskFragmentDialog(api).show(supportFragmentManager, "Create Task") }
             }
         }
         return adapter

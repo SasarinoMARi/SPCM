@@ -7,15 +7,15 @@
     <string name="More">더보기</string>
     <string name="MoreContextTitle">실행할 동작을 선탁하세요</string>
 
-    <string name="Run_Shutdown">시스템 종료</string>
-    <string name="Run_Hetzer">트윗 삭제 실시</string>
+    <string name="Run_Boot">컴퓨터 전원 켜기</string>
+    <string name="Run_Shutdown">컴퓨터 전원 끄기</string>
     <string name="Run_RdpServer">팀뷰어 서버 기동</string>
     <string name="Run_FileServer">파일 공유 서버 기동</string>
     <string name="Run_PiReboot">라즈베리 서버 재부팅</string>
     <string name="Run_Volume">PC 볼륨 조절</string>
 
-    <string name="Confirm_Wakeup">원격 컴퓨터 전원을 켭니다.</string>
-    <string name="Confirm_Shutdown">원격 컴퓨터를 종료합니다.</string>
+    <string name="Confirm_Wakeup">컴퓨터 전원을 켭니다.</string>
+    <string name="Confirm_Shutdown">컴퓨터 전원을 끕니다.</string>
     <string name="Confirm_Hetzer">정기 트윗 청소를 수동으로 시작합니다.</string>
     <string name="Confirm_RdpServer">원격 데스크탑 서버를 시작합니다.</string>
     <string name="Confirm_FileServer">파일 공유 서버를 시작합니다.</string>
@@ -24,7 +24,7 @@
     <string name="server_error">통신 에러가 발생했습니다.</string>
     <string name="Confirm_Play">링크를 데스크탑에 보냅니다.</string>
     <string name="Mute">음소거</string>
-    <string name="VolumeSeekbar">볼륨 조절 막대</string>
+    <string name="VolumeSeekbar">시스템 볼륨 조절</string>
     <string name="Confirm_Mute">음소거 설정을 변경합니다.</string>
     <string name="Task_Created">메모를 추가했습니다.</string>
     <string name="Run_CreateTask">할 일 추가하기</string>

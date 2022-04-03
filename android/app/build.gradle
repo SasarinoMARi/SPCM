@@ -46,10 +46,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 
-    // 예쁜 버튼 라이브러리
-    implementation 'com.ornach.nobobutton:nobobutton:1.6'
-
     // 파이어베이스
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-messaging:23.0.0'
+
+    // UI 라이브러리
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

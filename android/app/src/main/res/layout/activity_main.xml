@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="#eee"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layout_remote_status"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#70000000" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:foreground="?android:attr/selectableItemBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="16sp"
-            android:paddingEnd="16sp">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -42,16 +39,12 @@
                     android:layout_marginLeft="10dp"
                     android:fontFamily="@font/nunito_sans_semibold"
                     android:text="SasarinoMARi"
-                    android:textSize="25sp"
-                    android:textColor="#eee"/>
+                    android:textColor="#000"
+                    android:textSize="25sp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
             <LinearLayout
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -70,40 +63,43 @@
                     android:layout_marginStart="3dp"
                     android:fontFamily="@font/nunito_sans_semibold"
                     android:text="@string/Loading"
-                    android:textSize="25sp"
-                    android:textColor="#eee" />
+                    android:textColor="#333"
+                    android:textSize="25sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/button_launch_memoboard"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/icon_memoboard"/>
-            <ImageView
-                android:id="@+id/button_launch_diary"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/icon_diary"/>
-            <ImageView
-                android:id="@+id/button_wakeup"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/ic_launcher"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/button_launch_memoboard"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_memoboard" />
 
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/button_launch_diary"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_diary" />
+
+        <ImageView
+            android:id="@+id/button_wakeup"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/ic_launcher" />
 
     </LinearLayout>
 
-</RelativeLayout>
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
+

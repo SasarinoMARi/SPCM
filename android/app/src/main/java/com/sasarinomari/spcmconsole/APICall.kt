@@ -41,10 +41,10 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun shutdown() {
+    fun shutdown(callback: ()->Unit) {
         if (token == null) {
             establishment {
-                shutdown()
+                shutdown(callback)
             }
             return
         }
@@ -66,7 +66,7 @@ abstract class APICall(private val context: Context) {
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            shutdown()
+                            shutdown(callback)
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -107,10 +107,10 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun wakeup() {
+    fun wakeup(callback: ()->Unit) {
         if (token == null) {
             establishment {
-                wakeup()
+                wakeup(callback)
             }
             return
         }
@@ -132,7 +132,7 @@ abstract class APICall(private val context: Context) {
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            wakeup()
+                            wakeup(callback)
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
