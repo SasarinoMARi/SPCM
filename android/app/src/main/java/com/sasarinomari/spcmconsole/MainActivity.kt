@@ -1,13 +1,12 @@
 package com.sasarinomari.spcmconsole
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sasarinomari.spcmconsole.Memoboard.CreateTaskFragmentDialog
-import com.sasarinomari.spcmconsole.Memoboard.TaskModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -27,19 +26,7 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         setContentView(R.layout.activity_main)
 
         layout_remote_status.setOnClickListener {
-            RemotePowerManagementFragmentDialog(api).show(supportFragmentManager, "Remote Power Management")
-        }
-
-        button_launch_memoboard.setOnClickListener {
-            val launchIntent = packageManager.getLaunchIntentForPackage("com.sasarinomari.memoboard")
-            launchIntent?.let { startActivity(it) }
-        }
-        button_launch_diary.setOnClickListener {
-            val launchIntent = packageManager.getLaunchIntentForPackage("com.sasarinomari.diary")
-            launchIntent?.let { startActivity(it) }
-        }
-
-        button_wakeup.setOnClickListener {
+            RemoteComputerFragmentDialog(api).show(supportFragmentManager, "Remote Power Management")
         }
 
         buildAdapter()
@@ -101,18 +88,16 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
 
     fun setStatusToLoading() {
         status_text.text = getString(R.string.Loading)
-        val c = Color.parseColor("#ffffff")
+        val c = Color.parseColor("#000000")
         status_text.setTextColor(c)
         status_icon.setColorFilter(c)
     }
 
     private fun buildAdapter(): ListAdapter? {
         val commandList = arrayOf(
-            getString(R.string.Run_RdpServer),
-            getString(R.string.Run_FileServer),
-            getString(R.string.Run_PiReboot),
-            getString(R.string.Run_Volume),
-            getString(R.string.Run_CreateTask)
+            getString(R.string.Run_MemoboardPanel),
+            "일기 작성",
+            getString(R.string.Run_PiReboot)
         )
         val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
         for (i in commandList.indices) {
@@ -126,11 +111,16 @@ class MainActivity : AppCompatActivity(), APICall.lookupInterface {
         listview.adapter = adapter
         listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
             when(i) {
-                0 -> { confirm(getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
-                1 -> { confirm(getString(R.string.Confirm_FileServer)) { api.start_fs() } }
+                0 -> {
+                    MemoboardPanelFragmentDialog(api, supportFragmentManager)
+                        .show(supportFragmentManager, "Create Task")
+                }
+                1 -> {
+                    val intent = Intent("com.sasarinomari.diary.write")
+                    startActivity(intent)
+                }
                 2 -> { confirm(getString(R.string.Confirm_PiReboot)) { api.reboot_pi() } }
-                3 -> { VolumeFragmentDialog(api).show(supportFragmentManager, "Volume Control") }
-                4 -> { CreateTaskFragmentDialog(api).show(supportFragmentManager, "Create Task") }
+
             }
         }
         return adapter
