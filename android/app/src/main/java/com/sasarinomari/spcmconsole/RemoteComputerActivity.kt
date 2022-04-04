@@ -44,25 +44,11 @@ class RemoteComputerActivity : AppCompatActivity() {
         listview.adapter = adapter
         listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
             when(i) {
-                0 -> { confirm(getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
-                1 -> { confirm(getString(R.string.Confirm_FileServer)) { api.start_fs() } }
+                0 -> { SPCMConsole.confirm(this, getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
+                1 -> { SPCMConsole.confirm(this,  getString(R.string.Confirm_FileServer)) { api.start_fs() } }
 
             }
         }
         return adapter
-    }
-
-    private fun confirm(text: String, action: ()-> Unit) {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage(text)
-            .setCancelable(true)
-            .setPositiveButton(android.R.string.yes) { d, id ->
-                action()
-            }
-            .setNegativeButton(android.R.string.no) { d, id ->
-                d.dismiss()
-            }
-        val alert = builder.create()
-        alert.show()
     }
 }

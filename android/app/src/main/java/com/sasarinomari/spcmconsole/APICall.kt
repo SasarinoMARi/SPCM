@@ -142,36 +142,36 @@ abstract class APICall(private val context: Context) {
 
 
     interface lookupInterface {
-        fun onDead()
-        fun onLive()
+        fun onComputerOffline()
+        fun onComputerOnline()
+        fun onServerOffline()
     }
 
     fun lookup(i: lookupInterface) {
         val call = APIInterface.api.lookup()
         call.enqueue(object : Callback<String> {
             private fun dead() {
-                i.onDead()
+                i.onComputerOffline()
             }
 
             private fun live() {
-                i.onLive()
+                i.onComputerOnline()
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                dead()
+                i.onServerOffline()
             }
 
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "Online") {
-                        live()
+                        i.onComputerOnline()
                     } else {
-                        dead()
+                        i.onComputerOffline()
                     }
                 } else {
-                    // TODO: Http Response 처리
-                    dead()
+                    i.onServerOffline()
                 }
             }
         })
@@ -247,7 +247,7 @@ abstract class APICall(private val context: Context) {
     fun reboot_pi() {
         if (token == null) {
             establishment {
-                start_tv()
+                reboot_pi()
             }
             return
         }
@@ -262,7 +262,7 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.Confirm_RdpServer))
+                        onMessage(context.getString(R.string.Confirm_PiReboot))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
@@ -270,39 +270,6 @@ abstract class APICall(private val context: Context) {
                     if (response.code() == 403) {
                         establishment {
                             reboot_pi()
-                        }
-                    } else onMessage("${response.code()} : ${response.message()}")
-                }
-            }
-        })
-    }
-    
-    fun hetzer() {
-        if (token == null) {
-            establishment {
-                hetzer()
-            }
-            return
-        }
-
-        val call = APIInterface.api.hetzer(token!!)
-        call.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                onError(t.toString())
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    val result = response.body()!!
-                    if (result == "OK") {
-                        onMessage(context.getString(R.string.Confirm_Hetzer))
-                    } else {
-                        onError(context.getString(R.string.server_error))
-                    }
-                } else {
-                    if (response.code() == 403) {
-                        establishment {
-                            hetzer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -463,6 +430,24 @@ abstract class APICall(private val context: Context) {
             }
 
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                onError(t.toString())
+            }
+        })
+    }
+
+    fun getTasks(options: com.sasarinomari.spcmconsole.Memoboard.GetTaskOptions, callback: (Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>)->Unit) {
+        val call = com.sasarinomari.spcmconsole.Memoboard.APIInterface.api.task_list(mb_token!!, options)
+        call.enqueue(object : Callback<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>> {
+            override fun onResponse(call: Call<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>>, response: Response<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>>) {
+                if (response.isSuccessful) {
+                    val tasks = response.body()!!
+                    callback(tasks)
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>>, t: Throwable) {
                 onError(t.toString())
             }
         })

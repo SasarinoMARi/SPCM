@@ -1,5 +1,6 @@
 package com.sasarinomari.spcmconsole
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,20 @@ class MemoboardPanelFragmentDialog(
 
         rootView.button_create_task.setOnClickListener {
             CreateTaskFragmentDialog(api).show(supportFragmentManager, "Create Task")
+            this.dismiss()
+        }
+
+        rootView.button_open_diary.setOnClickListener {
+            val launchIntent =
+                context?.packageManager?.getLaunchIntentForPackage("com.sasarinomari.diary")
+            launchIntent?.let { startActivity(it) }
+            this.dismiss()
+        }
+
+        rootView.button_write_diary.setOnClickListener {
+            val intent = Intent("com.sasarinomari.diary.write")
+            startActivity(intent)
+            this.dismiss()
         }
 
         this.dialog?.setTitle("Memoboard Panel")
