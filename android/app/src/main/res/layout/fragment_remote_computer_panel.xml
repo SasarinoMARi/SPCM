@@ -10,10 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
+        android:fontFamily="@font/nunito_sans_semibold"
         android:text="@string/PanelName_RemoteDesktop"
         android:textColor="#000"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="15sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -44,6 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:fontFamily="@font/nunito_sans_light"
                     android:text="@string/Run_Boot"
                     android:textColor="#000" />
             </LinearLayout>
@@ -73,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:fontFamily="@font/nunito_sans_light"
                     android:text="@string/Run_Shutdown"
                     android:textColor="#000" />
             </LinearLayout>
@@ -94,10 +96,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_regular"
                     android:text="@string/VolumeSeekbar"
                     android:textColor="#000"
-                    android:textSize="10dp"
-                    android:textStyle="bold" />
+                    android:textSize="10dp" />
 
                 <LinearLayout
                     android:layout_width="250dp"
@@ -150,6 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:fontFamily="@font/nunito_sans_light"
                     android:text="@string/AdvancedControl"
                     android:textColor="#000" />
             </LinearLayout>

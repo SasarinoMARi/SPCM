@@ -11,8 +11,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
         android:layout_marginBottom="6dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/header" />
 
     <LinearLayout
@@ -76,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
-                        android:fontFamily="@font/nunito_sans_semibold"
+                        android:fontFamily="@font/nunito_sans_regular"
                         android:text="@string/Loading"
                         android:textColor="#333"
                         android:textSize="18sp" />
@@ -141,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
-                        android:fontFamily="@font/nunito_sans_semibold"
+                        android:fontFamily="@font/nunito_sans_regular"
                         android:text="@string/Loading"
                         android:textColor="#333"
                         android:textSize="18sp" />
@@ -152,10 +152,15 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/layout_dday"
+        layout="@layout/fragment_payday_dday" />
+
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:divider="#00000000" />
 

@@ -32,4 +32,6 @@
     <string name="AdvancedControl">기타 조작</string>
     <string name="WriteDiary">일기 쓰기</string>
     <string name="PanelName_RaspberryServer">라즈베리 서버 제어 패널</string>
+    <string name="PanelName_FoodDispenser">무작위 식사 메뉴 선택기</string>
+    <string name="RemainToPayDay">월급까지</string>
 </resources>
