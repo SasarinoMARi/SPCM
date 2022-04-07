@@ -9,6 +9,7 @@ const remote_server = require('./remote-server-api');
 const shell = require('shelljs');
 const fcm = require('./fcm');
 const mail = require('./email');
+const fd = require('./food_dispenser/food_api')
 
 // 접속자의 ipv4 주소를 반환
 function ipv4(req) {
@@ -150,13 +151,13 @@ module.exports = {
         start: function (req, res, next) {
             logger.v(`/start-fs from ${ipv4(req)}`);
             if(!authorize(req, res)) return;
-            remote_server.start_fs();
+            remote_server.startFileServer();
             res.send("OK");
         },
         stop: function (req, res, next) {
             logger.v(`/stop-fs from ${ipv4(req)}`);
             if(!authorize(req, res)) return;
-            remote_server.stop_fs();
+            remote_server.stopFileServer();
             res.send("OK");
         }
     },
@@ -166,7 +167,7 @@ module.exports = {
         start: function (req, res, next) {
             logger.v(`/start-tv from ${ipv4(req)}`);
             if(!authorize(req, res)) return;
-            remote_server.start_tv();
+            remote_server.startRdpServer();
             res.send("OK");
         }    
     },
@@ -220,5 +221,14 @@ module.exports = {
     
         res.send("OK"); // 트청 끝난 후에 반환하면 타임아웃남
         shell.exec('sh /git/tweeter/hetzer.sh');
+    },
+
+    food_dispenser: function(req, res, next) {
+        logger.v(`/food_dispenser from ${ipv4(req)}`);
+        
+        if(!authorize(req, res)) return;
+        fd.random(function(result) {
+            res.json(result); 
+        }, logger.e);
     }
 }

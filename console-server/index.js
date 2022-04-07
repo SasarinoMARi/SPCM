@@ -46,6 +46,7 @@ app.get('/media/mute', router.media.mute);
 app.get('/media/play', router.media.play);
 
 app.get('/hetzer', router.hetzer);
+app.get('/food_dispenser', router.food_dispenser);
 
 var port = process.env.PORT;
 var server = app.listen(port, function () {

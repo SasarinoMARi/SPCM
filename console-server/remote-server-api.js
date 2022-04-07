@@ -41,7 +41,7 @@ class remoteServer {
     async lookup(callback) {
         const options = {
             uri: baseUrl + "lookup",
-            timeout: 1000 * 5
+            timeout: 1000 * 2
         };
 
         let request = require("./await-request")
