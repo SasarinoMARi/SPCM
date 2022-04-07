@@ -1,8 +1,6 @@
     package com.sasarinomari.spcmconsole
 
-    import android.app.AlertDialog
-    import android.graphics.Color
-    import android.os.Build
+    import android.content.Intent
     import android.os.Bundle
     import android.view.View
     import android.widget.*
@@ -25,12 +23,13 @@
             }
         }
         private lateinit var serverStatusUI: ServerStatusUI
+        private val panel_payday = PayDayDday(api, this)
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
             initServerStatusUI()
-            PayDayDday(api, this).setDdayView(layout_dday)
+            panel_payday.init(layout_dday)
 
             layout_computer_status.setOnClickListener {
                 RemoteComputerFragmentDialog(api).show(
@@ -81,6 +80,7 @@
             serverStatusUI.setStatusToLoading()
             focused = true
             startStatusChecker()
+            panel_payday.reload()
         }
 
         override fun onPause() {
@@ -91,7 +91,7 @@
 
         private fun buildAdapter(): ListAdapter? {
             val commandList = arrayOf(
-                getString(R.string.Run_MemoboardPanel),
+                getString(R.string.WriteDiary),
                 "무작위 식사"
             )
             val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
@@ -107,8 +107,8 @@
             listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
                 when (i) {
                     0 -> {
-                        MemoboardPanelFragmentDialog(api, supportFragmentManager)
-                            .show(supportFragmentManager, "Create Task")
+                        val intent = Intent("com.sasarinomari.diary.write")
+                        startActivity(intent)
                     }
                     1 -> {
                         FoodDispenserFragmentDialog(api).show(supportFragmentManager, "Food Dispenser")
@@ -117,14 +117,4 @@
             }
             return adapter
         }
-
-        private fun fetchTasks() {
-            val option = com.sasarinomari.spcmconsole.Memoboard.GetTaskOptions()
-            Thread {
-                api.getTasks(option) {
-
-                }
-            }.start()
-        }
-
     }
