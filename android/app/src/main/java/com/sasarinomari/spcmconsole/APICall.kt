@@ -2,6 +2,7 @@ package com.sasarinomari.spcmconsole
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -407,6 +408,30 @@ abstract class APICall(private val context: Context) {
                     else { onError(context.getString(R.string.server_error)) }
                 } else {
                     if (response.code() == 403) { establishment { mute(option) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun foodDispenser(callback:(FoodModel)->Unit) {
+        if (token == null) {
+            establishment { foodDispenser(callback) }
+            return
+        }
+
+        val call = APIInterface.api.foodDispenser(token!!)
+        call.enqueue(object : Callback<FoodModel> {
+            override fun onFailure(call: Call<FoodModel>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<FoodModel>, response: Response<FoodModel>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    callback(result)
+                } else {
+                    if (response.code() == 403) { establishment { foodDispenser(callback) } }
                     else onMessage("${response.code()} : ${response.message()}")
                 }
             }

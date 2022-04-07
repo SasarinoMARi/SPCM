@@ -2,6 +2,8 @@ package com.sasarinomari.spcmconsole
 
 import android.database.Observable
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -48,6 +50,9 @@ interface APIInterface {
     @POST("noti/update_fcm_token")
     fun updateFcmToken(@Header("token") token:String, @Body body: updateFcmTokenParam): Call<String>
     class updateFcmTokenParam(val token: String)
+
+    @GET("food_dispenser")
+    fun foodDispenser(@Header("token") token:String): Call<FoodModel>
 
     companion object {
         private val BASE_URL = ""

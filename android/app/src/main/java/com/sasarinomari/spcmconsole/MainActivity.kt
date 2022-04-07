@@ -92,7 +92,7 @@
         private fun buildAdapter(): ListAdapter? {
             val commandList = arrayOf(
                 getString(R.string.WriteDiary),
-                "무작위 식사"
+                "오늘의 메뉴 추천"
             )
             val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
             for (i in commandList.indices) {
