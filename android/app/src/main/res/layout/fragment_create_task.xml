@@ -8,14 +8,15 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="24dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:text="새 할 일 추가"
             android:textColor="#000"
-            android:textSize="10dp" />
+            android:textSize="12dp" />
 
         <EditText
             android:id="@+id/text_name"
@@ -24,6 +25,8 @@
             android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:hint="제목"
+            android:imeOptions="actionNext"
+            android:inputType="text"
             android:maxLength="50"
             android:textSize="20sp" />
 
@@ -39,21 +42,38 @@
 
 
         <LinearLayout
-            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:id="@+id/button_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="12dp"
+                android:layout_marginStart="-12dp"
+                android:src="@drawable/icon_calendar_range" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <TextView
                 android:id="@+id/button_submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="등록" />
+                android:fontFamily="@font/nunito_sans_semibold"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="24dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="12dp"
+                android:text="@string/apply"
+                android:textColor="#000" />
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

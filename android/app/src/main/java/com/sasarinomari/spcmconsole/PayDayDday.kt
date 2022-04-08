@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import com.sasarinomari.spcmconsole.Memoboard.CreateTaskFragmentDialog
 import com.sasarinomari.spcmconsole.Memoboard.GetTaskOptions
 import com.sasarinomari.spcmconsole.Memoboard.TaskModel
@@ -64,6 +65,8 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
         option.Limit = 5
 
         api.getTasks(option) {
+            view.removeAllViews()
+
             var height = 0
             for(item in it) {
                 height += inflateMemoboard(view, item)
@@ -84,10 +87,6 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
         view.text_task_description.text = item.Description
         if(item.Description.isNullOrEmpty()) view.text_task_description.visibility = View.GONE
 
-        view.setOnClickListener {
-            // TODO: idx로 메모보드 호출
-        }
-
         if(item.Date != null) {
             val leftDays = getTaskLeftDays(item)
             view.text_task_left_days.text = getTaskLeftDayText(leftDays)
@@ -95,7 +94,6 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
         else {
             view.text_task_left_days.visibility = View.GONE
         }
-
 
         parent.addView(view)
 
@@ -129,5 +127,4 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
         val diff = destination.time - today.time
         return diff / (24 * 60 * 60 * 1000)
     }
-
 }
