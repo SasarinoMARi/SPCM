@@ -9,7 +9,8 @@ const remote_server = require('./remote-server-api');
 const shell = require('shelljs');
 const fcm = require('./fcm');
 const mail = require('./email');
-const fd = require('./food_dispenser/food_api')
+const fd = require('./food_dispenser/food_api');
+const temperature = require('./temperature');
 
 // 접속자의 ipv4 주소를 반환
 function ipv4(req) {
@@ -60,11 +61,17 @@ module.exports = {
                 logger.v(`/lookup from ${ip}`);
                 lookup_ips.push(ip);
             }
-        
-            var result = "Online";
+
+            var result = { server : { status : 1, temp : temperature.getTemp() }, pc : { status : 0 } };
+
             var lookup_result = await remote_server.lookup();
-            if(lookup_result === null) result = "Offline";
-            res.send(result);
+            if(lookup_result != undefined && lookup_result != null) {
+                lookup_result = JSON.parse(lookup_result);
+                result.pc.status = lookup_result.status;
+                result.pc.temp = lookup_result.temp;
+            }
+            
+            res.json(result);
         },
         reboot: function(req, res, next) {
             logger.v(`/reboot_pi from ${ipv4(req)}`);
