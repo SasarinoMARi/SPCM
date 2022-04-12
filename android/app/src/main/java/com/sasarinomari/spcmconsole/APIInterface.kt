@@ -1,22 +1,20 @@
 package com.sasarinomari.spcmconsole
 
-import android.database.Observable
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import com.sasarinomari.spcmconsole.Results.FoodResult
+import com.sasarinomari.spcmconsole.Results.LookupResult
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import java.net.CookieManager
 
 interface APIInterface {
     @GET("establishment")
     fun establishment(@Header("key") key:String): Call<String>
     @GET("lookup")
-    fun lookup(): Call<String>
+    fun lookup(): Call<LookupResult>
     @GET("reboot")
     fun reboot_pi(@Header("token") token:String): Call<String>
     @GET("hetzer")
@@ -52,7 +50,7 @@ interface APIInterface {
     class updateFcmTokenParam(val token: String)
 
     @GET("food_dispenser")
-    fun foodDispenser(@Header("token") token:String): Call<FoodModel>
+    fun foodDispenser(@Header("token") token:String): Call<FoodResult>
 
     companion object {
         private val BASE_URL = ""

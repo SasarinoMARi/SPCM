@@ -6,6 +6,7 @@
     import android.widget.*
     import androidx.appcompat.app.AppCompatActivity
     import com.google.firebase.messaging.FirebaseMessaging
+    import com.sasarinomari.spcmconsole.Results.LookupContent
     import kotlinx.android.synthetic.main.activity_main.*
     import java.util.*
     import kotlin.collections.ArrayList
@@ -57,8 +58,10 @@
             val views = HashMap<String, View>()
             views["computer_text"] = status_text_computer
             views["computer_icon"] = status_icon_computer
+            views["computer_temp"] = temp_text_computer
             views["raspberry_text"] = status_text_pi
             views["raspberry_icon"] = status_icon_pi
+            views["raspberry_temp"] = temp_text_pi
             val strings = HashMap<String, String>()
             strings["offline"] = getString(R.string.Offline)
             strings["online"] = getString(R.string.Online)
@@ -68,7 +71,25 @@
 
         private fun startStatusChecker() {
             Thread {
-                api.lookup(serverStatusUI)
+                api.lookup {
+                    when (it.Server.Status) {
+                        LookupContent.STATUS_ONLINE -> {
+                            serverStatusUI.onServerOnline(it)
+                        }
+                        else -> {
+                            serverStatusUI.onServerOffline()
+                        }
+                    }
+
+                    when (it.PC.Status) {
+                        LookupContent.STATUS_ONLINE -> {
+                            serverStatusUI.onComputerOnline(it)
+                        }
+                        else -> {
+                            serverStatusUI.onComputerOffline()
+                        }
+                    }
+                }
                 Thread.sleep(5000)
                 if (focused) startStatusChecker()
             }.start()

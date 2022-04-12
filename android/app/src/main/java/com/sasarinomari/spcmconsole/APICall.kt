@@ -2,8 +2,10 @@ package com.sasarinomari.spcmconsole
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.sasarinomari.spcmconsole.Results.FoodResult
+import com.sasarinomari.spcmconsole.Results.LookupContent
+import com.sasarinomari.spcmconsole.Results.LookupResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -141,38 +143,21 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-
-    interface lookupInterface {
-        fun onComputerOffline()
-        fun onComputerOnline()
-        fun onServerOffline()
-    }
-
-    fun lookup(i: lookupInterface) {
+    fun lookup(callback: (LookupResult) -> Unit) {
         val call = APIInterface.api.lookup()
-        call.enqueue(object : Callback<String> {
-            private fun dead() {
-                i.onComputerOffline()
+        call.enqueue(object : Callback<LookupResult> {
+            override fun onFailure(call: Call<LookupResult>, t: Throwable) {
+                val result = LookupResult()
+                result.Server.Status = 0
+                callback(result)
             }
 
-            private fun live() {
-                i.onComputerOnline()
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                i.onServerOffline()
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+            override fun onResponse(call: Call<LookupResult>, response: Response<LookupResult>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result == "Online") {
-                        i.onComputerOnline()
-                    } else {
-                        i.onComputerOffline()
-                    }
+                    callback(result)
                 } else {
-                    i.onServerOffline()
+                    onFailure(call, Exception("Response is not successful"))
                 }
             }
         })
@@ -414,19 +399,19 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun foodDispenser(callback:(FoodModel)->Unit) {
+    fun foodDispenser(callback:(FoodResult)->Unit) {
         if (token == null) {
             establishment { foodDispenser(callback) }
             return
         }
 
         val call = APIInterface.api.foodDispenser(token!!)
-        call.enqueue(object : Callback<FoodModel> {
-            override fun onFailure(call: Call<FoodModel>, t: Throwable) {
+        call.enqueue(object : Callback<FoodResult> {
+            override fun onFailure(call: Call<FoodResult>, t: Throwable) {
                 onError(t.toString())
             }
 
-            override fun onResponse(call: Call<FoodModel>, response: Response<FoodModel>) {
+            override fun onResponse(call: Call<FoodResult>, response: Response<FoodResult>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     callback(result)
