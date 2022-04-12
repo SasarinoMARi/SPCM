@@ -7,6 +7,7 @@ const logger = require('./../common/logger');
 const tokenManager = require('./../common/token-manager');
 const path = require('./path.json');
 const audio = require('win-audio').speaker;
+const temperature = require('./temperature/temperature');
 
 // 명령어 실행
 function command(command) {
@@ -82,13 +83,17 @@ module.exports = {
             }
         },
         // 업타임 체크
-        lookup: function (req, res, next) {
+        lookup: async function (req, res, next) {
             var ip = ipv4(req);
             if(!lookup_ips.includes(ip)) {
                 logger.v(`/lookup from ${ip}`);
                 lookup_ips.push(ip);
             }
-            res.send("OK");
+            var response = {
+                status : 1,
+                temp : await temperature.getTemp()
+            }
+            res.json(response);
         }
     },
 
