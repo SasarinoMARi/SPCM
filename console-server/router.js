@@ -7,8 +7,7 @@ const log = require('./logger')
 const tokenManager = require('./../common/token-manager')
 const remote_server = require('./desktop-api');
 const shell = require('shelljs');
-const fcm = require('./messaging/fcm');
-const mail = require('./messaging/email');
+const notifier = require('./messaging/notifier');
 const fd = require('./food_dispenser/food_api');
 const temperature = require('./temperature');
 
@@ -92,7 +91,7 @@ module.exports = {
         
             var title = req.body.title;
             var body = req.body.body;
-            fcm.send(title, body, {
+            notifier.sendFCM(title, body, {
                 success: function() {
                     res.send("OK");
                     log.verbose(log_header, `FCM 송신 성공됨 : ${body}`, ip);
@@ -112,7 +111,7 @@ module.exports = {
             if(!authorize(req, res)) return;
     
             var token = req.body.token;
-            fcm.update_id(token);
+            notifier.update_fcm_id(token);
             res.send("OK");
 
             log.info(log_header, `FCM 토큰 업데이트됨 : ${token}`, ip);
@@ -126,7 +125,7 @@ module.exports = {
         
             var title = req.body.title;
             var body = req.body.body;
-            mail.send(title, body);
+            notifier.sendEmail(title, body);
             res.send("OK");
 
             log.verbose(log_header, `메일 송신 성공됨 : ${body}`, ip);

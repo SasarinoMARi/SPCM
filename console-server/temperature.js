@@ -1,3 +1,6 @@
+/**
+ * 라즈베리파이 온도 측정용 모듈
+ */
 const shell = require('shelljs');
 const log = require('./logger');
 

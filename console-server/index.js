@@ -45,3 +45,5 @@ var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
     require('./logger').info('index.js', '서버 시작');
 });
+
+require('./scheduler').loadSchedules();

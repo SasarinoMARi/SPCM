@@ -11,6 +11,16 @@ CREATE TABLE `log` (
 )
 COLLATE='utf8_general_ci';
 
+CREATE TABLE `schedule` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`active` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '활성화 여부',
+	`cron` VARCHAR(128) NOT NULL COMMENT '실행할 시간(cron)',
+	`command` TEXT NOT NULL COMMENT '실행할 명령어',
+	`created_at` DATETIME NOT NULL COMMENT '기록 날짜',
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';
+
 CREATE TABLE `timeline` (
 	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
 	`created_at` DATETIME NOT NULL NULL COMMENT '기록 날짜',
