@@ -23,7 +23,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 
 /* 라우팅 테이블 정의 */
-app.get('/', router.system.default);
 app.get('/establishment', router.system.establishment);
 app.get('/lookup', router.system.lookup);
 app.get('/reboot', router.system.reboot);
@@ -51,4 +50,5 @@ app.get('/food_dispenser', router.food_dispenser);
 var port = process.env.PORT;
 var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
+    require('./logger').info('index.js', '서버 시작');
 });

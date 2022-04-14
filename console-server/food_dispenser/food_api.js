@@ -1,8 +1,8 @@
-const sql = require('./../sql.js');
+const sql = require('../database/sql.js');
 module.exports = {
     random: function(callback, errorCallback) {
         sql.query(
-            `SELECT * FROM food_list ORDER BY RAND() LIMIT 1`,
+            `SELECT * FROM food ORDER BY RAND() LIMIT 1`,
             function(error, results, fields) {
                 if(error) {
                     errorCallback(error);

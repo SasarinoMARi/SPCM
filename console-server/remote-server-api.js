@@ -5,12 +5,11 @@
 require("dotenv").config();
 const request = require('request');
 baseUrl = `${process.env.REMOTE_COMPUTER}/`;
-const logger = require("../common/logger")
+const log = require("./logger");
+const log_header = "desktop-api.js";
 
 class remoteServer {
-    establishment(callback) {
-        logger.v("api : establishment()");
-
+    establishment(request_ip, callback) {
         const key = require("../common/secret").cr_key
         const options = {
             uri: baseUrl + "establishment",
@@ -21,24 +20,24 @@ class remoteServer {
 
         request.get(options, function (error, response, body) {
             if (error) {
-                logger.e("error : " + error);
+                log.error(log_header, `[establishment] failed : ${error}`, request_ip);
             }
             else {
                 const statusCode = response && response.statusCode;
-                logger.v("statusCode : " + statusCode);
 
                 if (statusCode == 200) {
                     let json = JSON.parse(body);
                     callback.success(json.token);
                 }
                 else {
+                    log.error(log_header, `[establishment] status code ${statusCode} returned.`, request_ip);
                     callback.error();
                 }
             }
         });
     };
 
-    async lookup(callback) {
+    async lookup(request_ip) {
         const options = {
             uri: baseUrl + "lookup",
             timeout: 1000 * 2
@@ -51,31 +50,10 @@ class remoteServer {
             result = await request(options);
         }
         catch (err) {
-            logger.e(err);
+            log.error(log_header, `[lookup] failed : ${err}`, request_ip);
         }
 
         return result;
-
-        /*
-        request.get(options), function (error, response, body) {
-            if (error) {
-                logger.e("error : " + error);
-            }
-            else {
-                const statusCode = response && response.statusCode;
-                logger.d("statusCode : " + statusCode);
-
-                if (statusCode == 200) {
-                    let json = JSON.parse(body);
-                    logger.d("json result : " + json);
-                    callback.success(json);
-                }
-                else {
-                    callback.error();
-                }
-            }
-        });
-        */
     }
 
     /**
@@ -84,10 +62,8 @@ class remoteServer {
      * @param {string} headerPair : 헤더 쌍
      * @param {function} callback : 콜백 함수
      */
-    __generalCall(path, headerPair, callback) {
-        this.establishment({success : function(token) {
-            logger.d("api : " + path);
-
+    __generalCall(request_ip, path, headerPair, callback) {
+        this.establishment(request_ip, {success : function(token) {
             const options = {
                 uri: baseUrl + path,
                 headers: {
@@ -98,17 +74,17 @@ class remoteServer {
     
             request.get(options, function (error, response, body) {
                 if (error) {
-                    logger.e("error : " + error);
+                    log.error(log_header, `[${path}] failed : ${error}`, request_ip);
                 }
                 else {
                     const statusCode = response && response.statusCode;
-                    logger.v("statusCode : " + statusCode);
     
                     if (statusCode == 200) {
                         if(body == "OK") callback?.success("OK");
                         else callback?.error(body);
                     }
                     else {
+                        log.error(log_header, `[${path}] status code ${statusCode} returned.`, request_ip);
                         callback?.error(body);
                     }
                 }
@@ -119,14 +95,14 @@ class remoteServer {
         }});
     }
 
-    reboot() { this.__generalCall("power/reboot"); }
-    shutdown() { this.__generalCall("power/shutdown"); }
-    startFileServer() { this.__generalCall("file_server/start"); }
-    stopFileServer() { this.__generalCall("file_server/stop"); }
-    startRdpServer() { this.__generalCall("rdp_server/start"); }
-    volume(amount) { this.__generalCall("media/volume", {"amount": amount} ); }
-    mute(option) { this.__generalCall("media/mute", {"option": option} ); }
-    play(src) { this.__generalCall("media/play", {"src": src}); }
+    reboot(request_ip) { this.__generalCall(request_ip, "power/reboot"); }
+    shutdown(request_ip) { this.__generalCall(request_ip, "power/shutdown"); }
+    startFileServer(request_ip) { this.__generalCall(request_ip, "file_server/start"); }
+    stopFileServer(request_ip) { this.__generalCall(request_ip, "file_server/stop"); }
+    startRdpServer(request_ip) { this.__generalCall(request_ip, "rdp_server/start"); }
+    volume(request_ip, amount) { this.__generalCall(request_ip, "media/volume", {"amount": amount} ); }
+    mute(request_ip, option) { this.__generalCall(request_ip, "media/mute", {"option": option} ); }
+    play(request_ip, src) { this.__generalCall(request_ip, "media/play", {"src": src}); }
 };
 
 module.exports = new remoteServer();
