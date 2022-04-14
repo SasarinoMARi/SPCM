@@ -1,5 +1,6 @@
 /*
  * FCM 알림
+ * 이 모듈은 spcm 외부에서 사용되는 경우도 있음.
  */
 
 const fs = require('fs');

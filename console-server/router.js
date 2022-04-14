@@ -5,7 +5,7 @@
 const secret = require('../common/secret');
 const log = require('./logger')
 const tokenManager = require('./../common/token-manager')
-const remote_server = require('./remote-server-api');
+const remote_server = require('./desktop-api');
 const shell = require('shelljs');
 const fcm = require('./messaging/fcm');
 const mail = require('./messaging/email');
@@ -37,8 +37,8 @@ module.exports = {
     // 서비스 제어 코드
     system: {
         default: function (req, res, next) {
-            res.render("main.ejs");
-            log.critical(log_header, `잘못된 경로로 접근 요청됨`, getIpAddress(req));
+            res.render("wtf.ejs");
+            log.critical(log_header, `잘못된 경로로 접근 요청됨 : ${req.originalUrl}`, getIpAddress(req));
         },    
         establishment: function (req, res, next) {
             const ip = getIpAddress(req);
@@ -139,7 +139,7 @@ module.exports = {
             const ip = getIpAddress(req);
             log.verbose(log_header, `데스크탑 부팅 요청됨`, ip);
             if(!authorize(req, res)) return;
-            require("./iptime-wol").wakeup(ip);
+            require("./iptime-api").wakeup(ip);
             res.send("OK");
         },
         sleep: function (req, res, next) {

@@ -5,7 +5,7 @@
 require("dotenv").config();
 const request = require('request');
 const log = require("./logger");
-const log_header = 'iptime-wol.js';
+const log_header = 'iptime-api.js';
 
 let host = process.env.IPTIME_CONSOLE;
 let baseUrl = `http://${host}/`;

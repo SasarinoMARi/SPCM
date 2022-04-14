@@ -1,5 +1,5 @@
 /*
- * 목적지 서버 API 정의 파일
+ * 데스크탑 제어 api
  */
 
 require("dotenv").config();
