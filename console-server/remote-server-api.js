@@ -50,7 +50,8 @@ class remoteServer {
             result = await request(options);
         }
         catch (err) {
-            log.error(log_header, `[lookup] failed : ${err}`, request_ip);
+            // 꺼져있을 경우 당연히 실패함
+            // log.error(log_header, `[lookup] failed : ${err}`, request_ip);
         }
 
         return result;

@@ -7,16 +7,6 @@ const app = express();
 const router = require('./router')
 
 /*
- * EJS 렌더링 설정 및 공용 디렉터리 호스팅
- */
-/*
-외부 접속할 일 없으면 꺼놓기-> 보안 취약함
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
-app.use(express.static(__dirname + '/public'));
-*/
-
-/*
  * Request Body를 json으로 파싱하기 위한 설정
  */
 app.use(express.urlencoded({extended: true}));
@@ -46,6 +36,9 @@ app.get('/media/play', router.media.play);
 
 app.get('/hetzer', router.hetzer);
 app.get('/food_dispenser', router.food_dispenser);
+
+app.use(express.static(__dirname + '/public'));
+app.use(router.system.default);
 
 var port = process.env.PORT;
 var server = app.listen(port, function () {
