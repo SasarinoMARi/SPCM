@@ -33,7 +33,7 @@ class Logger {
         this.#notifier.sendBoth(title, content);
     }
 
-    log             (level, subject, content, ip) { this.#general_logging(0, subject, content, ip); }
+    log             (level, subject, content, ip) { this.#general_logging(level, subject, content, ip); }
     verbose         (subject, content, ip) { this.#general_logging(0, subject, content, ip); }
     debug           (subject, content, ip) { this.#general_logging(1, subject, content, ip); }
     info            (subject, content, ip) { this.#general_logging(2, subject, content, ip); }

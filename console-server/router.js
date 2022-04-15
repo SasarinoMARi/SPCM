@@ -81,7 +81,6 @@ module.exports = {
         },
         logs: function(req, res, next) {
             const ip = getIpAddress(req);
-            log.verbose(log_header, `로그 조회 요청됨`, ip);
             if(!authorize(req, res)) return;
             const level = req.headers.level ? req.headers.level : 0;
             const page = req.headers.page ? req.headers.page : 0;
@@ -89,7 +88,7 @@ module.exports = {
             const rpp = 50;
             const offect = rpp * page;
 
-            const query = `SELECT * from \`log\` where \`level\`>=${level} ORDER BY idx LIMIT ${rpp} OFFSET ${offect}`;
+            const query = `SELECT * from \`log\` where \`level\`>=${level} ORDER BY idx desc LIMIT ${rpp} OFFSET ${offect}`;
             sql.query(query, function(err, logs, fields) {
                 if(err) {
                     log.error(log_header, `Error fetching log list: ${err}`);
@@ -101,14 +100,16 @@ module.exports = {
         log: function(req, res, next) {
             const ip = getIpAddress(req);
             if(!authorize(req, res)) return;
-            const level = req.headers.level;
-            const subject = req.headers.subject;
-            const content = req.headers.content;
-            if(level == undefined || subject == undefined || content == undefined) {
+            const level = req.body.level;
+            const subject = req.body.subject;
+            const content = req.body.content;
+            if(!level || !subject || !content) {
                 res.statusCode = 500;
                 res.send("");
+                return;
             }
             log.log(level, subject, content, ip);
+            res.send("OK");
         }
     },
 
