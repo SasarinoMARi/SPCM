@@ -39,4 +39,6 @@
     <string name="apply">등록</string>
     <string name="ShowLogs">서버 로그 조회하기</string>
     <string name="LogLevelFilter">로그 레벨 필터</string>
+    <string name="SetDate_Today">오늘</string>
+    <string name="SetDate_Tommorow">내일</string>
 </resources>

@@ -16,6 +16,7 @@ import com.sasarinomari.spcmconsole.APICall
 import com.sasarinomari.spcmconsole.DatePickerFragmentDialog
 import com.sasarinomari.spcmconsole.R
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
+import java.util.*
 
 class CreateTaskFragmentDialog(private val api: APICall) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
@@ -39,6 +40,20 @@ class CreateTaskFragmentDialog(private val api: APICall) : DialogFragment(), Dat
         rootView.button_calendar.setOnClickListener {
             val f = DatePickerFragmentDialog(this)
             f.show(fragmentManager!!, "DatePicker")
+        }
+
+        rootView.button_today.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            year = calendar.get(Calendar.YEAR)
+            month = calendar.get(Calendar.MONTH) + 1
+            date = calendar.get(Calendar.DAY_OF_MONTH)
+        }
+        rootView.button_tommorow.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            year = calendar.get(Calendar.YEAR)
+            month = calendar.get(Calendar.MONTH) + 1
+            date = calendar.get(Calendar.DAY_OF_MONTH)
         }
 
         rootView.text_name.requestFocus()
