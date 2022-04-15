@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.fragment_raspberry_server_panel.view.*
 
@@ -41,16 +42,16 @@ class RaspberryServerFragmentDialog(private val api: APICall) : DialogFragment()
         return object: ServerStateChangeHandler{
             override fun onChangedServerState(online: Boolean) {
                 if(online) {
-                    view?.button_reboot?.background = null
+                    view?.button_reboot?.children?.first()?.background = null
                     view?.button_reboot?.isEnabled = true
 
-                    view?.button_open_logs?.background = null
+                    view?.button_open_logs?.children?.first()?.background = null
                     view?.button_open_logs?.isEnabled = true
                 } else {
-                    view?.button_reboot?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
+                    view?.button_reboot?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
                     view?.button_reboot?.isEnabled = false
 
-                    view?.button_open_logs?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
+                    view?.button_open_logs?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
                     view?.button_open_logs?.isEnabled = false
                 }
             }

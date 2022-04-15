@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.fragment_remote_computer_panel.view.*
 
@@ -69,24 +70,24 @@ class RemoteComputerFragmentDialog(private val api: APICall) : DialogFragment() 
 
             override fun onChangedComputerState(online: Boolean) {
                 if(online) {
-                    view?.button_power_off?.background = null
+                    view?.button_power_off?.children?.first()?.background = null
                     view?.button_power_off?.isEnabled = true
 
                     view?.container_volume?.background = null
                     view?.seek_volume?.isEnabled = true
                     view?.button_mute?.isEnabled = true
 
-                    view?.button_advanced_control?.background = null
+                    view?.button_advanced_control?.children?.first()?.background = null
                     view?.button_advanced_control?.isEnabled = true
                 } else {
-                    view?.button_power_off?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
+                    view?.button_power_off?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
                     view?.button_power_off?.isEnabled = false
 
                     view?.container_volume?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
                     view?.seek_volume?.isEnabled = false
                     view?.button_mute?.isEnabled = false
 
-                    view?.button_advanced_control?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
+                    view?.button_advanced_control?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
                     view?.button_advanced_control?.isEnabled = false
                 }
             }
