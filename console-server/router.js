@@ -47,7 +47,7 @@ module.exports = {
                 res.send(token);
             }
             else {
-                log.warning(log_header, `잘못된 토큰으로 인증 시도됨`, ip);
+                log.critical(log_header, `잘못된 토큰으로 인증 시도됨`, ip);
                 res.statusCode = 403
                 res.message = "Unauthorized"
                 res.json();
@@ -56,7 +56,7 @@ module.exports = {
         lookup: async function(req, res, next) {
             var ip = getIpAddress(req);
             if(!lookup_ips.includes(ip)) {
-                log.verbose(log_header, `새로운 lookup 요청됨`, ip);
+                log.verbose(log_header, `새로운 아이피로부터 lookup 요청됨`, ip);
                 lookup_ips.push(ip);
             }
 
@@ -75,7 +75,6 @@ module.exports = {
             const ip = getIpAddress(req);
             log.verbose(log_header, `서버 재부팅 요청됨`, ip);
             if(!authorize(req, res)) return;
-            log.info(log_header, `서버 재부팅 요청 승인됨`, ip);
             shell.exec('sudo reboot');
             res.send("OK");
         },
@@ -118,7 +117,6 @@ module.exports = {
         // spcm 앱으로 푸쉬 알림 송신
         send_fcm: function(req, res, next) {
             const ip = getIpAddress(req);
-            log.verbose(log_header, `FCM 송신 요청됨`, ip);
             
             if(!authorize(req, res)) return;
         
@@ -127,19 +125,18 @@ module.exports = {
             notifier.sendFCM(title, body, {
                 success: function() {
                     res.send("OK");
-                    log.verbose(log_header, `FCM 송신 성공됨 : ${body}`, ip);
+                    log.verbose(log_header, `FCM 송신 성공 : ${body}`, ip);
                 },
                 error: function(msg) {
                     res.statusCode = 500;
                     res.send("");
-                    log.error(log_header, `FCM 송신 실패됨 : ${msg}`, ip);
+                    log.error(log_header, `FCM 송신 실패 : ${msg}`, ip);
                 }
             })
         },
         // 푸쉬 알림 갱신용 함수
         update_fcm_token: function(req, res, next) {
             const ip = getIpAddress(req);
-            log.verbose(log_header, `FCM 토큰 업데이트 요청됨`, ip);
     
             if(!authorize(req, res)) return;
     
@@ -147,12 +144,11 @@ module.exports = {
             notifier.update_fcm_id(token);
             res.send("OK");
 
-            log.info(log_header, `FCM 토큰 업데이트됨 : ${token}`, ip);
+            log.verbose(log_header, `FCM 토큰 업데이트됨 : ${token}`, ip);
         },
         // 관리자에게 메일 전송
         send_mail: function(req, res, next) {
             const ip = getIpAddress(req);
-            log.verbose(log_header, `메일 송신 요청됨`, ip);
             
             if(!authorize(req, res)) return;
         
@@ -161,7 +157,7 @@ module.exports = {
             notifier.sendEmail(title, body);
             res.send("OK");
 
-            log.verbose(log_header, `메일 송신 성공됨 : ${body}`, ip);
+            log.verbose(log_header, `메일 송신 성공 : ${body}`, ip);
         }
     },
 
@@ -232,7 +228,6 @@ module.exports = {
         // 볼륨 제어
         volume: function (req, res, next) {
             const ip = getIpAddress(req);
-            log.verbose(log_header, `데스크탑 볼륨 제어 요청됨`, ip);
             if(!authorize(req, res)) return;
             let volume = req.headers.amount;
             if(volume===undefined) {
@@ -246,7 +241,6 @@ module.exports = {
         // 음소거 설정/해제, 0일때 해제, 1일때 뮤트, 이외는 토글
         mute: function (req, res, next) {
             const ip = getIpAddress(req);
-            log.verbose(log_header, `데스크탑 음소거 요청됨`, ip);
             if(!authorize(req, res)) return;
             let option = req.headers.option;
             if(option===undefined) {
@@ -281,8 +275,6 @@ module.exports = {
     },
 
     food_dispenser: function(req, res, next) {
-        log.verbose(log_header, `메뉴추천기 실행 요청됨`, getIpAddress(req));
-        
         if(!authorize(req, res)) return;
         fd.random(function(result) {
             res.json(result); 
