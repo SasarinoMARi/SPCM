@@ -1,8 +1,8 @@
-package com.sasarinomari.spcmconsole.Memoboard
+package com.sasarinomari.spcmconsole.parameters
 
 import com.google.gson.annotations.SerializedName
 
-class GetTaskOptions {
+class GetTaskParameter {
     @SerializedName("Tags")
     var Tags: ArrayList<Int> = ArrayList()
     @SerializedName("Method")

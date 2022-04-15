@@ -8,25 +8,15 @@ import com.sasarinomari.spcmconsole.results.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.security.MessageDigest
-import java.util.*
 
 abstract class APICall(private val context: Context) {
     abstract fun onError(message: String)
     abstract fun onMessage(message: String)
 
     private var token: String? = null
-    private var mb_token = "8]&Ynz#?)K&3h:"
-
 
     fun establishment(callback: () -> Unit) {
-        val c = Calendar.getInstance()
-        val h = c.get(Calendar.HOUR_OF_DAY)
-        val m = c.get(Calendar.MINUTE)
-        val key = ""
-
-        // Log.d("MainActivity", "key: $key")
-        val call = APIInterface.api.establishment(key)
+        val call = APIInterface.api.establishment(APIInterface.getToken())
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -38,7 +28,6 @@ abstract class APICall(private val context: Context) {
                     token = result
                     callback()
                 }
-
             }
         })
     }
@@ -129,10 +118,10 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun start_fs() {
+    fun startFileServer() {
         if (token == null) {
             establishment {
-                start_fs()
+                startFileServer()
             }
             return
         }
@@ -154,7 +143,7 @@ abstract class APICall(private val context: Context) {
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            start_fs()
+                            startFileServer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -162,11 +151,10 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-
-    fun start_tv() {
+    fun startTeamviewerServer() {
         if (token == null) {
             establishment {
-                start_tv()
+                startTeamviewerServer()
             }
             return
         }
@@ -188,7 +176,7 @@ abstract class APICall(private val context: Context) {
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            start_fs()
+                            startFileServer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -196,10 +184,10 @@ abstract class APICall(private val context: Context) {
         })
     }
     
-    fun reboot_pi() {
+    fun rebootServer() {
         if (token == null) {
             establishment {
-                reboot_pi()
+                rebootServer()
             }
             return
         }
@@ -221,26 +209,12 @@ abstract class APICall(private val context: Context) {
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            reboot_pi()
+                            rebootServer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
             }
         })
-    }
-
-    private fun sha256(param: String): String {
-        val HEX_CHARS = "0123456789ABCDEF"
-        val bytes = MessageDigest
-            .getInstance("SHA-256")
-            .digest(param.toByteArray())
-        val result = StringBuilder(bytes.size * 2)
-        bytes.forEach {
-            val i = it.toInt()
-            result.append(HEX_CHARS[i shr 4 and 0x0f])
-            result.append(HEX_CHARS[i and 0x0f])
-        }
-        return result.toString()
     }
 
     fun sendFcm(title: String, content: String, callback: ()->Unit) {
@@ -293,10 +267,9 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-
-    fun volume(amount: Int) {
+    fun setVolume(amount: Int) {
         if (token == null) {
-            establishment { volume(amount) }
+            establishment { setVolume(amount) }
             return
         }
 
@@ -312,16 +285,16 @@ abstract class APICall(private val context: Context) {
                     if (result == "OK") {   }
                     else { onError(context.getString(R.string.server_error)) }
                 } else {
-                    if (response.code() == 403) { establishment { volume(amount) } }
+                    if (response.code() == 403) { establishment { setVolume(amount) } }
                     else onMessage("${response.code()} : ${response.message()}")
                 }
             }
         })
     }
 
-    fun play(src: String) {
+    fun openUrl(src: String) {
         if (token == null) {
-            establishment { play(src) }
+            establishment { openUrl(src) }
             return
         }
 
@@ -335,7 +308,7 @@ abstract class APICall(private val context: Context) {
                     if (result == "OK") { onMessage(context.getString(R.string.Confirm_Play)) }
                     else { onError(context.getString(R.string.server_error)) }
                 } else {
-                    if (response.code() == 403) { establishment { play(src) } }
+                    if (response.code() == 403) { establishment { openUrl(src) } }
                     else onMessage("${response.code()} : ${response.message()}")
                 }
             }
@@ -438,11 +411,8 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    /**
-     * 2022-03-31 최종 커밋 기준 복붙
-     */
-    fun createTask(task: com.sasarinomari.spcmconsole.Memoboard.TaskModel, callback: () -> Unit) {
-        val call = com.sasarinomari.spcmconsole.Memoboard.APIInterface.api.task_create(mb_token, task)
+    fun createTask(task: TaskModel, callback: () -> Unit) {
+        val call = APIInterface.memoApi.task_create(APIInterface.getMemoToken(), task)
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 if (response.isSuccessful) {
@@ -460,10 +430,10 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun getTasks(options: com.sasarinomari.spcmconsole.Memoboard.GetTaskOptions, callback: (Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>)->Unit) {
-        val call = com.sasarinomari.spcmconsole.Memoboard.APIInterface.api.task_list(mb_token!!, options)
-        call.enqueue(object : Callback<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>> {
-            override fun onResponse(call: Call<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>>, response: Response<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>>) {
+    fun getTasks(options: GetTaskParameter, callback: (Array<TaskModel>)->Unit) {
+        val call = APIInterface.memoApi.task_list(APIInterface.getMemoToken(), options)
+        call.enqueue(object : Callback<Array<TaskModel>> {
+            override fun onResponse(call: Call<Array<TaskModel>>, response: Response<Array<TaskModel>>) {
                 if (response.isSuccessful) {
                     val tasks = response.body()!!
                     callback(tasks)
@@ -472,7 +442,7 @@ abstract class APICall(private val context: Context) {
                 }
             }
 
-            override fun onFailure(call: Call<Array<com.sasarinomari.spcmconsole.Memoboard.TaskModel>>, t: Throwable) {
+            override fun onFailure(call: Call<Array<TaskModel>>, t: Throwable) {
                 onError(t.toString())
             }
         })

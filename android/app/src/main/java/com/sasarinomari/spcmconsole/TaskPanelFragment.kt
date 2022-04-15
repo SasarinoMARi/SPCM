@@ -1,28 +1,51 @@
 package com.sasarinomari.spcmconsole
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
-import com.sasarinomari.spcmconsole.Memoboard.CreateTaskFragmentDialog
-import com.sasarinomari.spcmconsole.Memoboard.GetTaskOptions
-import com.sasarinomari.spcmconsole.Memoboard.TaskModel
-import kotlinx.android.synthetic.main.fragment_payday_dday.view.*
+import androidx.fragment.app.Fragment
+import com.sasarinomari.spcmconsole.parameters.GetTaskParameter
+import com.sasarinomari.spcmconsole.results.TaskModel
+import kotlinx.android.synthetic.main.fragment_task_panel.*
 import kotlinx.android.synthetic.main.item_task.view.*
 import java.util.*
 
-class PayDayDday(private val api: APICall, private val activity: AppCompatActivity) {
+class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
+    private lateinit var api : APICall
+    fun setApiCall(api: APICall) { this.api = api }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val dday = calculatePayday()
+        text_dday.text = getString(R.string.Dday, dday)
+
+        button_open_memoboard.setOnClickListener {
+            val launchIntent = context?.packageManager?.getLaunchIntentForPackage("com.sasarinomari.memoboard")
+            launchIntent?.let { context?.startActivity(it) }
+        }
+        button_create_task.setOnClickListener {
+            CreateTaskFragmentDialog(api).show(childFragmentManager, "Create Task")
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchMemoboard(layout_memoboard as ViewGroup)
+    }
+
+
+    /**
+     * 월급일 계산 코드
+     * 주말일 경우 직전의 금요일을 월급일로 취급한다.
+     */
     private fun calculatePayday(): Long {
         val calendar = Calendar.getInstance()
         val today = calendar.time
 
-        /**
-         * 월급일 계산 코드
-         * 주말일 경우 직전의 금요일을 월급일로 취급한다.
-          */
         if(calendar.get(Calendar.DAY_OF_MONTH) >= 25) calendar.add(Calendar.MONTH, 1)
         calendar.set(Calendar.DAY_OF_MONTH, 25)
         if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -39,36 +62,17 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
         return days
     }
 
-    private lateinit var container : View
-
-    @SuppressLint("SetTextI18n")
-    fun init(view: View) {
-        val dday = calculatePayday()
-        view.text_dday.text = "D-${dday}"
-        container = view.layout_memoboard
-
-        view.button_open_memoboard.setOnClickListener {
-            val launchIntent = activity.packageManager?.getLaunchIntentForPackage("com.sasarinomari.memoboard")
-            launchIntent?.let { activity.startActivity(it) }
-        }
-        view.button_create_task.setOnClickListener {
-            CreateTaskFragmentDialog(api).show(activity.supportFragmentManager, "Create Task")
-        }
-    }
-
-    fun reload() {
-        fetchMemoboard(container as ViewGroup)
-    }
+    // region 할 일 가져오는 코드
 
     private fun fetchMemoboard(view: ViewGroup) {
-        val option = GetTaskOptions()
+        val option = GetTaskParameter()
         option.Limit = 5
 
-        api.getTasks(option) {
+        api.getTasks(option) { tasks ->
             view.removeAllViews()
 
             var height = 0
-            for(item in it) {
+            for(item in tasks) {
                 height += inflateMemoboard(view, item)
             }
 
@@ -80,8 +84,8 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
     }
 
     private fun inflateMemoboard(parent: ViewGroup, item: TaskModel): Int {
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflater.inflate(R.layout.item_task, parent, false)
+        val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
+        val view = inflater?.inflate(R.layout.item_task, parent, false) ?: return 0
 
         view.text_task_name.text = item.Name
         view.text_task_description.text = item.Description
@@ -127,4 +131,6 @@ class PayDayDday(private val api: APICall, private val activity: AppCompatActivi
         val diff = destination.time - today.time
         return diff / (24 * 60 * 60 * 1000)
     }
+
+    // endregion
 }

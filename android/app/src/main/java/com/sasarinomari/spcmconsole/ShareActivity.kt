@@ -24,7 +24,7 @@ class ShareActivity : AppCompatActivity() {
              */
             if("text/plain" == intent.type) {
                 val url = intent.getStringExtra(Intent.EXTRA_TEXT)
-                if(url!=null) api.play(url)
+                if(url!=null) api.openUrl(url)
                 finish()
             }
         }

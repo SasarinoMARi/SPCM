@@ -1,20 +1,15 @@
-package com.sasarinomari.spcmconsole.Memoboard
+package com.sasarinomari.spcmconsole
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
-import android.widget.SeekBar
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.sasarinomari.spcmconsole.APICall
-import com.sasarinomari.spcmconsole.DatePickerFragmentDialog
-import com.sasarinomari.spcmconsole.R
+import com.sasarinomari.spcmconsole.results.TaskModel
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
 import java.util.*
 

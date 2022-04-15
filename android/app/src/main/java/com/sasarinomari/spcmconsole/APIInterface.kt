@@ -1,6 +1,7 @@
 package com.sasarinomari.spcmconsole
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.sasarinomari.spcmconsole.parameters.*
 import com.sasarinomari.spcmconsole.results.*
 import okhttp3.OkHttpClient
@@ -8,6 +9,8 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.security.MessageDigest
+import java.util.*
 
 interface APIInterface {
     @GET("establishment")
@@ -53,6 +56,7 @@ interface APIInterface {
     @GET("food_dispenser")
     fun foodDispenser(@Header("token") token:String): Call<FoodResult>
 
+
     companion object {
         private val BASE_URL = ""
 
@@ -72,8 +76,69 @@ interface APIInterface {
                 .build()
         }
 
+        private fun sha256(param: String): String {
+            val HEX_CHARS = "0123456789ABCDEF"
+            val bytes = MessageDigest
+                .getInstance("SHA-256")
+                .digest(param.toByteArray())
+            val result = StringBuilder(bytes.size * 2)
+            bytes.forEach {
+                val i = it.toInt()
+                result.append(HEX_CHARS[i shr 4 and 0x0f])
+                result.append(HEX_CHARS[i and 0x0f])
+            }
+            return result.toString()
+        }
+
         val api: APIInterface by lazy {
             retrofit.create(APIInterface::class.java)
+        }
+
+        fun getToken() : String {
+            val c = Calendar.getInstance()
+            val h = c.get(Calendar.HOUR_OF_DAY)
+            val m = c.get(Calendar.MINUTE)
+            return ""
+        }
+
+        val memoApi: MemoboardAPIInterface
+            get() {
+                return MemoboardAPIInterface.api
+            }
+
+        fun getMemoToken() : String {
+            return ""
+        }
+    }
+
+    interface MemoboardAPIInterface {
+        @POST("task/list")
+        fun task_list(@Header("key") token:String, @Body body: GetTaskParameter): Call<Array<TaskModel>>
+        @POST("task/create")
+        fun task_create(@Header("key") token:String, @Body body: TaskModel): Call<JsonObject>
+
+        companion object {
+            private val BASE_URL = ""
+
+            private val gson = GsonBuilder()
+                .setLenient()
+                .create()
+
+            val okHttpClient = OkHttpClient
+                .Builder()
+                .build()
+
+            private val retrofit by lazy {
+                Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
+            }
+
+            val api: MemoboardAPIInterface by lazy {
+                retrofit.create(MemoboardAPIInterface::class.java)
+            }
         }
     }
 }

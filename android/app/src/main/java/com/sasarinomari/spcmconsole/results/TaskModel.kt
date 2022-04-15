@@ -1,7 +1,6 @@
-package com.sasarinomari.spcmconsole.Memoboard
+package com.sasarinomari.spcmconsole.results
 
 import com.google.gson.annotations.SerializedName
-
 
 class TaskModel {
     @SerializedName("TaskId")

@@ -11,7 +11,6 @@
     import kotlin.collections.ArrayList
     import kotlin.collections.HashMap
 
-
     class MainActivity : AppCompatActivity() {
         private val api = object : APICall(this) {
             override fun onError(message: String) {
@@ -22,83 +21,25 @@
                 onError(message)
             }
         }
-        private lateinit var serverStatusUI: ServerStatusUI
-        private val panel_payday = PayDayDday(api, this)
+
+        private val overviewFragment by lazy { server_overview as ServerOverviewFragment }
+        private val taskPanelFragment by lazy { task_panel as TaskPanelFragment }
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_main)
-            initServerStatusUI()
-            panel_payday.init(layout_dday)
 
-            layout_computer_status.setOnClickListener {
-                RemoteComputerFragmentDialog(api).show(
-                    supportFragmentManager,
-                    "Remote Power Management"
-                )
-            }
-            layout_pi_status.setOnClickListener {
-                RaspberryServerFragmentDialog(api).show(
-                    supportFragmentManager,
-                    "Server Management"
-                )
-            }
+            overviewFragment.setApiCall(api)
+            taskPanelFragment.setApiCall(api)
 
+            // 실험적 기능 어댑터 초기화
             buildAdapter()
-
 
             // FCM 토큰 갱신
             FirebaseMessaging.getInstance().token.addOnSuccessListener {
                 api.updateFcmToken(it) { }
             }
         }
-
-        private fun initServerStatusUI() {
-            val views = HashMap<String, View>()
-            views["computer_text"] = status_text_computer
-            views["computer_icon"] = status_icon_computer
-            views["computer_temp"] = temp_text_computer
-            views["raspberry_text"] = status_text_pi
-            views["raspberry_icon"] = status_icon_pi
-            views["raspberry_temp"] = temp_text_pi
-            val strings = HashMap<String, String>()
-            strings["offline"] = getString(R.string.Offline)
-            strings["online"] = getString(R.string.Online)
-            strings["loading"] = getString(R.string.Loading)
-            serverStatusUI = ServerStatusUI(views, strings)
-        }
-
-        private fun startStatusChecker() {
-            Thread {
-                api.lookup {
-                    when (it.Server.Status) {
-                        LookupContent.STATUS_ONLINE -> serverStatusUI.onServerOnline(it)
-                        else -> serverStatusUI.onServerOffline()
-                    }
-                    when (it.PC.Status) {
-                        LookupContent.STATUS_ONLINE -> serverStatusUI.onComputerOnline(it)
-                        else -> serverStatusUI.onComputerOffline()
-                    }
-                }
-                Thread.sleep(5000)
-                if (focused) startStatusChecker()
-            }.start()
-        }
-
-        var focused = true
-        override fun onResume() {
-            super.onResume()
-            serverStatusUI.setStatusToLoading()
-            focused = true
-            startStatusChecker()
-            panel_payday.reload()
-        }
-
-        override fun onPause() {
-            super.onPause()
-            focused = false
-        }
-
 
         private fun buildAdapter(): ListAdapter? {
             val commandList = arrayOf(

@@ -87,6 +87,15 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_marginTop="60dp"
+                        android:layout_marginBottom="60dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#888"
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:gravity="center"
+                        android:text="불러오는 중이거나 할 일이 없나봐요"/>
                 </LinearLayout>
             </LinearLayout>
 

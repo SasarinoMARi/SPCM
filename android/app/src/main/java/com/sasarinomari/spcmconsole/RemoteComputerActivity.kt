@@ -1,6 +1,5 @@
 package com.sasarinomari.spcmconsole
 
-import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
@@ -44,8 +43,8 @@ class RemoteComputerActivity : AppCompatActivity() {
         listview.adapter = adapter
         listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
             when(i) {
-                0 -> { SPCMConsole.confirm(this, getString(R.string.Confirm_RdpServer)) { api.start_tv() } }
-                1 -> { SPCMConsole.confirm(this,  getString(R.string.Confirm_FileServer)) { api.start_fs() } }
+                0 -> { SPCMConsole.confirm(this, getString(R.string.Confirm_RdpServer)) { api.startTeamviewerServer() } }
+                1 -> { SPCMConsole.confirm(this,  getString(R.string.Confirm_FileServer)) { api.startFileServer() } }
 
             }
         }

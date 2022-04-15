@@ -2,23 +2,19 @@
     <string name="app_name">나루</string>
     <string name="Online">온라인</string>
     <string name="Offline">오프라인</string>
-
     <string name="Loading">불러오는 중..</string>
     <string name="More">더보기</string>
     <string name="MoreContextTitle">실행할 동작을 선탁하세요</string>
-
     <string name="Run_Boot">컴퓨터 전원 켜기</string>
     <string name="Run_Shutdown">컴퓨터 전원 끄기</string>
     <string name="Run_RdpServer">TeamViewer 서버 켜기</string>
     <string name="Run_FileServer">파일 공유 서버 켜기</string>
     <string name="Reboot">재부팅</string>
-
     <string name="Confirm_Wakeup">컴퓨터 전원을 켭니다.</string>
     <string name="Confirm_Shutdown">컴퓨터 전원을 끕니다.</string>
     <string name="Confirm_RdpServer">TeamViewer 서버를 시작합니다.</string>
     <string name="Confirm_FileServer">파일 공유 서버를 시작합니다.</string>
     <string name="Confirm_PiReboot">라즈베리 서버를 재부팅합니다.</string>
-
     <string name="server_error">통신 에러가 발생했습니다.</string>
     <string name="Confirm_Play">링크를 데스크탑에 보냅니다.</string>
     <string name="Mute">음소거</string>
@@ -41,4 +37,7 @@
     <string name="LogLevelFilter">로그 레벨 필터</string>
     <string name="SetDate_Today">오늘</string>
     <string name="SetDate_Tommorow">내일</string>
+    <string name="TouchToDetail">터치하여 자세히</string>
+    <string name="CurrentTemperature">현재 온도 : %1$s˚C</string>
+    <string name="Dday">D-%1$d</string>
 </resources>

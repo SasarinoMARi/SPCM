@@ -1,7 +1,6 @@
-package com.sasarinomari.spcmconsole.Memoboard
+package com.sasarinomari.spcmconsole
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import java.sql.Time
 import java.sql.Timestamp
