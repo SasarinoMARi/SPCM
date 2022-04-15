@@ -1,9 +1,8 @@
 package com.sasarinomari.spcmconsole
 
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import com.sasarinomari.spcmconsole.Results.FoodResult
-import com.sasarinomari.spcmconsole.Results.LookupResult
+import com.sasarinomari.spcmconsole.parameters.*
+import com.sasarinomari.spcmconsole.results.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -17,6 +16,10 @@ interface APIInterface {
     fun lookup(): Call<LookupResult>
     @GET("reboot")
     fun reboot_pi(@Header("token") token:String): Call<String>
+    @GET("logs")
+    fun logs(@Header("token") token:String, @Header("level") level:Int, @Header("page") page:Int): Call<Array<LogResult>>
+    @POST("log")
+    fun log(@Header("token") token:String, @Body body: LogParameter): Call<String>
     @GET("hetzer")
     fun hetzer(@Header("token") token:String): Call<String>
 
@@ -43,11 +46,9 @@ interface APIInterface {
     fun play(@Header("token") token:String, @Header("src") src:String): Call<String>
 
     @POST("noti/send_fcm")
-    fun sendFcm(@Header("token") token:String, @Body body: sendFcmParam): Call<String>
-    class sendFcmParam(val title: String, val body: String)
+    fun sendFcm(@Header("token") token:String, @Body body: NotifyParameter): Call<String>
     @POST("noti/update_fcm_token")
-    fun updateFcmToken(@Header("token") token:String, @Body body: updateFcmTokenParam): Call<String>
-    class updateFcmTokenParam(val token: String)
+    fun updateFcmToken(@Header("token") token:String, @Body body: FcmTokenUpdateParameter): Call<String>
 
     @GET("food_dispenser")
     fun foodDispenser(@Header("token") token:String): Call<FoodResult>

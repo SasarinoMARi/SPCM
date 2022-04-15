@@ -18,6 +18,10 @@ class RaspberryServerFragmentDialog(private val api: APICall) : DialogFragment()
             SPCMConsole.confirm(context!!, getString(R.string.Confirm_PiReboot)) { api.reboot_pi() }
             this.dismiss()
         }
+        rootView.button_open_logs.setOnClickListener {
+            val intent = Intent(context, LogViewActivity::class.java)
+            startActivity(intent)
+        }
 
         this.dialog?.setTitle("Server Management")
 

@@ -37,4 +37,6 @@
     <string name="Reroll">다시 뽑기</string>
     <string name="CallToStore">매장에 전화하기</string>
     <string name="apply">등록</string>
+    <string name="ShowLogs">서버 로그 조회하기</string>
+    <string name="LogLevelFilter">로그 레벨 필터</string>
 </resources>

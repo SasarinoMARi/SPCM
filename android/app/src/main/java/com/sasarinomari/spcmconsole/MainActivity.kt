@@ -6,9 +6,8 @@
     import android.widget.*
     import androidx.appcompat.app.AppCompatActivity
     import com.google.firebase.messaging.FirebaseMessaging
-    import com.sasarinomari.spcmconsole.Results.LookupContent
+    import com.sasarinomari.spcmconsole.results.LookupContent
     import kotlinx.android.synthetic.main.activity_main.*
-    import java.util.*
     import kotlin.collections.ArrayList
     import kotlin.collections.HashMap
 
@@ -73,21 +72,12 @@
             Thread {
                 api.lookup {
                     when (it.Server.Status) {
-                        LookupContent.STATUS_ONLINE -> {
-                            serverStatusUI.onServerOnline(it)
-                        }
-                        else -> {
-                            serverStatusUI.onServerOffline()
-                        }
+                        LookupContent.STATUS_ONLINE -> serverStatusUI.onServerOnline(it)
+                        else -> serverStatusUI.onServerOffline()
                     }
-
                     when (it.PC.Status) {
-                        LookupContent.STATUS_ONLINE -> {
-                            serverStatusUI.onComputerOnline(it)
-                        }
-                        else -> {
-                            serverStatusUI.onComputerOffline()
-                        }
+                        LookupContent.STATUS_ONLINE -> serverStatusUI.onComputerOnline(it)
+                        else -> serverStatusUI.onComputerOffline()
                     }
                 }
                 Thread.sleep(5000)
@@ -113,7 +103,8 @@
         private fun buildAdapter(): ListAdapter? {
             val commandList = arrayOf(
                 getString(R.string.WriteDiary),
-                "오늘의 메뉴 추천"
+                "오늘의 메뉴 추천",
+                "로그 기록 api 테스트"
             )
             val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
             for (i in commandList.indices) {
@@ -133,6 +124,11 @@
                     }
                     1 -> {
                         FoodDispenserFragmentDialog(api).show(supportFragmentManager, "Food Dispenser")
+                    }
+                    2 -> {
+                        api.log(1, "MainActivity.kt", "안드로이드에서 기록된 로그입니다") {
+                            Toast.makeText(this@MainActivity, "OK!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }

@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.sasarinomari.spcmconsole.Results.LookupResult
+import com.sasarinomari.spcmconsole.results.LookupResult
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -45,8 +45,6 @@ class ServerStatusUI(
             tempView.text = "클릭하여 자세히"
             tempView.setTextColor(color_gray)
         }
-
-        onComputerOffline()
     }
 
     @SuppressLint("SetTextI18n")
@@ -86,6 +84,13 @@ class ServerStatusUI(
         (views["raspberry_text"] as TextView).text = strings["loading"]
         (views["raspberry_text"] as TextView).setTextColor(color_default)
         (views["raspberry_icon"] as ImageView).setColorFilter(color_default)
+
+        val cTempView = (views["computer_temp"] as TextView)
+        cTempView.text = "클릭하여 자세히"
+        cTempView.setTextColor(color_gray)
+        val rTempView = (views["raspberry_temp"] as TextView)
+        rTempView.text = "클릭하여 자세히"
+        rTempView.setTextColor(color_gray)
     }
 
     fun getRoundedTemperature(temperature: String): String {
