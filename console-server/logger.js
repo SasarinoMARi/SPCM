@@ -33,9 +33,10 @@ class Logger {
         this.#notifier.sendBoth(title, content);
     }
 
-    verbose         (subject, content, ip) { this.#general_logging(0, subject, content, ip) }
-    debug           (subject, content, ip) { this.#general_logging(1, subject, content, ip) }
-    info            (subject, content, ip) { this.#general_logging(2, subject, content, ip) }
+    log             (level, subject, content, ip) { this.#general_logging(0, subject, content, ip); }
+    verbose         (subject, content, ip) { this.#general_logging(0, subject, content, ip); }
+    debug           (subject, content, ip) { this.#general_logging(1, subject, content, ip); }
+    info            (subject, content, ip) { this.#general_logging(2, subject, content, ip); }
     warning         (subject, content, ip) { this.#general_logging(3, subject, content, ip); this.#notifyToAdmin(3, subject, content, ip) }
     error           (subject, content, ip) { this.#general_logging(4, subject, content, ip); this.#notifyToAdmin(4, subject, content, ip) }
     critical        (subject, content, ip) { this.#general_logging(5, subject, content, ip); this.#notifyToAdmin(5, subject, content, ip) }

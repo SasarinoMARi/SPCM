@@ -10,6 +10,7 @@ const shell = require('shelljs');
 const notifier = require('./messaging/notifier');
 const fd = require('./food_dispenser/food_api');
 const temperature = require('./temperature');
+const sql = require('./database/sql');
 
 const log_header = 'router.js';
 
@@ -78,6 +79,37 @@ module.exports = {
             shell.exec('sudo reboot');
             res.send("OK");
         },
+        logs: function(req, res, next) {
+            const ip = getIpAddress(req);
+            log.verbose(log_header, `로그 조회 요청됨`, ip);
+            if(!authorize(req, res)) return;
+            const level = req.headers.level ? req.headers.level : 0;
+            const page = req.headers.page ? req.headers.page : 0;
+
+            const rpp = 50;
+            const offect = rpp * page;
+
+            const query = `SELECT * from \`log\` where \`level\`>=${level} ORDER BY idx LIMIT ${rpp} OFFSET ${offect}`;
+            sql.query(query, function(err, logs, fields) {
+                if(err) {
+                    log.error(log_header, `Error fetching log list: ${err}`);
+                    return;
+                }
+                res.json(logs);
+            });
+        },
+        log: function(req, res, next) {
+            const ip = getIpAddress(req);
+            if(!authorize(req, res)) return;
+            const level = req.headers.level;
+            const subject = req.headers.subject;
+            const content = req.headers.content;
+            if(level == undefined || subject == undefined || content == undefined) {
+                res.statusCode = 500;
+                res.send("");
+            }
+            log.log(level, subject, content, ip);
+        }
     },
 
     // 알림 관련 코드

@@ -42,6 +42,7 @@ CREATE TABLE `food_list` (
 	`Phone` VARCHAR(18) NOT NULL NULL COMMENT '전화번호',
 	`Description` TEXT NULL DEFAULT NULL COMMENT '비고',
 	`Disabled` TINYINT NOT NULL DEFAULT '0' COMMENT '비활성화 여부',
+	`Thumbnail_URL` TEXT NULL DEFAULT NULL COMMENT '섬네일 주소',
 	PRIMARY KEY (`FoodId`)
 )
 COLLATE='utf8_general_ci';

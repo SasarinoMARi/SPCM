@@ -16,6 +16,8 @@ app.use(express.json())
 app.get('/establishment', router.system.establishment);
 app.get('/lookup', router.system.lookup);
 app.get('/reboot', router.system.reboot);
+app.get('/logs', router.system.logs);
+app.post('/log', router.system.log);
 
 app.post('/noti/send_fcm', router.noti.send_fcm);
 app.post('/noti/update_fcm_token', router.noti.update_fcm_token);
@@ -40,10 +42,10 @@ app.get('/food_dispenser', router.food_dispenser);
 app.use(express.static(__dirname + '/public'));
 app.use(router.system.default);
 
+require('./scheduler').loadSchedules();
+
 var port = process.env.PORT;
 var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
     require('./logger').info('index.js', '서버 시작');
 });
-
-require('./scheduler').loadSchedules();
