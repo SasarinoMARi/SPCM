@@ -14,6 +14,7 @@ COLLATE='utf8_general_ci';
 CREATE TABLE `schedule` (
 	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
 	`active` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '활성화 여부',
+	`name` TEXT NOT NULL COMMENT '작업 이름',
 	`cron` VARCHAR(128) NOT NULL COMMENT '실행할 시간(cron)',
 	`command` TEXT NOT NULL COMMENT '실행할 명령어',
 	`created_at` DATETIME NOT NULL COMMENT '기록 날짜',
@@ -34,7 +35,7 @@ CREATE TABLE `timeline` (
 )
 COLLATE='utf8_general_ci';
 
-CREATE TABLE `food_list` (
+CREATE TABLE `food` (
 	`FoodId` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
 	`Name` VARCHAR(100) NOT NULL COMMENT '메뉴명',
 	`Store` VARCHAR(100) NOT NULL NULL COMMENT '매장명',
@@ -46,3 +47,16 @@ CREATE TABLE `food_list` (
 	PRIMARY KEY (`FoodId`)
 )
 COLLATE='utf8_general_ci';
+
+CREATE TABLE `destroyed_tweet` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`text` TEXT NOT NULL COMMENT '본문',
+	`is_mention` TINYINT NOT NULL DEFAULT '0' COMMENT '멘션인지 여부',
+	`is_retweet` TINYINT NOT NULL DEFAULT '0' COMMENT '리트윗인지 여부',
+	`created_at` DATETIME NOT NULL COMMENT '트윗 날짜',
+	`destroyed_at` DATE NOT NULL COMMENT '삭제 날짜',
+	`retweet_count` INT UNSIGNED NULL DEFAULT NULL COMMENT '리트윗 수',
+	`favorite_count` INT UNSIGNED NULL DEFAULT NULL COMMENT '마음 수',
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8mb4_unicode_ci';

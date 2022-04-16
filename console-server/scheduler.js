@@ -12,6 +12,7 @@ const cron = require('node-schedule');
 const sql = require('./database/sql');
 const notifier = require('./messaging/notifier')
 const shell = require('shelljs');
+const twitter = require('./twitter');
 
 class Scheduler {
     constructor() { }
@@ -27,9 +28,9 @@ class Scheduler {
             console.log(`Fetching schedule complete! ${schedules.length} schedules is ready.`);
             schedules.forEach(schedule => {
                 if(schedule.active == 1) {
-                    console.log(`${schedule.cron}  ${schedule.command}`);
+                    console.log(`${schedule.name} : ${schedule.cron}  ${schedule.command}`);
                     cron.scheduleJob(schedule.cron, function() { 
-                        log.verbose(log_header, `run schedule: ${schedule.command}`);
+                        log.verbose(log_header, `run schedule: ${schedule.name}`);
                         try{ eval(schedule.command); }
                         catch(e) { 
                             log.warning(log_header, `\nError running scheduled command : \n${schedule.command}\n\n${e}\n\n`);
