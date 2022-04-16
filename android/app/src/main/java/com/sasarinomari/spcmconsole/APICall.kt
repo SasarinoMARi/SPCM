@@ -447,4 +447,36 @@ abstract class APICall(private val context: Context) {
             }
         })
     }
+    fun reloadSchedule(callback: ()->Unit) {
+        if (token == null) {
+            establishment {
+                reloadSchedule(callback)
+            }
+            return
+        }
+
+        val call = APIInterface.api.reloadSchedule(token!!)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") {
+                        onMessage(context.getString(R.string.Success_Schedule_Reload))
+                    } else {
+                        onError(context.getString(R.string.server_error))
+                    }
+                } else {
+                    if (response.code() == 403) {
+                        establishment {
+                            reloadSchedule(callback)
+                        }
+                    } else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
 }
