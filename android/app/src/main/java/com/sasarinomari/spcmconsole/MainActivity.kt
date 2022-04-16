@@ -1,136 +1,78 @@
-package com.sasarinomari.spcmconsole
+    package com.sasarinomari.spcmconsole
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.graphics.Color
-import android.os.Bundle
-import android.view.WindowManager
-import android.widget.PopupMenu
-import android.widget.Toast
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.android.synthetic.main.activity_main.*
+    import android.content.Intent
+    import android.os.Bundle
+    import android.view.View
+    import android.widget.*
+    import androidx.appcompat.app.AppCompatActivity
+    import com.google.firebase.messaging.FirebaseMessaging
+    import com.sasarinomari.spcmconsole.results.LookupContent
+    import kotlinx.android.synthetic.main.activity_main.*
+    import kotlin.collections.ArrayList
+    import kotlin.collections.HashMap
 
+    class MainActivity : AppCompatActivity() {
+        private val api = object : APICall(this) {
+            override fun onError(message: String) {
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+            }
 
-class MainActivity : Activity(), APICall.lookupInterface {
-    private val api = object : APICall(this) {
-        override fun onError(message: String) {
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+            override fun onMessage(message: String) {
+                onError(message)
+            }
         }
 
-        override fun onMessage(message: String) {
-            onError(message)
+        private val overviewFragment by lazy { server_overview as ServerOverviewFragment }
+        private val taskPanelFragment by lazy { task_panel as TaskPanelFragment }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+
+            overviewFragment.setApiCall(api)
+            taskPanelFragment.setApiCall(api)
+
+            // 실험적 기능 어댑터 초기화
+            buildAdapter()
+
+            // FCM 토큰 갱신
+            FirebaseMessaging.getInstance().token.addOnSuccessListener {
+                api.updateFcmToken(it) { }
+            }
         }
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true)
-        setContentView(R.layout.activity_main)
-
-        button_wakeup.setOnClickListener {
-            confirm(getString(R.string.pc_start)) { api.wakeup() }
-        }
-
-        button_shutdown.setOnClickListener {
-            confirm(getString(R.string.pc_stop)) { api.shutdown() }
-        }
-
-        button_more.setOnClickListener {
-            val popupMenu = PopupMenu(this@MainActivity, it)
-            menuInflater.inflate(R.menu.menu_main_actions, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId) {
-                    R.id.action_fserver_start -> {
-                        confirm(getString(R.string.fserver_start)) { api.start_fs() }
+        private fun buildAdapter(): ListAdapter? {
+            val commandList = arrayOf(
+                getString(R.string.WriteDiary),
+                "오늘의 메뉴 추천",
+                "로그 기록 api 테스트"
+            )
+            val arrayList: ArrayList<HashMap<String, String>> = ArrayList()
+            for (i in commandList.indices) {
+                val hashMap: HashMap<String, String> = HashMap()
+                hashMap["text"] = commandList[i]
+                arrayList.add(hashMap)
+            }
+            val from = arrayOf("text")
+            val to = intArrayOf(R.id.text_command_name)
+            val adapter = SimpleAdapter(this, arrayList, R.layout.item_command, from, to)
+            listview.adapter = adapter
+            listview.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                when (i) {
+                    0 -> {
+                        val intent = Intent("com.sasarinomari.diary.write")
+                        startActivity(intent)
                     }
-                    R.id.action_rdpserver_start -> {
-                        confirm(getString(R.string.rdpserver_start)) { api.start_tv() }
+                    1 -> {
+                        FoodDispenserFragmentDialog(api).show(supportFragmentManager, "Food Dispenser")
                     }
-                    R.id.action_raspi_reboot -> {
-                        confirm(getString(R.string.raspi_reboot)) { api.reboot_pi() }
-                    }
-                    R.id.action_hetzer_start -> {
-                        confirm(getString(R.string.hetzer_start)) {api.hetzer()}
-                    }
-                    else -> {
-
+                    2 -> {
+                        api.log(1, "MainActivity.kt", "안드로이드에서 기록된 로그입니다") {
+                            Toast.makeText(this@MainActivity, "OK!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-                return@setOnMenuItemClickListener false
             }
-            popupMenu.show()
-        }
-
-        // FCM 토큰 갱신
-        FirebaseMessaging.getInstance().token.addOnSuccessListener {
-            api.updateFcmToken(it) { }
+            return adapter
         }
     }
-
-    private fun confirm(text: String, action: ()-> Unit) {
-        val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setMessage(text)
-            .setCancelable(true)
-            .setPositiveButton(android.R.string.yes) { d, id ->
-                action()
-            }
-            .setNegativeButton(android.R.string.no) { d, id ->
-                d.dismiss()
-            }
-        val alert = builder.create()
-        alert.show()
-    }
-
-    private fun startStatusChecker() {
-        Thread {
-            api.lookup(this@MainActivity)
-            Thread.sleep(5000)
-            if(focused) startStatusChecker()
-        }.start()
-    }
-
-    var focused = true
-    override fun onResume() {
-        super.onResume()
-        setStatusToLoading()
-        focused = true
-        startStatusChecker()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        focused = false
-    }
-    private fun setWindowFlag(bits: Int, on: Boolean) {
-        val win = window ?: return
-        val winParams = win.attributes
-        if (on) {
-            winParams.flags = winParams.flags or bits
-        } else {
-            winParams.flags = winParams.flags and bits.inv()
-        }
-        win.attributes = winParams
-    }
-
-    override fun onDead() {
-        status_text.text = getString(R.string.Offline)
-        val c = Color.parseColor("#EF3D56")
-        status_text.setTextColor(c)
-        status_icon.setColorFilter(c)
-    }
-
-    override fun onLive() {
-        status_text.text = getString(R.string.Online)
-        val c = Color.parseColor("#00A889")
-        status_text.setTextColor(c)
-        status_icon.setColorFilter(c)
-    }
-
-    fun setStatusToLoading() {
-        status_text.text = getString(R.string.Loading)
-        val c = Color.parseColor("#ffffff")
-        status_text.setTextColor(c)
-        status_icon.setColorFilter(c)
-    }
-
-}

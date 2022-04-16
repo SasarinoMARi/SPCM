@@ -3,11 +3,11 @@ package com.sasarinomari.spcmconsole
 import android.content.Context
 import android.util.Log
 import com.google.gson.JsonObject
+import com.sasarinomari.spcmconsole.parameters.*
+import com.sasarinomari.spcmconsole.results.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.security.MessageDigest
-import java.util.*
 
 abstract class APICall(private val context: Context) {
     abstract fun onError(message: String)
@@ -16,13 +16,7 @@ abstract class APICall(private val context: Context) {
     private var token: String? = null
 
     fun establishment(callback: () -> Unit) {
-        val c = Calendar.getInstance()
-        val h = c.get(Calendar.HOUR_OF_DAY)
-        val m = c.get(Calendar.MINUTE)
-        val key = ""
-
-        // Log.d("MainActivity", "key: $key")
-        val call = APIInterface.api.establishment(key)
+        val call = APIInterface.api.establishment(APIInterface.getToken())
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -34,15 +28,14 @@ abstract class APICall(private val context: Context) {
                     token = result
                     callback()
                 }
-
             }
         })
     }
 
-    fun shutdown() {
+    fun shutdown(callback: ()->Unit) {
         if (token == null) {
             establishment {
-                shutdown()
+                shutdown(callback)
             }
             return
         }
@@ -57,14 +50,14 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.pc_stop))
+                        onMessage(context.getString(R.string.Confirm_Shutdown))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            shutdown()
+                            shutdown(callback)
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -72,43 +65,10 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun sleep() {
+    fun wakeup(callback: ()->Unit) {
         if (token == null) {
             establishment {
-                sleep()
-            }
-            return
-        }
-
-        val call = APIInterface.api.sleep(token!!)
-        call.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                onError(t.toString())
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    val result = response.body()!!
-                    if (result == "OK") {
-                        onMessage("시스템 절전 요청을 보냈습니다.")
-                    } else {
-                        onError(context.getString(R.string.server_error))
-                    }
-                } else {
-                    if (response.code() == 403) {
-                        establishment {
-                            sleep()
-                        }
-                    } else onMessage("${response.code()} : ${response.message()}")
-                }
-            }
-        })
-    }
-
-    fun wakeup() {
-        if (token == null) {
-            establishment {
-                wakeup()
+                wakeup(callback)
             }
             return
         }
@@ -123,14 +83,14 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.pc_start))
+                        onMessage(context.getString(R.string.Confirm_Wakeup))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            wakeup()
+                            wakeup(callback)
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -138,52 +98,35 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-
-    interface lookupInterface {
-        fun onDead()
-        fun onLive()
-    }
-
-    fun lookup(i: lookupInterface) {
+    fun lookup(callback: (LookupResult) -> Unit) {
         val call = APIInterface.api.lookup()
-        call.enqueue(object : Callback<String> {
-            private fun dead() {
-                i.onDead()
+        call.enqueue(object : Callback<LookupResult> {
+            override fun onFailure(call: Call<LookupResult>, t: Throwable) {
+                val result = LookupResult()
+                result.Server.Status = 0
+                callback(result)
             }
 
-            private fun live() {
-                i.onLive()
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                dead()
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+            override fun onResponse(call: Call<LookupResult>, response: Response<LookupResult>) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
-                    if (result == "Online") {
-                        live()
-                    } else {
-                        dead()
-                    }
+                    callback(result)
                 } else {
-                    // TODO: Http Response 처리
-                    dead()
+                    onFailure(call, Exception("Response is not successful"))
                 }
             }
         })
     }
 
-    fun start_fs() {
+    fun startFileServer() {
         if (token == null) {
             establishment {
-                start_fs()
+                startFileServer()
             }
             return
         }
 
-        val call = APIInterface.api.start_fs(token!!)
+        val call = APIInterface.api.startFileServer(token!!)
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -193,14 +136,14 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.fserver_start))
+                        onMessage(context.getString(R.string.Confirm_FileServer))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            start_fs()
+                            startFileServer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -208,15 +151,15 @@ abstract class APICall(private val context: Context) {
         })
     }
 
-    fun stop_fs() {
+    fun startTeamviewerServer() {
         if (token == null) {
             establishment {
-                stop_fs()
+                startTeamviewerServer()
             }
             return
         }
 
-        val call = APIInterface.api.stop_fs(token!!)
+        val call = APIInterface.api.startRdpServer(token!!)
         call.enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 onError(t.toString())
@@ -226,49 +169,14 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage("파일 서버 중단 요청을 보냈습니다.")
+                        onMessage(context.getString(R.string.Confirm_RdpServer))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            stop_fs()
-                        }
-                    } else onMessage("${response.code()} : ${response.message()}")
-                }
-            }
-        })
-    }
-
-
-
-    fun start_tv() {
-        if (token == null) {
-            establishment {
-                start_tv()
-            }
-            return
-        }
-
-        val call = APIInterface.api.start_tv(token!!)
-        call.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                onError(t.toString())
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    val result = response.body()!!
-                    if (result == "OK") {
-                        onMessage(context.getString(R.string.rdpserver_start))
-                    } else {
-                        onError(context.getString(R.string.server_error))
-                    }
-                } else {
-                    if (response.code() == 403) {
-                        establishment {
-                            start_fs()
+                            startFileServer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
@@ -276,10 +184,10 @@ abstract class APICall(private val context: Context) {
         })
     }
     
-    fun reboot_pi() {
+    fun rebootServer() {
         if (token == null) {
             establishment {
-                start_tv()
+                rebootServer()
             }
             return
         }
@@ -294,66 +202,19 @@ abstract class APICall(private val context: Context) {
                 if (response.isSuccessful) {
                     val result = response.body()!!
                     if (result == "OK") {
-                        onMessage(context.getString(R.string.rdpserver_start))
+                        onMessage(context.getString(R.string.Confirm_PiReboot))
                     } else {
                         onError(context.getString(R.string.server_error))
                     }
                 } else {
                     if (response.code() == 403) {
                         establishment {
-                            reboot_pi()
+                            rebootServer()
                         }
                     } else onMessage("${response.code()} : ${response.message()}")
                 }
             }
         })
-    }
-    
-    fun hetzer() {
-        if (token == null) {
-            establishment {
-                hetzer()
-            }
-            return
-        }
-
-        val call = APIInterface.api.hetzer(token!!)
-        call.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                onError(t.toString())
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    val result = response.body()!!
-                    if (result == "OK") {
-                        onMessage(context.getString(R.string.hetzer_start))
-                    } else {
-                        onError(context.getString(R.string.server_error))
-                    }
-                } else {
-                    if (response.code() == 403) {
-                        establishment {
-                            hetzer()
-                        }
-                    } else onMessage("${response.code()} : ${response.message()}")
-                }
-            }
-        })
-    }
-
-    private fun sha256(param: String): String {
-        val HEX_CHARS = "0123456789ABCDEF"
-        val bytes = MessageDigest
-            .getInstance("SHA-256")
-            .digest(param.toByteArray())
-        val result = StringBuilder(bytes.size * 2)
-        bytes.forEach {
-            val i = it.toInt()
-            result.append(HEX_CHARS[i shr 4 and 0x0f])
-            result.append(HEX_CHARS[i and 0x0f])
-        }
-        return result.toString()
     }
 
     fun sendFcm(title: String, content: String, callback: ()->Unit) {
@@ -364,7 +225,7 @@ abstract class APICall(private val context: Context) {
             return
         }
 
-        val data = APIInterface.sendFcmParam(title, content)
+        val data = NotifyParameter(title, content)
         val call = APIInterface.api.sendFcm(token!!, data)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -389,7 +250,7 @@ abstract class APICall(private val context: Context) {
             return
         }
 
-        val data = APIInterface.updateFcmTokenParam(fcmid)
+        val data = FcmTokenUpdateParameter(fcmid)
         val call = APIInterface.api.updateFcmToken(token!!, data)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -401,6 +262,187 @@ abstract class APICall(private val context: Context) {
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+        })
+    }
+
+    fun setVolume(amount: Int) {
+        if (token == null) {
+            establishment { setVolume(amount) }
+            return
+        }
+
+        val call = APIInterface.api.volume(token!!, amount)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") {   }
+                    else { onError(context.getString(R.string.server_error)) }
+                } else {
+                    if (response.code() == 403) { establishment { setVolume(amount) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun openUrl(src: String) {
+        if (token == null) {
+            establishment { openUrl(src) }
+            return
+        }
+
+        val call = APIInterface.api.play(token!!, src)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) { onError(t.toString()) }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") { onMessage(context.getString(R.string.Confirm_Play)) }
+                    else { onError(context.getString(R.string.server_error)) }
+                } else {
+                    if (response.code() == 403) { establishment { openUrl(src) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun mute(option: Int = 2) {
+        if (token == null) {
+            establishment { mute(option) }
+            return
+        }
+
+        val call = APIInterface.api.mute(token!!, option)
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) { onError(t.toString()) }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if (result == "OK") { onMessage(context.getString(R.string.Confirm_Mute)) }
+                    else { onError(context.getString(R.string.server_error)) }
+                } else {
+                    if (response.code() == 403) { establishment { mute(option) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun foodDispenser(callback:(FoodResult)->Unit) {
+        if (token == null) {
+            establishment { foodDispenser(callback) }
+            return
+        }
+
+        val call = APIInterface.api.foodDispenser(token!!)
+        call.enqueue(object : Callback<FoodResult> {
+            override fun onFailure(call: Call<FoodResult>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<FoodResult>, response: Response<FoodResult>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    callback(result)
+                } else {
+                    if (response.code() == 403) { establishment { foodDispenser(callback) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun getLogs(logLevel: Int, page: Int, callback:(Array<LogResult>)->Unit) {
+        if (token == null) {
+            establishment { getLogs(logLevel, page, callback) }
+            return
+        }
+
+        val call = APIInterface.api.logs(token!!, logLevel, page)
+        call.enqueue(object : Callback<Array<LogResult>> {
+            override fun onFailure(call: Call<Array<LogResult>>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<Array<LogResult>>, response: Response<Array<LogResult>>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    callback(result)
+                } else {
+                    if (response.code() == 403) { establishment { getLogs(logLevel, page, callback) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
+
+    fun log(level: Int, subject: String, content:String, callback: ()->Unit) {
+        if (token == null) {
+            establishment {
+                log(level, subject, content, callback)
+            }
+            return
+        }
+
+        val data = LogParameter(level, subject, content)
+        val call = APIInterface.api.log(token!!, data)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    callback()
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                onError(t.toString())
+            }
+        })
+    }
+
+    fun createTask(task: TaskModel, callback: () -> Unit) {
+        val call = APIInterface.memoApi.task_create(APIInterface.getMemoToken(), task)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    Log.d("API_NEW_TASK", result.toString())
+                    callback()
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                onError(t.toString())
+            }
+        })
+    }
+
+    fun getTasks(options: GetTaskParameter, callback: (Array<TaskModel>)->Unit) {
+        val call = APIInterface.memoApi.task_list(APIInterface.getMemoToken(), options)
+        call.enqueue(object : Callback<Array<TaskModel>> {
+            override fun onResponse(call: Call<Array<TaskModel>>, response: Response<Array<TaskModel>>) {
+                if (response.isSuccessful) {
+                    val tasks = response.body()!!
+                    callback(tasks)
+                } else {
+                    onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Array<TaskModel>>, t: Throwable) {
                 onError(t.toString())
             }
         })
