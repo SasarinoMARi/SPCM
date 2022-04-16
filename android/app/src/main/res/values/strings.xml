@@ -40,4 +40,6 @@
     <string name="TouchToDetail">터치하여 자세히</string>
     <string name="CurrentTemperature">현재 온도 : %1$s˚C</string>
     <string name="Dday">D-%1$d</string>
+    <string name="ReloadSchedule">예약 작업 목록 새로고침</string>
+    <string name="Success_Schedule_Reload">서버 스케줄러를 새로 고쳤습니다.</string>
 </resources>

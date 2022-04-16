@@ -25,6 +25,8 @@ interface APIInterface {
     fun log(@Header("token") token:String, @Body body: LogParameter): Call<String>
     @GET("hetzer")
     fun hetzer(@Header("token") token:String): Call<String>
+    @GET("reload_schedule")
+    fun reloadSchedule(@Header("token") token:String): Call<String>
 
     @GET("power/wakeup")
     fun wakeup(@Header("token") token:String): Call<String>
