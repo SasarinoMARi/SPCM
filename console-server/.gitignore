@@ -3,3 +3,4 @@ logs/
 .env
 fcm_id
 firebaseAccountKey.json
+test/

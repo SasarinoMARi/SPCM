@@ -4,14 +4,13 @@
 
 require("dotenv").config();
 const request = require('request');
-const logger = require("./../common/logger")
+const log = require("./logger");
+const log_header = 'iptime-api.js';
 
 let host = process.env.IPTIME_CONSOLE;
 let baseUrl = `http://${host}/`;
 
-function checkup() {
-    logger.d("wol: checkup");
-
+function checkup(request_ip) {
     const options = {
         uri: baseUrl + "checkup",
         headers: {
@@ -23,7 +22,7 @@ function checkup() {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("checkup error : " + error);
+            log.error(log_header, `[/checkup failed] ${error}`, request_ip);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -31,15 +30,13 @@ function checkup() {
                 version(body);
             }
             else {
-                logger.e("checkup statusCode : " + statusCode);
+                log.error(log_header, `[/checkup failed] status code ${statusCode} returned.`, request_ip);
             }
         }
     });
 }
 
-function version() {
-    logger.d("wol : version");
-
+function version(request_ip) {
     const options = {
         uri: baseUrl + "version",
         headers: {
@@ -52,7 +49,7 @@ function version() {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("version error : " + error);
+            log.error(log_header, `[/version failed] ${error}`, request_ip);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -60,15 +57,13 @@ function version() {
                 hostinfo(body);
             }
             else {
-                logger.e("version statusCode : " + statusCode);
+                log.error(log_header, `[/version failed] status code ${statusCode} returned.`, request_ip);
             }
         }
     });
 }
 
-function hostinfo() {
-    logger.d("wol : hostinfo");
-
+function hostinfo(request_ip) {
     const options = {
         uri: baseUrl + "login/hostinfo.cgi",
         headers: {
@@ -84,7 +79,7 @@ function hostinfo() {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("hostinfo error : " + error);
+            log.error(log_header, `[/hostinfo failed] ${error}`, request_ip);
         }
         else {
             const statusCode = response && response.statusCode;
@@ -92,15 +87,13 @@ function hostinfo() {
                 login_handler(body);
             }
             else {
-                logger.e("hostinfo statusCode : " + statusCode);
+                log.error(log_header, `[/hostinfo failed] status code ${statusCode} returned.`, request_ip);
             }
         }
     });
 }
 
-function login_handler() {
-    logger.d("wol : login_handler");
-
+function login_handler(request_ip) {
     const postData = {
         'username': 'MARi',
         'passwd': 'dntkQyd132!',
@@ -123,23 +116,21 @@ function login_handler() {
 
     request.post(options, function (error, response, body) {
         if (error) {
-            logger.e("login_handler error : " + error);
+            log.error(log_header, `[/login_handler failed] ${error}`, request_ip);
         }
         else {
             const statusCode = response && response.statusCode;
             if (statusCode == 200) {
-                info(body);
+                info(request_ip, body);
             }
             else {
-                logger.e("login_handler statusCode : " + statusCode);
+                log.error(log_header, `[/login_handler failed] status code ${statusCode} returned.`, request_ip);
             }
         }
     });
 }
 
-function info(session) {
-    logger.d("wol : info");
-
+function info(request_ip, session) {
     const options = {
         uri: baseUrl + "sess-bin/info.cgi",
         headers: {
@@ -156,24 +147,22 @@ function info(session) {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("info error : " + error);
+            log.error(log_header, `[/info failed] ${error}`, request_ip);
         }
         else {
             const statusCode = response && response.statusCode;
             if (statusCode == 200) {
                 mac = body.split(";")[0];
-                wol_apply(session, mac);
+                wol_apply(request_ip, session, mac);
             }
             else {
-                logger.e("info statusCode : " + statusCode);
+                log.error(log_header, `[/info failed] status code ${statusCode} returned.`, request_ip);
             }           
         }
     });
 }
 
-function wol_apply(session, mac) {
-    logger.d("wol : wol_apply : " + mac);
-
+function wol_apply(request_ip, session, mac) {
     const options = {
         uri: baseUrl + "sess-bin/wol_apply.cgi",
         headers: {
@@ -191,27 +180,27 @@ function wol_apply(session, mac) {
 
     request.get(options, function (error, response, body) {
         if (error) {
-            logger.e("wol_apply error : " + error);
+            log.error(log_header, `[/wol_apply failed] ${error}`, request_ip);
         }
         else {
             const statusCode = response && response.statusCode;
             if (statusCode == 200) {
-                if(body==="Ok") done(body);
-                else logger.e("body: " + body);
+                if(body==="Ok") done(request_ip);
+                else log.error(log_header, "body: " + body, request_ip);
             }
             else {
-                logger.e("wol_apply statusCode : " + statusCode);
+                log.error(log_header, `[/wol_apply failed] status code ${statusCode} returned.`, request_ip);
             }           
         }
     });
 }
 
-function done() {
-    logger.v('Wake On Lan Success.');
+function done(request_ip) {
+    // log.verbose(log_header, `Wake On Lan Success.`, request_ip);
 }
 
 module.exports = {
-    wakeup : function () {
-        checkup();
+    wakeup : function (request_ip) {
+        checkup(request_ip);
     }
 }

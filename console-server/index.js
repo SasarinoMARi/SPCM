@@ -7,38 +7,45 @@ const app = express();
 const router = require('./router')
 
 /*
- * EJS 렌더링 설정 및 공용 디렉터리 호스팅
- */
-/*
-외부 접속할 일 없으면 꺼놓기-> 보안 취약함
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
-app.use(express.static(__dirname + '/public'));
-*/
-
-/*
  * Request Body를 json으로 파싱하기 위한 설정
  */
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 
 /* 라우팅 테이블 정의 */
-app.get('/', router.default);
-app.get('/establishment', router.establishment);
-app.get('/lookup', router.lookup);
-app.get('/wakeup', router.wakeup);
-app.get('/sleep', router.sleep);
-app.get('/reboot', router.reboot);
-app.get('/shutdown', router.shutdown);
-app.get('/start-fs', router.start_fs);
-app.get('/stop-fs', router.stop_fs);
-app.get('/start-tv', router.start_tv);
-app.get('/reboot-pi', router.reboot_pi);
+app.get('/establishment', router.system.establishment);
+app.get('/lookup', router.system.lookup);
+app.get('/reboot', router.system.reboot);
+app.get('/logs', router.system.logs);
+app.post('/log', router.system.log);
+
+app.post('/noti/send_fcm', router.noti.send_fcm);
+app.post('/noti/update_fcm_token', router.noti.update_fcm_token);
+app.post('/noti/send_mail', router.noti.send_mail);
+
+app.get('/power/wakeup', router.power.wakeup);
+app.get('/power/reboot', router.power.reboot);
+app.get('/power/shutdown', router.power.shutdown);
+
+app.get('/file_server/start', router.file_server.start);
+app.get('/file_server/stop', router.file_server.stop);
+
+app.get('/rdp_server/start', router.rdp_server.start);
+
+app.get('/media/volume', router.media.volume);
+app.get('/media/mute', router.media.mute);
+app.get('/media/play', router.media.play);
+
 app.get('/hetzer', router.hetzer);
-app.post('/fcm_send', router.fcm_send);
-app.post('/fcm_update_token', router.fcm_update_token);
+app.get('/food_dispenser', router.food_dispenser);
+
+app.use(express.static(__dirname + '/public'));
+app.use(router.system.default);
+
+require('./scheduler').loadSchedules();
 
 var port = process.env.PORT;
 var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
+    require('./logger').info('index.js', '서버 시작');
 });
