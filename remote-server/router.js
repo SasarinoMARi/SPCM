@@ -187,7 +187,7 @@ module.exports = {
                 res.send("Bad Request");
                 return;
             };
-            command(`"${path.chrome}" ${src}`);
+            command(`start "${path.chrome}" ${src}`);
             logger.d(`play ${src}`);
             res.send("OK");
         }
