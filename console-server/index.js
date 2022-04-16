@@ -18,6 +18,7 @@ app.get('/lookup', router.system.lookup);
 app.get('/reboot', router.system.reboot);
 app.get('/logs', router.system.logs);
 app.post('/log', router.system.log);
+app.get('/reload_schedule', router.system.reload_schedule);
 
 app.post('/noti/send_fcm', router.noti.send_fcm);
 app.post('/noti/update_fcm_token', router.noti.update_fcm_token);

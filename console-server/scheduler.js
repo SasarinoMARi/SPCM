@@ -5,6 +5,18 @@
  * - command에서는 절대 경로만 사용할 것!
  * - loadSchedules 호출 후 코드 내에서 사용하는 모듈이 변경되더라도 재시작 전까지 반영되지 않음. 
  *   (eval에서 require한 코드만 해당. 2차적으로 참조하는 경우 괜찮을 듯)
+ * 
+ * 
+ * Cron 표현식 참고용
+ *  *    *    *    *    *    *
+ *  ┬    ┬    ┬    ┬    ┬    ┬
+ *  │    │    │    │    │    │
+ *  │    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)
+ *  │    │    │    │    └───── month (1 - 12)
+ *  │    │    │    └────────── day of month (1 - 31)
+ *  │    │    └─────────────── hour (0 - 23)
+ *  │    └──────────────────── minute (0 - 59)
+ *  └───────────────────────── second (0 - 59, OPTIONAL)
  */
 const log_header = 'scheduler.js';
 const log = require('./logger');
@@ -17,7 +29,7 @@ const twitter = require('./twitter');
 class Scheduler {
     constructor() { }
     loadSchedules() {
-        cron.cancelJob();
+        cron.gracefulShutdown();
 
         console.log("Start fetching schedules...");
         sql.query('SELECT * FROM schedule', function(err, schedules, fields) {
@@ -25,7 +37,7 @@ class Scheduler {
                 log.error(log_header, `Error fetching schedule list: ${err}`);
                 return;
             }
-            console.log(`Fetching schedule complete! ${schedules.length} schedules is ready.`);
+            log.info(log_header, `Fetching schedule complete! ${schedules.length} schedules is ready.`);
             schedules.forEach(schedule => {
                 if(schedule.active == 1) {
                     console.log(`${schedule.name} : ${schedule.cron}  ${schedule.command}`);

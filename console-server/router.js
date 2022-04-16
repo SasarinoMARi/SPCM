@@ -11,6 +11,7 @@ const notifier = require('./messaging/notifier');
 const fd = require('./food_dispenser/food_api');
 const temperature = require('./temperature');
 const sql = require('./database/sql');
+const scheduler = require('./scheduler');
 
 const log_header = 'router.js';
 
@@ -109,6 +110,13 @@ module.exports = {
             }
             log.log(level, subject, content, ip);
             res.send("OK");
+        },
+        reload_schedule: function(req, res, next) {
+            const ip = getIpAddress(req);
+            if(!authorize(req, res)) return;
+            res.send("OK");
+
+            scheduler.loadSchedules();
         }
     },
 
@@ -122,7 +130,7 @@ module.exports = {
         
             var title = req.body.title;
             var body = req.body.body;
-            notifier.sendFCM(title, body, {
+            notifier.sendFcm(title, body, {
                 success: function() {
                     res.send("OK");
                     log.verbose(log_header, `FCM 송신 성공 : ${body}`, ip);
