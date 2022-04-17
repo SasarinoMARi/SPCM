@@ -2,28 +2,27 @@ package com.sasarinomari.spcmconsole.results
 
 import com.google.gson.annotations.SerializedName
 
+
 class TaskModel {
-    @SerializedName("TaskId")
-    var TaskId: Int? = null
-    @SerializedName("Name")
-    var Name: String? = null
-    @SerializedName("Description")
-    var Description: String? = null
-    @SerializedName("Date")
-    var Date: String? = null
-    @SerializedName("Time")
-    var Time: String? = null
-    @SerializedName("Priority")
-    var Priority: Short? = null
-    @SerializedName("Done")
-    var Done: Int? = null
-    val Status: Boolean
-        get() {return Done==1}
-    @SerializedName("Tags")
-    var Tags: String? = null
-    val TagList: List<String>
-        get() {
-            return if(Tags==null) ArrayList()
-            else Tags!!.split(",")
-        }
+    @SerializedName("idx")
+    var idx: Int = -1
+    @SerializedName("name")
+    var name: String = ""
+    @SerializedName("description")
+    var description: String? = null
+    @SerializedName("date")
+    var date: String? = null
+    @SerializedName("time")
+    var time: String? = null
+    @SerializedName("priority")
+    var priority: Short? = null
+    @SerializedName("done")
+    var done: Int? = null
+    @SerializedName("tags")
+    var tags: String? = null
+
+    fun getTagList() : List<String> {
+        return if(tags==null) ArrayList()
+        else tags!!.split(",")
+    }
 }

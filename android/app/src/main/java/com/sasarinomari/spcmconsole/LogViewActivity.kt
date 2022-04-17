@@ -25,11 +25,11 @@ class LogViewActivity : AppCompatActivity() {
         }
     }
 
-    private var adapter = LogAdapter()
+    private val adapter = LogAdapter()
     private var logLevel = 0
     private var page = 0
-    private var lastItemVisibleFlag = false
-    private var mLockListView = false
+    private var lastItemVisibleFlag = false     // 스크롤이 맨 밑인지
+    private var mLockListView = false           // 현재 데이터를 가져오는 중인지
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,7 @@ class LogViewActivity : AppCompatActivity() {
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) { }
         }
+        logs_level_selector.setSelection(1)
 
         listview.setOnScrollListener(object: AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView?, scrollState: Int) {
@@ -93,8 +94,7 @@ class LogAdapter : BaseAdapter() {
     override fun getItemId(position: Int): Long = position.toLong()
     @SuppressLint("SetTextI18n")
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
-        var convertView = view
-        if (convertView == null) convertView = LayoutInflater.from(parent?.context).inflate(R.layout.item_log, parent, false)!!
+        val convertView = view?: LayoutInflater.from(parent?.context).inflate(R.layout.item_log, parent, false)!!
 
         val item: LogResult = getItem(position)
         val level = LogLevel(item.level)

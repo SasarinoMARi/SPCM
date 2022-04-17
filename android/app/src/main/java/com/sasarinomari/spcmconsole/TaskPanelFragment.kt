@@ -66,7 +66,7 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
 
     private fun fetchMemoboard(view: ViewGroup) {
         val option = GetTaskParameter()
-        option.Limit = 5
+        option.limit = 5
 
         api.getTasks(option) { tasks ->
             view.removeAllViews()
@@ -76,10 +76,12 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
                 height += inflateMemoboard(view, item)
             }
 
+            /*
             val params = view.layoutParams
             params.height = height
             view.layoutParams = params
             view.requestLayout()
+             */
         }
     }
 
@@ -87,11 +89,11 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
         val inflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?
         val view = inflater?.inflate(R.layout.item_task, parent, false) ?: return 0
 
-        view.text_task_name.text = item.Name
-        view.text_task_description.text = item.Description
-        if(item.Description.isNullOrEmpty()) view.text_task_description.visibility = View.GONE
+        view.text_task_name.text = item.name
+        view.text_task_description.text = item.description
+        if(item.description.isNullOrEmpty()) view.text_task_description.visibility = View.GONE
 
-        if(item.Date != null) {
+        if(item.date != null) {
             val leftDays = getTaskLeftDays(item)
             view.text_task_left_days.text = getTaskLeftDayText(leftDays)
         }
@@ -118,11 +120,11 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
     }
 
     private fun getTaskLeftDays(item: TaskModel): Long {
-        if(item.Date == null) return 0
+        if(item.date == null) return 0
         val calendar = Calendar.getInstance()
         val today = calendar.time
 
-        val dateArray = item.Date!!.split("-")
+        val dateArray = item.date!!.split("-")
         calendar.set(Calendar.YEAR, dateArray[0].toInt())
         calendar.set(Calendar.MONTH, dateArray[1].toInt()-1)
         calendar.set(Calendar.DAY_OF_MONTH, dateArray[2].toInt())

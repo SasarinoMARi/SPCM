@@ -3,21 +3,19 @@ package com.sasarinomari.spcmconsole.parameters
 import com.google.gson.annotations.SerializedName
 
 class GetTaskParameter {
-    @SerializedName("Tags")
-    var Tags: ArrayList<Int> = ArrayList()
-    @SerializedName("Method")
-    var Method: String = "U"
-
-    @SerializedName("Date")
-    var Date: DateObject = DateObject()
-
-    @SerializedName("Limit")
-    var Limit: Int? = null
+    @SerializedName("tags")
+    var tags: ArrayList<Int> = ArrayList()
+    @SerializedName("method")
+    var method: Int = TASK_ONLY_UNDONE
+    @SerializedName("limit")
+    var limit = 30
+    @SerializedName("page")
+    var page = 0
 
     companion object {
-        const val GET_TASK_METHOD_ALL = "A"     // 전체 할 일 불러오기
-        const val GET_TASK_METHOD_UNDONE = "U"  // 완료되지 않은 할 일만 불러오기
-        const val GET_TASK_METHOD_DONE = "D"    // 완료된 할 일만 불러오기
+        const val TASK_ONLY_UNDONE = 0          // 완료되지 않은 할 일만 불러오기
+        const val TASK_ONLY_DONE = 1            // 완료된 할 일만 불러오기
+        const val TASK_ALL = 2                  // 전체 할 일 불러오기
     }
 
     class DateObject {
@@ -27,5 +25,4 @@ class GetTaskParameter {
         @SerializedName("To")
         var To: String? = ""
     }
-
 }

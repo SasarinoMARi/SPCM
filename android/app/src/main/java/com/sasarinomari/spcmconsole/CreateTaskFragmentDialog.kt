@@ -21,10 +21,10 @@ class CreateTaskFragmentDialog(private val api: APICall) : DialogFragment(), Dat
         rootView = inflater.inflate(R.layout.fragment_create_task, container)
         rootView.button_submit.setOnClickListener {
             val task = TaskModel()
-            task.Name = rootView.text_name.text.toString()
-            task.Description = rootView.text_description.text.toString()
-            task.Date = DateTimeConvertor.buildDate(year, month, date)
-            if(task.Name.isNullOrBlank()) return@setOnClickListener
+            task.name = rootView.text_name.text.toString()
+            task.description = rootView.text_description.text.toString()
+            task.date = DateTimeConvertor.buildDate(year, month, date)
+            if(task.name.isNullOrBlank()) return@setOnClickListener
 
             api.createTask(task) {
                 Toast.makeText(context, getString(R.string.Task_Created), Toast.LENGTH_LONG).show()
