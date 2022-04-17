@@ -73,15 +73,13 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
 
             var height = 0
             for(item in tasks) {
-                height += inflateMemoboard(view, item)
+                height += inflateMemoboard(view, item) + 10 // Magic..
             }
 
-            /*
             val params = view.layoutParams
             params.height = height
             view.layoutParams = params
             view.requestLayout()
-             */
         }
     }
 

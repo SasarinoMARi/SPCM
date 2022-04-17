@@ -42,4 +42,6 @@
     <string name="Dday">D-%1$d</string>
     <string name="ReloadSchedule">예약 작업 목록 새로고침</string>
     <string name="Success_Schedule_Reload">서버 스케줄러를 새로 고쳤습니다.</string>
+    <string name="FoodDispenser">뭐먹지?</string>
+    <string name="RandomCorrect">오래된 일기\n첨삭하기</string>
 </resources>
