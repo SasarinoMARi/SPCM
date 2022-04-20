@@ -1,12 +1,14 @@
 package com.sasarinomari.spcmconsole
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_task_panel.*
 
 class MainActivity : AppCompatActivity() {
     private val api = object : APICall(this) {
@@ -52,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     image_header.setImageBitmap(image)
                     image_header.visibility = View.VISIBLE
-                    image_loading.visibility = View.GONE
+                    loading_header.visibility = View.INVISIBLE
                 }
             }
         }

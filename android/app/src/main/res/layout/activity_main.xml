@@ -12,33 +12,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="300dp"
             android:orientation="vertical">
 
             <ProgressBar
-                android:id="@+id/image_loading"
+                android:id="@+id/loading_header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="50dp"/>
+                android:layout_height="50dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/server_overview"/>
 
             <ImageView
-                android:visibility="gone"
                 android:id="@+id/image_header"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/header" />
+                android:visibility="gone"/>
 
-        </LinearLayout>
+            <fragment
+                android:id="@+id/server_overview"
+                android:name="com.sasarinomari.spcmconsole.ServerOverviewFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_server_overview"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <fragment
-            android:id="@+id/server_overview"
-            android:name="com.sasarinomari.spcmconsole.ServerOverviewFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_server_overview" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <fragment
             android:id="@+id/task_panel"
