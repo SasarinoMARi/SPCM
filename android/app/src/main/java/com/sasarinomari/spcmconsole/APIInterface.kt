@@ -27,6 +27,8 @@ interface APIInterface {
     fun hetzer(@Header("token") token:String): Call<String>
     @GET("reload_schedule")
     fun reloadSchedule(@Header("token") token:String): Call<String>
+    @GET("header_image")
+    fun header_image(@Header("token") token:String): Call<Array<JsonObject>>
 
     @GET("power/wakeup")
     fun wakeup(@Header("token") token:String): Call<String>
@@ -60,7 +62,7 @@ interface APIInterface {
 
 
     companion object {
-        private val BASE_URL = ""
+        val BASE_URL = ""
 
         private val gson = GsonBuilder()
             .setLenient()

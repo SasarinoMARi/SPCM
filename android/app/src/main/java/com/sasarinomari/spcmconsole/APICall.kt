@@ -479,4 +479,28 @@ abstract class APICall(private val context: Context) {
             }
         })
     }
+
+    fun getHeaderImage(callback:(String)->Unit) {
+        if (token == null) {
+            establishment { getHeaderImage(callback) }
+            return
+        }
+
+        val call = APIInterface.api.header_image(token!!)
+        call.enqueue(object : Callback<Array<JsonObject>> {
+            override fun onFailure(call: Call<Array<JsonObject>>, t: Throwable) {
+                onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<Array<JsonObject>>, response: Response<Array<JsonObject>>) {
+                if (response.isSuccessful) {
+                    val result = response.body()!!
+                    if(result.count() > 0) callback(result[0].get("url").asString)
+                } else {
+                    if (response.code() == 403) { establishment { getHeaderImage(callback) } }
+                    else onMessage("${response.code()} : ${response.message()}")
+                }
+            }
+        })
+    }
 }

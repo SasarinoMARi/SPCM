@@ -12,11 +12,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/header" />
+            android:layout_height="160dp"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/image_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="50dp"/>
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/image_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/header" />
+
+        </LinearLayout>
 
         <fragment
             android:id="@+id/server_overview"

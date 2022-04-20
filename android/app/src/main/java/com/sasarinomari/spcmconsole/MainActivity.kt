@@ -3,13 +3,10 @@ package com.sasarinomari.spcmconsole
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sasarinomari.spcmconsole.results.LookupContent
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
     private val api = object : APICall(this) {
@@ -46,7 +43,18 @@ class MainActivity : AppCompatActivity() {
 
         // FCM 토큰 갱신
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
-            api.updateFcmToken(it) { }
+            // api.updateFcmToken(it) { }
+        }
+        
+        api.getHeaderImage { path ->
+            val url = "${APIInterface.BASE_URL}/header/$path"
+            SPCMConsole.downloadUrlToBitmap(url) { image ->
+                runOnUiThread {
+                    image_header.setImageBitmap(image)
+                    image_header.visibility = View.VISIBLE
+                    image_loading.visibility = View.GONE
+                }
+            }
         }
     }
 
