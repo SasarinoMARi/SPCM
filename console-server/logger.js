@@ -18,8 +18,8 @@ class Logger {
      */
     #general_logging(level, subject, content, ip) {
         if(level >= 3) console.log(`[${subject}] ${content}`);
-        var query = "INSERT INTO `log` (created_at, `level`, subject, content, `from`) VALUES (?,?,?,?,?)";
-        var param = [this.#time().format("YYYY-MM-DD HH:mm:ss"), level, subject, content, ip];
+        var query = `INSERT INTO \`log\` (created_at, \`level\`, subject, content, \`from\`) VALUES (?,?,?,${this.#sql.escape(content)},?)`;
+        var param = [this.#time().format("YYYY-MM-DD HH:mm:ss"), level, subject, ip];
         this.#sql.query(query, param, function(err, results, fields) {
             if(err) {
                 console.log(err);

@@ -34,7 +34,7 @@ class Scheduler {
         console.log("Start fetching schedules...");
         sql.query('SELECT * FROM schedule', function(err, schedules, fields) {
             if(err) {
-                log.error(log_header, `Error fetching schedule list: ${err}`);
+                log.error(log_header, `Error fetching schedule list: ${err.sqlMessage}`);
                 return;
             }
             log.info(log_header, `Fetching schedule complete! ${schedules.length} schedules is ready.`);

@@ -117,6 +117,18 @@ module.exports = {
             res.send("OK");
 
             scheduler.loadSchedules();
+        },
+        header_image: function(req, res, next) {
+            const ip = getIpAddress(req);
+            if(!authorize(req, res)) return;
+
+            sql.query(`SELECT * FROM header_image ORDER BY RAND() LIMIT 1`, function (error, results, fields) {
+                if(error) {
+                    log.error(log_header, `Error fetching header list: ${error.sqlMessage}`);
+                    return;
+                }
+                res.json(results);
+            });
         }
     },
 
