@@ -17,10 +17,13 @@ class Logger {
      * @param {string} ip (Optional) 기록 아이피
      */
     #general_logging(level, subject, content, ip) {
-        if(level >= 3) console.log(`[${subject}] ${content}`);
-        var query = `INSERT INTO \`log\` (created_at, \`level\`, subject, content, \`from\`) VALUES (?,?,?,${this.#sql.escape(content)},?)`;
-        var param = [this.#time().format("YYYY-MM-DD HH:mm:ss"), level, subject, ip];
-        this.#sql.query(query, param, function(err, results, fields) {
+        if (level >= 3) console.log(`[${subject}] ${content}`);
+        if (!ip) ip = 'null'; else ip = `'${ip}'`;
+        
+        var query = `INSERT INTO \`log\` (created_at, \`level\`, subject, content, \`from\`) \
+            VALUES ('${this.#time().format("YYYY-MM-DD HH:mm:ss")}','${level}','${subject}',${this.#sql.escape(content)},${ip})`;
+
+        this.#sql.query(query, function(err, results, fields) {
             if(err) {
                 console.log(err);
             }

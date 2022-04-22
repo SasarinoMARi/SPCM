@@ -5,7 +5,7 @@ module.exports = {
             `SELECT * FROM food ORDER BY RAND() LIMIT 1`,
             function(error, results, fields) {
                 if(error) {
-                    errorCallback(error);
+                    errorCallback('food_api.js', error);
                     return;
                 }
                 if(results.length>0) callback(results[0]);
