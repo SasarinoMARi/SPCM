@@ -71,24 +71,24 @@ class RemoteComputerFragmentDialog(private val api: APICall) : DialogFragment() 
             override fun onChangedComputerState(online: Boolean) {
                 if(online) {
                     view?.button_power_off?.children?.first()?.background = null
-                    view?.button_power_off?.isEnabled = true
+                    // view?.button_power_off?.isEnabled = true
 
                     view?.container_volume?.background = null
-                    view?.seek_volume?.isEnabled = true
-                    view?.button_mute?.isEnabled = true
+                    // view?.seek_volume?.isEnabled = true
+                    // view?.button_mute?.isEnabled = true
 
                     view?.button_advanced_control?.children?.first()?.background = null
-                    view?.button_advanced_control?.isEnabled = true
+                    // view?.button_advanced_control?.isEnabled = true
                 } else {
                     view?.button_power_off?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
-                    view?.button_power_off?.isEnabled = false
+                    // view?.button_power_off?.isEnabled = false
 
                     view?.container_volume?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
-                    view?.seek_volume?.isEnabled = false
-                    view?.button_mute?.isEnabled = false
+                    // view?.seek_volume?.isEnabled = false
+                    // view?.button_mute?.isEnabled = false
 
                     view?.button_advanced_control?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
-                    view?.button_advanced_control?.isEnabled = false
+                    // view?.button_advanced_control?.isEnabled = false
                 }
             }
         }

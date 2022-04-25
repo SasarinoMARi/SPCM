@@ -46,16 +46,16 @@ class RaspberryServerFragmentDialog(private val api: APICall) : DialogFragment()
             override fun onChangedServerState(online: Boolean) {
                 if(online) {
                     view?.button_reboot?.children?.first()?.background = null
-                    view?.button_reboot?.isEnabled = true
+                    // view?.button_reboot?.isEnabled = true
 
                     view?.button_open_logs?.children?.first()?.background = null
-                    view?.button_open_logs?.isEnabled = true
+                    // view?.button_open_logs?.isEnabled = true
                 } else {
                     view?.button_reboot?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
-                    view?.button_reboot?.isEnabled = false
+                    // view?.button_reboot?.isEnabled = false
 
                     view?.button_open_logs?.children?.first()?.setBackgroundColor(context!!.getColor(R.color.button_disabled))
-                    view?.button_open_logs?.isEnabled = false
+                    // view?.button_open_logs?.isEnabled = false
                 }
             }
 
