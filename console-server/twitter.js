@@ -96,7 +96,7 @@ class Twitter {
         else {
             this.#client.post(`statuses/destroy/${tweet.id_str}.json`, function(error) {
                 if (error) {
-                    log.error(log_header, error);
+                    log.debug(log_header, error);
                 }
                 else {
                     this.#writeCleanerLog(tweet);
@@ -141,18 +141,17 @@ class Twitter {
         const retweet_count = !is_retweet?tweet.retweet_count:null;
         const favorite_count = !is_retweet?tweet.favorite_count:null;
 
-        var query = "INSERT INTO `destroyed_tweet` (text, is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count) VALUES (?,?,?,?,?,?,?)";
-        var param = [text, is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count];
+        var query = `INSERT INTO \`destroyed_tweet\` (text, is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count) VALUES (${this.#sql.escape(text)},?,?,?,?,?,?)`;
+        var param = [is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count];
         this.#sql.query(query, param, function(err, results, fields) {
             if(err) {
-                console.log(err);
-                log.error(log_header, err.sqlMessage);
+                log.debug(log_header, err.sqlMessage);
             }
         });
     }
 
     #onFinishedCleaner() {
-        console.log("트윗 청소 완료!");
+        // console.log("트윗 청소 완료!");
     }
 
 

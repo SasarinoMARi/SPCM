@@ -60,3 +60,11 @@ CREATE TABLE `destroyed_tweet` (
 	PRIMARY KEY (`idx`)
 )
 COLLATE='utf8mb4_unicode_ci';
+
+CREATE TABLE `header_image` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`url` TEXT NOT NULL COMMENT 'url',
+	`description` TEXT NULL DEFAULT NULL COMMENT '비고',
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';

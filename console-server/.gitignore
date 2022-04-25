@@ -4,3 +4,4 @@ logs/
 fcm_id
 firebaseAccountKey.json
 test/
+header/
