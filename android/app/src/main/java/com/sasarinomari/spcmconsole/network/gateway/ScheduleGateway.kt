@@ -5,10 +5,10 @@ import com.sasarinomari.spcmconsole.network.SPCMInterface
 import com.sasarinomari.spcmconsole.network.model.ScheduleModel
 
 internal class ScheduleGateway: GatewayBase() {
-    fun reload(client: APIClient, callback: ((String)->Unit)?) {
+    fun reload(client: APIClient, callback: ((Unit)->Unit)?) {
         client.establishment {
             val call = SPCMInterface.api.reloadSchedule(it)
-            call.enqueue(object: GatewayBase.GeneralHandler<String>(client, callback, { reload(client, callback) }) {})
+            call.enqueue(object: GatewayBase.GeneralHandler<Unit>(client, callback, { reload(client, callback) }) {})
         }
     }
 
@@ -19,10 +19,10 @@ internal class ScheduleGateway: GatewayBase() {
         }
     }
 
-    fun set(param: ScheduleModel, client: APIClient, callback: ((String)->Unit)?) {
+    fun set(param: ScheduleModel, client: APIClient, callback: ((Unit)->Unit)?) {
         client.establishment {
             val call = SPCMInterface.api.setSchedules(it, param)
-            call.enqueue(object: GatewayBase.GeneralHandler<String>(client, callback, { set(param, client, callback) }) {})
+            call.enqueue(object: GatewayBase.GeneralHandler<Unit>(client, callback, { set(param, client, callback) }) {})
         }
     }
 }

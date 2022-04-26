@@ -17,49 +17,45 @@ interface SPCMInterface {
     @GET("lookup")
     fun lookup(): Call<LookupResult>
     @GET("reboot")
-    fun reboot_pi(@Header("token") token:String): Call<String>
+    fun reboot(@Header("token") token:String): Call<Unit>
     @GET("logs")
     fun logs(@Header("token") token:String, @Header("level") level:Int, @Header("page") page:Int): Call<Array<LogResult>>
     @POST("log")
-    fun log(@Header("token") token:String, @Body body: LogParameter): Call<String>
-    @GET("hetzer")
-    fun hetzer(@Header("token") token:String): Call<String>
+    fun log(@Header("token") token:String, @Body body: LogParameter): Call<Unit>
     @GET("header_image")
     fun header_image(@Header("token") token:String): Call<Array<JsonObject>>
 
     @GET("schedule/reload")
-    fun reloadSchedule(@Header("token") token:String): Call<String>
+    fun reloadSchedule(@Header("token") token:String): Call<Unit>
     @GET("schedule/get")
     fun getSchedules(@Header("token") token:String): Call<Array<ScheduleModel>>
     @POST("schedule/set")
-    fun setSchedules(@Header("token") token:String, @Body body: ScheduleModel): Call<String>
+    fun setSchedules(@Header("token") token:String, @Body body: ScheduleModel): Call<Unit>
 
     @GET("power/wakeup")
-    fun wakeup(@Header("token") token:String): Call<String>
+    fun wakeup(@Header("token") token:String): Call<Unit>
     @GET("power/shutdown")
-    fun shutdown(@Header("token") token:String): Call<String>
-    @GET("power/reboot")
-    fun reboot(@Header("token") token:String): Call<String>
+    fun shutdown(@Header("token") token:String): Call<Unit>
 
     @GET("file_server/start")
-    fun startFileServer(@Header("token") token:String): Call<String>
+    fun startFileServer(@Header("token") token:String): Call<Unit>
     @GET("file_server/stop")
-    fun stopFileServer(@Header("token") token:String): Call<String>
+    fun stopFileServer(@Header("token") token:String): Call<Unit>
 
     @GET("rdp_server/start")
-    fun startRdpServer(@Header("token") token:String): Call<String>
+    fun startRdpServer(@Header("token") token:String): Call<Unit>
 
     @GET("media/volume")
-    fun volume(@Header("token") token:String, @Header("amount") amount:Int): Call<String>
+    fun volume(@Header("token") token:String, @Header("amount") amount:Int): Call<Unit>
     @GET("media/mute")
-    fun mute(@Header("token") token:String, @Header("option") amount:Int): Call<String>
+    fun mute(@Header("token") token:String, @Header("option") amount:Int): Call<Unit>
     @GET("media/play")
-    fun play(@Header("token") token:String, @Header("src") src:String): Call<String>
+    fun play(@Header("token") token:String, @Header("src") src:String): Call<Unit>
 
     @POST("noti/send_fcm")
-    fun sendFcm(@Header("token") token:String, @Body body: NotifyParameter): Call<String>
+    fun sendFcm(@Header("token") token:String, @Body body: NotifyParameter): Call<Unit>
     @POST("noti/update_fcm_token")
-    fun updateFcmToken(@Header("token") token:String, @Body body: FcmTokenUpdateParameter): Call<String>
+    fun updateFcmToken(@Header("token") token:String, @Body body: FcmTokenUpdateParameter): Call<Unit>
 
     @GET("food_dispenser")
     fun foodDispenser(@Header("token") token:String): Call<FoodResult>

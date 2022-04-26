@@ -12,7 +12,7 @@ internal abstract class GatewayBase {
         override fun onResponse(call: Call<T>, response: Response<T>) {
             when {
                 response.isSuccessful -> callback?.let { it(response.body()!!) }
-                response.code() == 403 -> recursive()
+                response.code() == 403 -> { client.disconnect(); recursive() }
                 else -> client.error("요청 실패(${response.code()}) : ${response.message()}")
             }
         }

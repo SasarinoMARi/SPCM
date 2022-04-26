@@ -44,4 +44,6 @@
     <string name="Success_Schedule_Reload">서버 스케줄러를 새로 고쳤습니다.</string>
     <string name="FoodDispenser">뭐먹지?</string>
     <string name="RandomCorrect">오래된 일기\n첨삭하기</string>
+    <string name="PanelName_ServerSchedule">서버 스케줄 관리</string>
+    <string name="Confirm_Toggle_Schedule">이 스케줄의 활성 상태를 전환할까요?</string>
 </resources>

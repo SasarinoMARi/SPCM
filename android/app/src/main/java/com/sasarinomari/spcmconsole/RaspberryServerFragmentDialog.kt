@@ -29,7 +29,8 @@ class RaspberryServerFragmentDialog(private val api: APIClient) : DialogFragment
             startActivity(intent)
         }
         rootView.button_reload_schedules.setOnClickListener {
-            api.reloadSchedule {  }
+            val dialog = ServerScheduleFragmentDialog(api)
+            dialog.show(childFragmentManager, "Server Schedule")
         }
 
         this.dialog?.setTitle("Server Management")

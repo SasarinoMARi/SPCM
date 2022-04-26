@@ -6,17 +6,17 @@ import com.sasarinomari.spcmconsole.network.parameter.FcmTokenUpdateParameter
 import com.sasarinomari.spcmconsole.network.parameter.NotifyParameter
 
 internal class NotificationGateway : GatewayBase() {
-    fun updateFcmToken(param: FcmTokenUpdateParameter, client: APIClient, callback: ((String)->Unit)?) {
+    fun updateFcmToken(param: FcmTokenUpdateParameter, client: APIClient, callback: ((Unit)->Unit)?) {
         client.establishment { token ->
             val call = SPCMInterface.api.updateFcmToken(token, param)
-            call.enqueue(object: GeneralHandler<String>(client, callback, { updateFcmToken(param, client, callback) }) {})
+            call.enqueue(object: GeneralHandler<Unit>(client, callback, { updateFcmToken(param, client, callback) }) {})
         }
     }
 
-    fun sendFcm(param: NotifyParameter, client: APIClient, callback: ((String)->Unit)?) {
+    fun sendFcm(param: NotifyParameter, client: APIClient, callback: ((Unit)->Unit)?) {
         client.establishment { token ->
             val call = SPCMInterface.api.sendFcm(token, param)
-            call.enqueue(object: GeneralHandler<String>(client, callback, { sendFcm(param, client, callback) }) {})
+            call.enqueue(object: GeneralHandler<Unit>(client, callback, { sendFcm(param, client, callback) }) {})
         }
     }
 }

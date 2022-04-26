@@ -7,9 +7,9 @@ import com.sasarinomari.spcmconsole.network.model.TaskModel
 import com.sasarinomari.spcmconsole.network.parameter.GetTaskParameter
 
 internal class MemoboardGateway : GatewayBase() {
-    fun createTask (task: TaskModel, client: APIClient, callback: ((JsonObject)->Unit)?) {
+    fun createTask (task: TaskModel, client: APIClient, callback: ((Unit)->Unit)?) {
         val call = MEMOInterface.api.task_create(MEMOInterface.key, task)
-        call.enqueue(object: GeneralHandler<JsonObject>(client, callback, { createTask(task, client, callback) }) {})
+        call.enqueue(object: GeneralHandler<Unit>(client, callback, { createTask(task, client, callback) }) {})
     }
 
     fun getTasks (options: GetTaskParameter, client: APIClient, callback: ((Array<TaskModel>)->Unit)?) {

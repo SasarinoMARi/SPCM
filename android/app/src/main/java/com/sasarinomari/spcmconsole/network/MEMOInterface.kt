@@ -16,7 +16,7 @@ interface MEMOInterface {
     @POST("task/list")
     fun task_list(@Header("key") token:String, @Body body: GetTaskParameter): Call<Array<TaskModel>>
     @POST("task/create")
-    fun task_create(@Header("key") token:String, @Body body: TaskModel): Call<JsonObject>
+    fun task_create(@Header("key") token:String, @Body body: TaskModel): Call<Unit>
 
     companion object {
         private val gson = GsonBuilder()

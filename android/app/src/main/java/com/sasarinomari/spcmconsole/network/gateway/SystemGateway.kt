@@ -19,6 +19,7 @@ internal class SystemGateway : GatewayBase() {
     /**
      * 연결 수립 및 api 토큰 등록
      */
+    fun disconnect() = null.also { token = it }
     fun establishment(client: APIClient, callback: (String) -> Unit) {
         if(token == null) {
             val call = SPCMInterface.api.establishment(SPCMInterface.key)
@@ -59,10 +60,10 @@ internal class SystemGateway : GatewayBase() {
         })
     }
 
-    fun reboot(client: APIClient, callback: ((String)->Unit)?) {
+    fun reboot(client: APIClient, callback: ((Unit)->Unit)?) {
         establishment(client) { token ->
             val call = SPCMInterface.api.reboot(token)
-            call.enqueue(object: GeneralHandler<String>(client, callback, { reboot(client, callback) }) {})
+            call.enqueue(object: GeneralHandler<Unit>(client, callback, { reboot(client, callback) }) {})
         }
     }
 
@@ -73,10 +74,10 @@ internal class SystemGateway : GatewayBase() {
         }
     }
 
-    fun log(param: LogParameter, client: APIClient, callback: ((String)->Unit)?) {
+    fun log(param: LogParameter, client: APIClient, callback: ((Unit)->Unit)?) {
         establishment(client) { token ->
             val call = SPCMInterface.api.log(token, param)
-            call.enqueue(object: GeneralHandler<String>(client, callback, { log(param, client, callback) }) {})
+            call.enqueue(object: GeneralHandler<Unit>(client, callback, { log(param, client, callback) }) {})
         }
     }
 
