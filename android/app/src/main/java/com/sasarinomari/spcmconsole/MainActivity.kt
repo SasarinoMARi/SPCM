@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         // FCM 토큰 갱신
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
-            // api.updateFcmToken(it) { }
+            api.updateFcmToken(it) { }
         }
         
         api.getHeaderImage { path ->
