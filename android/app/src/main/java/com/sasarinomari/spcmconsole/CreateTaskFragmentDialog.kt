@@ -9,7 +9,8 @@ import android.view.WindowManager
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.sasarinomari.spcmconsole.results.TaskModel
+import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.model.TaskModel
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
 import java.util.*
 

@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.sasarinomari.spcmconsole.parameters.GetTaskParameter
-import com.sasarinomari.spcmconsole.results.TaskModel
+import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.parameter.GetTaskParameter
+import com.sasarinomari.spcmconsole.network.model.TaskModel
 import kotlinx.android.synthetic.main.fragment_task_panel.*
 import kotlinx.android.synthetic.main.item_task.view.*
 import java.util.*

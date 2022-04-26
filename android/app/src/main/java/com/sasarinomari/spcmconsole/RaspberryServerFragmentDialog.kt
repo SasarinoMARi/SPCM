@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
+import com.sasarinomari.spcmconsole.network.APICall
 import kotlinx.android.synthetic.main.fragment_raspberry_server_panel.view.*
 
 class RaspberryServerFragmentDialog(private val api: APICall) : DialogFragment() {

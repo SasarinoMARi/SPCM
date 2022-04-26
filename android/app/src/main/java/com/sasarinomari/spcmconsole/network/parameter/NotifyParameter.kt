@@ -1,4 +1,4 @@
-package com.sasarinomari.spcmconsole.parameters
+package com.sasarinomari.spcmconsole.network.parameter
 
 class NotifyParameter(
     val title: String,

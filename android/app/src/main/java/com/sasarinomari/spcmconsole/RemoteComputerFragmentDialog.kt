@@ -1,7 +1,6 @@
 package com.sasarinomari.spcmconsole
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
+import com.sasarinomari.spcmconsole.network.APICall
 import kotlinx.android.synthetic.main.fragment_remote_computer_panel.view.*
 
 class RemoteComputerFragmentDialog(private val api: APICall) : DialogFragment() {

@@ -1,4 +1,4 @@
-package com.sasarinomari.spcmconsole.results
+package com.sasarinomari.spcmconsole.network.model
 
 import com.google.gson.annotations.SerializedName
 

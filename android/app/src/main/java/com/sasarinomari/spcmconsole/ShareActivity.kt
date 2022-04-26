@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.sasarinomari.spcmconsole.network.APICall
 
 class ShareActivity : AppCompatActivity() {
     private val api = object : APICall(this) {

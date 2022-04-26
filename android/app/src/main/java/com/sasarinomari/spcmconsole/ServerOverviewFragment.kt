@@ -4,8 +4,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.sasarinomari.spcmconsole.results.LookupContent
-import com.sasarinomari.spcmconsole.results.LookupResult
+import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.model.LookupContent
+import com.sasarinomari.spcmconsole.network.model.LookupResult
 import kotlinx.android.synthetic.main.fragment_server_overview.*
 import kotlin.math.roundToInt
 

@@ -1,9 +1,9 @@
-package com.sasarinomari.spcmconsole
+package com.sasarinomari.spcmconsole.network
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import com.sasarinomari.spcmconsole.parameters.*
-import com.sasarinomari.spcmconsole.results.*
+import com.sasarinomari.spcmconsole.network.parameter.*
+import com.sasarinomari.spcmconsole.network.model.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -25,10 +25,15 @@ interface APIInterface {
     fun log(@Header("token") token:String, @Body body: LogParameter): Call<String>
     @GET("hetzer")
     fun hetzer(@Header("token") token:String): Call<String>
-    @GET("reload_schedule")
-    fun reloadSchedule(@Header("token") token:String): Call<String>
     @GET("header_image")
     fun header_image(@Header("token") token:String): Call<Array<JsonObject>>
+
+    @GET("schedule/reload")
+    fun reloadSchedule(@Header("token") token:String): Call<String>
+    @GET("schedule/get")
+    fun getSchedules(@Header("token") token:String): Call<Array<ScheduleModel>>
+    @POST("schedule/set")
+    fun setSchedules(@Header("token") token:String, @Body body: ScheduleModel): Call<String>
 
     @GET("power/wakeup")
     fun wakeup(@Header("token") token:String): Call<String>

@@ -1,4 +1,4 @@
-package com.sasarinomari.spcmconsole.parameters
+package com.sasarinomari.spcmconsole.network.parameter
 
 class LogParameter(
     val level: Int,

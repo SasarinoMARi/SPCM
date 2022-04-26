@@ -1,10 +1,11 @@
-package com.sasarinomari.spcmconsole
+package com.sasarinomari.spcmconsole.network
 
 import android.content.Context
 import android.util.Log
 import com.google.gson.JsonObject
-import com.sasarinomari.spcmconsole.parameters.*
-import com.sasarinomari.spcmconsole.results.*
+import com.sasarinomari.spcmconsole.R
+import com.sasarinomari.spcmconsole.network.parameter.*
+import com.sasarinomari.spcmconsole.network.model.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

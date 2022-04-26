@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.fragment_food_dispenser.*
+import com.sasarinomari.spcmconsole.network.APICall
 import kotlinx.android.synthetic.main.fragment_food_dispenser.view.*
 import java.text.DecimalFormat
 

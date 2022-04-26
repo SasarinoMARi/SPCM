@@ -8,7 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.sasarinomari.spcmconsole.results.LogResult
+import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.model.LogResult
 import kotlinx.android.synthetic.main.activity_log_view.*
 import kotlinx.android.synthetic.main.item_log.view.*
 import java.text.SimpleDateFormat
