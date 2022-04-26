@@ -4,15 +4,15 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.model.LookupContent
 import com.sasarinomari.spcmconsole.network.model.LookupResult
 import kotlinx.android.synthetic.main.fragment_server_overview.*
 import kotlin.math.roundToInt
 
 class ServerOverviewFragment : Fragment(R.layout.fragment_server_overview) {
-    private lateinit var api : APICall
-    fun setApiCall(api: APICall) { this.api = api }
+    private lateinit var api : APIClient
+    fun setApiCall(api: APIClient) { this.api = api }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

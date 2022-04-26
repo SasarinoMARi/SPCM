@@ -9,12 +9,12 @@ import android.view.WindowManager
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.model.TaskModel
 import kotlinx.android.synthetic.main.fragment_create_task.view.*
 import java.util.*
 
-class CreateTaskFragmentDialog(private val api: APICall) : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class CreateTaskFragmentDialog(private val api: APIClient) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var rootView: View
 

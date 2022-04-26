@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.model.LogResult
 import kotlinx.android.synthetic.main.activity_log_view.*
 import kotlinx.android.synthetic.main.item_log.view.*
@@ -16,13 +16,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class LogViewActivity : AppCompatActivity() {
-    private val api = object : APICall(this) {
-        override fun onError(message: String) {
+    private val api = object : APIClient(this) {
+        override fun error(message: String) {
             Toast.makeText(this@LogViewActivity, message, Toast.LENGTH_LONG).show()
-        }
-
-        override fun onMessage(message: String) {
-            onError(message)
         }
     }
 

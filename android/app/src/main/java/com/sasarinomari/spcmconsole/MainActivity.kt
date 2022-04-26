@@ -6,18 +6,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sasarinomari.spcmconsole.network.APICall
-import com.sasarinomari.spcmconsole.network.APIInterface
+import com.sasarinomari.spcmconsole.network.APIClient
+import com.sasarinomari.spcmconsole.network.SPCMInterface
+import com.sasarinomari.spcmconsole.network.Secret
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private val api = object : APICall(this) {
-        override fun onError(message: String) {
+    private val api = object : APIClient(this) {
+        override fun error(message: String) {
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-        }
-
-        override fun onMessage(message: String) {
-            onError(message)
         }
     }
 
@@ -49,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
         
         api.getHeaderImage { path ->
-            val url = "${APIInterface.BASE_URL}/header/$path"
+            val url = "${Secret.SPCM_URL}/header/$path"
             SPCMConsole.downloadUrlToBitmap(url) { image ->
                 runOnUiThread {
                     image_header.setImageBitmap(image)

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.parameter.GetTaskParameter
 import com.sasarinomari.spcmconsole.network.model.TaskModel
 import kotlinx.android.synthetic.main.fragment_task_panel.*
@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.item_task.view.*
 import java.util.*
 
 class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
-    private lateinit var api : APICall
-    fun setApiCall(api: APICall) { this.api = api }
+    private lateinit var api : APIClient
+    fun setApiCall(api: APIClient) { this.api = api }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

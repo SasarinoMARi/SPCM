@@ -8,16 +8,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
-        val api = object : APICall(this) {
-            override fun onError(message: String) { }
-            override fun onMessage(message: String) { }
+        val api = object : APIClient(this) {
+            override fun error(message: String) { }
         }
         api.updateFcmToken(token) { }
     }

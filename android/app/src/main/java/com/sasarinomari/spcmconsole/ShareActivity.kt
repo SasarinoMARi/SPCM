@@ -4,16 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 
 class ShareActivity : AppCompatActivity() {
-    private val api = object : APICall(this) {
-        override fun onError(message: String) {
+    private val api = object : APIClient(this) {
+        override fun error(message: String) {
             Toast.makeText(this@ShareActivity, message, Toast.LENGTH_LONG).show()
-        }
-
-        override fun onMessage(message: String) {
-            onError(message)
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {

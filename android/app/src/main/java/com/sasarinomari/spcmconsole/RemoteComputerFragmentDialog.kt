@@ -9,10 +9,10 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import kotlinx.android.synthetic.main.fragment_remote_computer_panel.view.*
 
-class RemoteComputerFragmentDialog(private val api: APICall) : DialogFragment() {
+class RemoteComputerFragmentDialog(private val api: APIClient) : DialogFragment() {
     var callbackAfterCreateView: (()->Unit)? = null
     fun afterCreateView(callback: ()->Unit) : RemoteComputerFragmentDialog {
         callbackAfterCreateView = callback

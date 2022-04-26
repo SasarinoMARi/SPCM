@@ -6,17 +6,13 @@ import android.widget.AdapterView
 import android.widget.ListAdapter
 import android.widget.SimpleAdapter
 import android.widget.Toast
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import kotlinx.android.synthetic.main.activity_remote_computer.*
 
 class RemoteComputerActivity : AppCompatActivity() {
-    private val api = object : APICall(this) {
-        override fun onError(message: String) {
+    private val api = object : APIClient(this) {
+        override fun error(message: String) {
             Toast.makeText(this@RemoteComputerActivity, message, Toast.LENGTH_LONG).show()
-        }
-
-        override fun onMessage(message: String) {
-            onError(message)
         }
     }
 

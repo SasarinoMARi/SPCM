@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
-import com.sasarinomari.spcmconsole.network.APICall
+import com.sasarinomari.spcmconsole.network.APIClient
 import kotlinx.android.synthetic.main.fragment_food_dispenser.view.*
 import java.text.DecimalFormat
 
-class FoodDispenserFragmentDialog(private val api: APICall) : DialogFragment() {
+class FoodDispenserFragmentDialog(private val api: APIClient) : DialogFragment() {
     private val df = DecimalFormat("###,###")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
