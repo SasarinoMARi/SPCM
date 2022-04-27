@@ -13,11 +13,12 @@ internal abstract class GatewayBase {
             when {
                 response.isSuccessful -> callback?.let { it(response.body()!!) }
                 response.code() == 403 -> { client.disconnect(); recursive() }
-                else -> client.error("요청 실패(${response.code()}) : ${response.message()}")
+                else -> { client.disconnect(); client.error("요청 실패(${response.code()}) : ${response.message()}") }
             }
         }
 
         override fun onFailure(call: Call<T>, t: Throwable) {
+            client.disconnect();
             client.error("네트워크 오류: ${t.message}")
         }
     }
