@@ -18,7 +18,6 @@ app.get('/lookup', router.system.lookup);
 app.get('/reboot', router.system.reboot);
 app.get('/logs', router.system.logs);
 app.post('/log', router.system.log);
-app.get('/reload_schedule', router.system.reload_schedule);
 app.get('/header_image', router.system.header_image);
 
 app.post('/noti/send_fcm', router.noti.send_fcm);
@@ -41,6 +40,10 @@ app.get('/media/play', router.media.play);
 app.get('/hetzer', router.hetzer);
 app.get('/food_dispenser', router.food_dispenser);
 
+app.get('/schedule/reload', router.schedule.reload);
+app.get('/schedule/get', router.schedule.get);
+app.post('/schedule/set', router.schedule.set);
+
 app.use(express.static(__dirname + '/public'));
 app.use(router.system.default);
 
@@ -49,5 +52,10 @@ require('./scheduler').loadSchedules();
 var port = process.env.PORT;
 var server = app.listen(port, function () {
     console.log(`Server has started on port ${port}`);
-    require('./logger').info('index.js', '서버 시작');
+
+    // DB 서버 초기화 주먹구구로 대기 (10초면 되지 않을까)
+    setTimeout(function() {
+        require('./logger').info('index.js', '나루 서버가 시작됩니다.');
+    }, 10 * 1000);
+    
 });

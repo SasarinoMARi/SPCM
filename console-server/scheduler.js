@@ -52,6 +52,40 @@ class Scheduler {
             });
         });
     }
+
+    getSchedules(req, res) {
+        sql.query('SELECT * FROM schedule', function (err, schedules, fields) {
+            if (err) {
+                log.error(log_header, `Error fetching schedule list: ${err.sqlMessage}`);
+                res.statusCode = 500;
+                res.send("");
+                return;
+            }
+            res.json(schedules);
+        });
+    }
+
+    setSchedules(req, res) {
+        const id = req.body.idx; 
+        var active = req.body.active;
+
+        if(!id) {
+            res.statusCode = 500;
+            res.send("");
+            return;
+        }
+        if(!active) active = false;
+
+        sql.query(`UPDATE schedule SET \`active\`=${active} WHERE idx=${id}`, function(err, results, fields) {
+            if (err) {
+                log.error(log_header, `Error update schedule: ${err.sqlMessage}`);
+                res.statusCode = 500;
+                res.send("");
+                return;
+            }
+            res.send("OK");
+        });
+    }
 }
 
 module.exports = new Scheduler();

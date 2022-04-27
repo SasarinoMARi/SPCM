@@ -111,13 +111,6 @@ module.exports = {
             log.log(level, subject, content, ip);
             res.send("OK");
         },
-        reload_schedule: function(req, res, next) {
-            const ip = getIpAddress(req);
-            if(!authorize(req, res)) return;
-            res.send("OK");
-
-            scheduler.loadSchedules();
-        },
         header_image: function(req, res, next) {
             const ip = getIpAddress(req);
             if(!authorize(req, res)) return;
@@ -283,6 +276,25 @@ module.exports = {
             remote_server.play(ip, src);
             res.send("OK");
         }
+    },
+
+    schedule: {
+        reload: function(req, res, next) {
+            const ip = getIpAddress(req);
+            if(!authorize(req, res)) return;
+            res.send("OK");
+            scheduler.loadSchedules();
+        },
+        get: function(req, res, next) {
+            const ip = getIpAddress(req);
+            if(!authorize(req, res)) return;
+            scheduler.getSchedules(req, res);
+        },
+        set: function(req, res, next) {
+            const ip = getIpAddress(req);
+            if(!authorize(req, res)) return;
+            scheduler.setSchedules(req, res);
+        },
     },
 
     hetzer: function(req, res, next) {
