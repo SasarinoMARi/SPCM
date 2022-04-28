@@ -82,6 +82,6 @@ interface SPCMInterface {
             retrofit.create(SPCMInterface::class.java)
         }
 
-        val key: String = Secret.SPCM_KEY
+        val key: String get() { return Secret.SPCM_KEY }
     }
 }
