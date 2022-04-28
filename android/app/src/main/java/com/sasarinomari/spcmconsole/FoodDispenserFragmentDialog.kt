@@ -24,10 +24,13 @@ class FoodDispenserFragmentDialog(private val api: APIClient) : DialogFragment()
         rootView.text_name.text = ""
         rootView.text_price.text = ""
         rootView.text_store.text = ""
-        setCallButton(rootView.button_call, false)
 
         rootView.button_reroll.setOnClickListener {
             foodDispenser(rootView)
+        }
+        rootView.button_open_list.setOnClickListener {
+            val i = Intent(context, FoodListActivity::class.java)
+            context?.startActivity(i)
         }
 
         foodDispenser(rootView)
@@ -39,21 +42,19 @@ class FoodDispenserFragmentDialog(private val api: APIClient) : DialogFragment()
 
     @SuppressLint("SetTextI18n")
     private fun foodDispenser(view: View) {
-        api.foodDispenser { food ->
+        api.pickRandomFood { food ->
             view.text_name.text = food.Name
             view.text_price.text = "₩${df.format(food.Price)}"
             view.text_store.text = food.Store
             if(food.Phone != null) {
-                setCallButton(view.button_call, true)
-                view.button_call.setOnClickListener {
+                view.setOnClickListener {
                     val intent = Intent(Intent.ACTION_DIAL)
                     intent.data = Uri.parse("tel:${food.Phone}")
                     startActivity(intent)
                 }
             }
             else {
-                setCallButton(view.button_call, false)
-                view.button_call.setOnClickListener(null)
+                view.setOnClickListener(null)
             }
         }
     }

@@ -2,7 +2,7 @@ package com.sasarinomari.spcmconsole.network.model
 
 import com.google.gson.annotations.SerializedName
 
-class FoodResult {
+class FoodModel {
     @SerializedName("FoodId")
     var FoodId: Int = -1
     @SerializedName("Name")

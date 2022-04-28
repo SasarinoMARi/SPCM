@@ -9,7 +9,6 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import java.util.*
 
 interface SPCMInterface {
     @GET("establishment")
@@ -58,9 +57,9 @@ interface SPCMInterface {
     fun updateFcmToken(@Header("token") token:String, @Body body: FcmTokenUpdateParameter): Call<Unit>
 
     @GET("food/pick_random")
-    fun pickRandomFood(@Header("token") token:String): Call<FoodResult>
+    fun pickRandomFood(@Header("token") token:String): Call<FoodModel>
     @GET("food/get")
-    fun getFoodList(@Header("token") token:String): Call<Array<FoodResult>>
+    fun getFoodList(@Header("token") token:String): Call<Array<FoodModel>>
 
 
     companion object {

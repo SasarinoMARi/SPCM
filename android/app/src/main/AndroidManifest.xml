@@ -47,7 +47,9 @@
         <activity
             android:name=".LogViewActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".FoodListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
