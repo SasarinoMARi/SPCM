@@ -57,8 +57,10 @@ interface SPCMInterface {
     @POST("noti/update_fcm_token")
     fun updateFcmToken(@Header("token") token:String, @Body body: FcmTokenUpdateParameter): Call<Unit>
 
-    @GET("food_dispenser")
-    fun foodDispenser(@Header("token") token:String): Call<FoodResult>
+    @GET("food/pick_random")
+    fun pickRandomFood(@Header("token") token:String): Call<FoodResult>
+    @GET("food/get")
+    fun getFoodList(@Header("token") token:String): Call<Array<FoodResult>>
 
 
     companion object {
