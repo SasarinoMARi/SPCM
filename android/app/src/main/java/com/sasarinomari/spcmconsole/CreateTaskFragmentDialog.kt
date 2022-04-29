@@ -16,6 +16,7 @@ import java.util.*
 
 class CreateTaskFragmentDialog(private val api: APIClient) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
+    private var onTaskChangedListener: OnTaskChangedListener? = null
     private lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -29,6 +30,7 @@ class CreateTaskFragmentDialog(private val api: APIClient) : DialogFragment(), D
 
             api.createTask(task) {
                 Toast.makeText(context, getString(R.string.Task_Created), Toast.LENGTH_LONG).show()
+                onTaskChangedListener?.onTaskChanged()
                 this@CreateTaskFragmentDialog.dismiss()
             }
         }
@@ -68,5 +70,13 @@ class CreateTaskFragmentDialog(private val api: APIClient) : DialogFragment(), D
         this.year = year
         this.month = month+1
         this.date = date
+    }
+
+    fun setOnTaskChangedListener(listener: OnTaskChangedListener) {
+        this.onTaskChangedListener = listener
+    }
+
+    interface OnTaskChangedListener {
+        fun onTaskChanged()
     }
 }

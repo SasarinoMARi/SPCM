@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.fragment_task_panel.*
 import kotlinx.android.synthetic.main.item_task.view.*
 import java.util.*
 
-class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
+class TaskPanelFragment : Fragment(R.layout.fragment_task_panel),
+    CreateTaskFragmentDialog.OnTaskChangedListener {
     private lateinit var api : APIClient
     fun setApiCall(api: APIClient) { this.api = api }
 
@@ -28,7 +29,9 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
             launchIntent?.let { context?.startActivity(it) }
         }
         button_create_task.setOnClickListener {
-            CreateTaskFragmentDialog(api).show(childFragmentManager, "Create Task")
+            val f = CreateTaskFragmentDialog(api)
+            f.setOnTaskChangedListener(this)
+            f.show(childFragmentManager, "Create Task")
         }
 
     }
@@ -131,6 +134,10 @@ class TaskPanelFragment : Fragment(R.layout.fragment_task_panel) {
 
         val diff = destination.time - today.time
         return diff / (24 * 60 * 60 * 1000)
+    }
+
+    override fun onTaskChanged() {
+        fetchMemoboard(layout_memoboard as ViewGroup)
     }
 
     // endregion
