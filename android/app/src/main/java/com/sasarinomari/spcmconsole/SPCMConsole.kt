@@ -8,6 +8,13 @@ import java.lang.Exception
 import java.net.URL
 import java.security.MessageDigest
 
+internal class Constants {
+    companion object {
+        const val PREFERENCE_DEFAULT = "naru.preference.default"
+        const val NEXT_HEADER_IMAGE_ID = "pref.next_header_image"
+    }
+}
+
 class SPCMConsole {
     companion object {
         fun sha256(param: String): String {
