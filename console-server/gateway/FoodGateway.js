@@ -14,6 +14,15 @@ class FoodGateway extends Gateway {
             })
         });
     }
+
+    getFoods(conn) {
+        Gateway.authentication(conn, () => {
+            const query = `SELECT * FROM food`;
+            Gateway.query(query, conn, (result) => {
+                conn.send(result);
+            })
+        });
+    }
 }
 
 module.exports = new FoodGateway();

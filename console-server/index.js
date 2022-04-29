@@ -43,7 +43,8 @@ app.get('/media/volume', (req, res, next) => gateways.desktop.setVolume(new Conn
 app.get('/media/mute', (req, res, next) => gateways.desktop.mute(new Connection(req, res)));
 app.get('/media/play', (req, res, next) => gateways.desktop.play(new Connection(req, res)));
 
-app.get('/food_dispenser', (req, res, next) => gateways.food.pickRandom(new Connection(req, res)));
+app.get('/food/pick_random', (req, res, next) => gateways.food.pickRandom(new Connection(req, res)));
+app.get('/food/get', (req, res, next) => gateways.food.getFoods(new Connection(req, res)));
 
 app.get('/schedule/reload', (req, res, next) => gateways.schedule.reload(new Connection(req, res)));
 app.get('/schedule/get', (req, res, next) => gateways.schedule.get(new Connection(req, res)));
