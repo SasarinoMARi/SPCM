@@ -61,6 +61,9 @@ interface SPCMInterface {
     @GET("food/get")
     fun getFoodList(@Header("token") token:String): Call<Array<FoodModel>>
 
+    @GET("weather/get")
+    fun getWeather(@Header("token") token:String): Call<WeatherModel>
+
 
     companion object {
         private val gson = GsonBuilder()

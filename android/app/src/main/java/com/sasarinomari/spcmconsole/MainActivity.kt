@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private val overviewFragment by lazy { server_overview as ServerOverviewFragment }
     private val taskPanelFragment by lazy { task_panel as TaskPanelFragment }
+    private val weatherPanelFragment by lazy { weather_panel as WeatherPanel }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         overviewFragment.setApiCall(api)
         taskPanelFragment.setApiCall(api)
+        weatherPanelFragment.setApiCall(api)
+        weatherPanelFragment.setActivity(this)
 
         button_write_diary.setOnClickListener {
             val intent = Intent("com.sasarinomari.diary.write")

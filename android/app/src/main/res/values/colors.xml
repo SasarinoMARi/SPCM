@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#484848</color>
     <color name="button_disabled">#20000000</color>
+    <color name="favorite_color">#d1c4e9</color>
 </resources>
