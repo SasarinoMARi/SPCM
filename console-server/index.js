@@ -12,6 +12,7 @@ const gateways = {
     noti : require('./gateway/NotificationGateway'),
     food : require('./gateway/FoodGateway'),
     schedule : require('./gateway/ScheduleGateway'),
+    weather : require('./gateway/WeatherGateway'),
 };
 
 /*
@@ -49,6 +50,8 @@ app.get('/food/get', (req, res, next) => gateways.food.getFoods(new Connection(r
 app.get('/schedule/reload', (req, res, next) => gateways.schedule.reload(new Connection(req, res)));
 app.get('/schedule/get', (req, res, next) => gateways.schedule.get(new Connection(req, res)));
 app.post('/schedule/set', (req, res, next) => gateways.schedule.set(new Connection(req, res)));
+
+app.get('/weather/get', (req, res, next) => gateways.weather.getWeather(new Connection(req, res)));
 
 app.use(express.static(__dirname + '/public'));
 app.use((req, res, next) => gateways.system.default(new Connection(req, res)));
