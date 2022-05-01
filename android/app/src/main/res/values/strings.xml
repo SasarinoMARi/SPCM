@@ -46,7 +46,19 @@
     <string name="RandomCorrect">오래된 일기\n첨삭하기</string>
     <string name="PanelName_ServerSchedule">서버 스케줄 관리</string>
     <string name="Confirm_Toggle_Schedule">이 스케줄의 활성 상태를 전환할까요?</string>
-    <string name="tempdiff">일교차 %1$s (%2$d-%3$d)</string>
+    <string name="tempdiff">일교차 %1$s\n(%2$d ~ %3$d˚C)</string>
     <string name="temp">%1$s˚C</string>
     <string name="tempdiff2">어제보다 %1#s도 따뜻해요</string>
+    
+    <string name="RecommendCloth">지금 날씨에 입기 좋은 옷</string>
+    <string name="cloth_recommend_over28">반팔, 민소매 / 반바지</string>
+    <string name="cloth_recommend_over23">반팔, 얇은 셔츠 / 얇은 바지</string>
+    <string name="cloth_recommend_over20">얇은 가디건, 긴팔티 / 청바지</string>
+    <string name="cloth_recommend_over17">얇은 니트, 맨투맨, 얇은 재킷 / 청바지</string>
+    <string name="cloth_recommend_over12">자켓, 야상, 니트 /두꺼운 바지</string>
+    <string name="cloth_recommend_over9">트렌치코트, 야상, 니트</string>
+    <string name="cloth_recommend_over5">코드, 히트텍, 니트</string>
+    <string name="cloth_recommend_under4">패딩, 두꺼운 코트, 목도리</string>
+
+    
 </resources>

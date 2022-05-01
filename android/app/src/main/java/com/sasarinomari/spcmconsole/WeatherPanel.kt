@@ -17,10 +17,6 @@ class WeatherPanel : Fragment(R.layout.fragment_weather_panel) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         root.visibility = View.GONE
-        root.setOnClickListener {
-            val f = WeatherDetailFragmentDialog(api)
-            f.show(childFragmentManager, "Weather Detail")
-        }
     }
 
     override fun onResume() {
@@ -43,6 +39,11 @@ class WeatherPanel : Fragment(R.layout.fragment_weather_panel) {
             temp_diff.text = getString(R.string.tempdiff, WeatherGateway.getTempDiff(weather.minTemp, weather.maxTemp),
                 weather.minTemp.toInt(), weather.maxTemp.toInt())
             */
+
+            root.setOnClickListener {
+                val f = WeatherDetailFragmentDialog(api, weather)
+                f.show(childFragmentManager, "Weather Detail")
+            }
         }
     }
 }

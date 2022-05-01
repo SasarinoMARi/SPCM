@@ -108,7 +108,7 @@ class LogAdapter : BaseAdapter() {
         convertView.log_content.setTextColor(color)
 
 
-        convertView.log_createdAt.text = convertWeekday(df.format(item.createdAt))
+        convertView.log_createdAt.text = SPCMConsole.convertWeekday(df.format(item.createdAt))
         convertView.log_createdAt.setTextColor(color)
 
         if(item.from != null) {
@@ -120,17 +120,6 @@ class LogAdapter : BaseAdapter() {
 
 
         return convertView
-    }
-
-    private fun convertWeekday(dateString: String): String {
-        return dateString
-            .replace("Monday", "월요일")
-            .replace("Tuesday", "화요일")
-            .replace("Wednesday", "수요일")
-            .replace("Thursday", "목요일")
-            .replace("Friday", "금요일")
-            .replace("Saturday", "토요일")
-            .replace("Sunday", "일요일")
     }
 
     private class LogLevel(private val level: Int) {

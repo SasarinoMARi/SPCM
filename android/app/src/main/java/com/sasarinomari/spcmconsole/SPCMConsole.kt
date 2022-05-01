@@ -57,5 +57,16 @@ class SPCMConsole {
                 }
             }.start()
         }
+
+        fun convertWeekday(dateString: String): String {
+            return dateString
+                .replace("Monday", "월요일")
+                .replace("Tuesday", "화요일")
+                .replace("Wednesday", "수요일")
+                .replace("Thursday", "목요일")
+                .replace("Friday", "금요일")
+                .replace("Saturday", "토요일")
+                .replace("Sunday", "일요일")
+        }
     }
 }
