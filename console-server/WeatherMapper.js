@@ -227,7 +227,7 @@ class WeatherMapper {
         const param = [[
             location.lat, location.lon,
             modules.time().format("YYYY-MM-DD"),
-            modules.time().format("hh:mm:ss"),
+            modules.time().format("HH:mm:ss"),
             weather.weather, weather.icon,
             weather.temp, weather.temp_min, weather.temp_max
         ]];

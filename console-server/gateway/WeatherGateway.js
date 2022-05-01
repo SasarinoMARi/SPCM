@@ -7,7 +7,11 @@ class NotificationGateway extends Gateway {
 
     getWeather(conn) {
         Gateway.authentication(conn, () => {
-            let query = `SELECT * FROM weather_log ORDER BY idx DESC LIMIT 1`;
+            let query = `SELECT *, (SELECT AVG(temp) FROM weather_log WHERE 
+                            \`date\` = DATE(SUBDATE(NOW(), INTERVAL 1 DAY) AND 
+                            \`time\` BETWEEN '08:55:00' AND '21:05:00')) AS temp_yesterday
+                        FROM weather_log
+                        ORDER BY \`date\` DESC LIMIT 1 `;
             Gateway.query(query, conn, (result) => {
                 if (result.length > 0) conn.send(result[0]);
                 else conn.send(null); 
