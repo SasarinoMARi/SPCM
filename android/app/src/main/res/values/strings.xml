@@ -48,4 +48,5 @@
     <string name="Confirm_Toggle_Schedule">이 스케줄의 활성 상태를 전환할까요?</string>
     <string name="tempdiff">일교차 %1$s (%2$d-%3$d)</string>
     <string name="temp">%1$s˚C</string>
+    <string name="tempdiff2">어제보다 %1#s도 따뜻해요</string>
 </resources>

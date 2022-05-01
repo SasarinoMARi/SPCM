@@ -24,7 +24,7 @@
             android:id="@+id/_image_container"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_margin="12dp"
+            android:layout_margin="16dp"
             android:background="@drawable/oval"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/temp_current"
@@ -63,12 +63,25 @@
             app:layout_constraintTop_toTopOf="@id/_image_container" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/temp_diff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-5dp"
             android:fontFamily="@font/nunito_sans_light"
             android:text="@string/tempdiff"
+            android:textColor="#555"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/temp_current"
+            app:layout_constraintTop_toBottomOf="@id/temp_current" />
+
+        <TextView
+            android:id="@+id/temp_diff2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:fontFamily="@font/nunito_sans_light"
+            android:text="@string/tempdiff2"
             android:textColor="#555"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/temp_current"

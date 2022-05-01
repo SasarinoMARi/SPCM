@@ -63,6 +63,8 @@ interface SPCMInterface {
 
     @GET("weather/get")
     fun getWeather(@Header("token") token:String): Call<WeatherModel>
+    @GET("weather/forecast")
+    fun getForecast(@Header("token") token:String): Call<Array<WeatherModel>>
 
 
     companion object {

@@ -44,4 +44,5 @@ abstract class APIClient(val context: Context) {
     fun getTasks(options: GetTaskParameter, callback: (Array<TaskModel>)->Unit) = MemoboardGateway().getTasks(options, this, callback)
 
     fun getWeather(callback: (WeatherModel)->Unit) = WeatherGateway().getWeather(this, callback)
+    fun getForecast(callback: (Array<WeatherModel>)->Unit) = WeatherGateway().getForecast(this, callback)
 }

@@ -7,6 +7,8 @@ class WeatherModel {
     var weather: Int = -1
     @SerializedName("weather_icon")
     var weatherIconUrl: String = ""
+    @SerializedName("date")
+    var date: String? = null
 
     @SerializedName("temp")
     var temp: Float = -1f
