@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="-5dp"
             android:fontFamily="@font/nunito_sans_light"
-            android:text="@string/tempdiff2"
+            android:text="@string/tempdiff2_similar"
             android:textColor="#555"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/temp_current"

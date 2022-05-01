@@ -48,7 +48,9 @@
     <string name="Confirm_Toggle_Schedule">이 스케줄의 활성 상태를 전환할까요?</string>
     <string name="tempdiff">일교차 %1$s\n(%2$d ~ %3$d˚C)</string>
     <string name="temp">%1$s˚C</string>
-    <string name="tempdiff2">어제보다 %1#s도 따뜻해요</string>
+    <string name="tempdiff2_similar">어제랑 비슷한 온도에요.</string>
+    <string name="tempdiff2_hot">어제보다 %1$s도 따뜻해요.</string>
+    <string name="tempdiff2_cold">어제보다 %1$s도 추워요.</string>
     
     <string name="RecommendCloth">지금 날씨에 입기 좋은 옷</string>
     <string name="cloth_recommend_over28">반팔, 민소매 / 반바지</string>

@@ -20,4 +20,6 @@ class WeatherModel {
     var minTemp: Float = -1f
     @SerializedName("temp_max")
     var maxTemp: Float = -1f
+    @SerializedName("temp_yesterday")
+    var yesterdayTempAverage: Float? = null
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.gateway.WeatherGateway
 import kotlinx.android.synthetic.main.fragment_weather_panel.*
+import kotlin.math.roundToInt
 
 class WeatherPanel : Fragment(R.layout.fragment_weather_panel) {
     private lateinit var api : APIClient
@@ -21,8 +22,6 @@ class WeatherPanel : Fragment(R.layout.fragment_weather_panel) {
 
     override fun onResume() {
         super.onResume()
-        
-        // TODO: 어제와의 기온차 보여주기
 
         api.getWeather { weather ->
             root.visibility = View.VISIBLE
@@ -35,6 +34,15 @@ class WeatherPanel : Fragment(R.layout.fragment_weather_panel) {
             weather_text.text = WeatherGateway.mapWeatherCode(weather.weather)
             temp_current.text = getString(R.string.temp, weather.temp.toString())
             temp_current.setTextColor(WeatherGateway.getTempColor((weather.temp)))
+            weather.yesterdayTempAverage?.let { yesterday ->
+                val diff = yesterday - weather.temp
+                when {
+                    diff in -2f .. 2f -> temp_diff2.text = getString(R.string.tempdiff2_similar)
+                    diff > 0 -> temp_diff2.text = getString(R.string.tempdiff2_cold, diff.roundToInt().toString())
+                    else -> temp_diff2.text = getString(R.string.tempdiff2_cold, diff.roundToInt().toString())
+                }
+            }
+
             /*
             temp_diff.text = getString(R.string.tempdiff, WeatherGateway.getTempDiff(weather.minTemp, weather.maxTemp),
                 weather.minTemp.toInt(), weather.maxTemp.toInt())
