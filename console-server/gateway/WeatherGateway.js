@@ -9,7 +9,7 @@ const Gateway = require("./GatewayBase");
 class NotificationGateway extends Gateway {
     constructor() { super() }
 
-    #buildOption(lat, lon) {
+    #buildOption(url, lat, lon) {
         // 좌표 올바르지 않으면 낙성대역으로 초기화
         if(!lat || !lon) {
             lat = 37.477679;
@@ -17,12 +17,12 @@ class NotificationGateway extends Gateway {
         } 
 
         return {
-            uri: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}`
+            uri: `${url}?lat=${lat}&lon=${lon}&appid=${key}`
         }
     }
 
     getWeather(conn) {
-        const options = this.#buildOption(conn.body.lat, conn.body.lon);
+        const options = this.#buildOption('https://api.openweathermap.org/data/2.5/weather', conn.body.lat, conn.body.lon);
         request.get(options, (error, response, body) => {
             if (error) {
                 conn.internalError();
@@ -39,25 +39,56 @@ class NotificationGateway extends Gateway {
                 modules.log.error(LOG_SUBJECT, logMsg);
                 return;
             }
-            const json = JSON.parse(response.body);
-        
-            // 켈빈에서 섭씨로 변환: -273.15
-            const temp =  Math.round((json.main.temp - 273.15)*10)/10; 
-            const temp_min = Math.round((json.main.temp_min - 273.15)*10)/10;
-            const temp_max = Math.round((json.main.temp_max - 273.15)*10)/10;
-        
-            const weather = json.weather[0].id;
-            const icon = `http://openweathermap.org/img/wn/${json.weather[0].icon}@2x.png`;
-        
+            const w = JSON.parse(response.body);
+           
             const result = {
-                weather: weather,
-                weather_icon: icon,
+                weather: w.weather[0].id,
+                weather_icon: `http://openweathermap.org/img/wn/${w.weather[0].icon}@2x.png`,
         
-                temp: temp,
-                temp_min: temp_min,
-                temp_max: temp_max
+                temp: Math.round((w.main.temp - 273.15)*10)/10,
+                temp_min: Math.round((w.main.temp_min - 273.15)*10)/10,
+                temp_max: Math.round((w.main.temp_max - 273.15)*10)/10
             };
             
+            conn.send(result);
+        });
+    }
+
+
+    getForecast(conn) {
+        const options = this.#buildOption('https://api.openweathermap.org/data/2.5/forecast', conn.body.lat, conn.body.lon);
+        request.get(options, (error, response, body) => {
+            if (error) {
+                conn.internalError();
+                modules.log.error(LOG_SUBJECT, error);
+                return;
+            } else if(response.statusCode != 200) {
+                conn.internalError();
+                let logMsg = `Response status code is not 200\n[${response.statusCode}] ${response.statusMessage}`;
+                modules.log.error(LOG_SUBJECT, logMsg);
+                return;
+            } else if (!response.body) {
+                conn.internalError();
+                let logMsg = `Response body is empty\n[${response.statusCode}] ${response.statusMessage}`;
+                modules.log.error(LOG_SUBJECT, logMsg);
+                return;
+            }
+            const result = [];
+
+            const json = JSON.parse(response.body);
+            for(var i in json.list) {
+                const w = json.list[i];
+                const obj = {
+                    temp: Math.round((w.main.temp - 273.15)*10)/10,
+                    temp_min:  Math.round((w.main.temp_min - 273.15)*10)/10,
+                    temp_max: Math.round((w.main.temp_max - 273.15)*10)/10,
+
+                    weather: w.weather[0].id,
+                    weather_icon: `http://openweathermap.org/img/wn/${w.weather[0].icon}@2x.png`,
+                    date: w.dt_txt,
+                };
+                result.push(obj);
+            };            
             conn.send(result);
         });
     }

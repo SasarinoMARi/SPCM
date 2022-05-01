@@ -52,6 +52,7 @@ app.get('/schedule/get', (req, res, next) => gateways.schedule.get(new Connectio
 app.post('/schedule/set', (req, res, next) => gateways.schedule.set(new Connection(req, res)));
 
 app.get('/weather/get', (req, res, next) => gateways.weather.getWeather(new Connection(req, res)));
+app.get('/weather/forecast', (req, res, next) => gateways.weather.getForecast(new Connection(req, res)));
 
 app.use(express.static(__dirname + '/public'));
 app.use((req, res, next) => gateways.system.default(new Connection(req, res)));
