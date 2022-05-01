@@ -1,6 +1,7 @@
 package com.sasarinomari.spcmconsole.network.gateway
 
 import android.graphics.Color
+import com.sasarinomari.spcmconsole.R
 import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.SPCMInterface
 import com.sasarinomari.spcmconsole.network.model.WeatherModel
@@ -27,6 +28,21 @@ internal class WeatherGateway : GatewayBase() {
                 val COLOR_CHILLY = Color.parseColor("#424242")
                 val COLOR_WARM = Color.parseColor("#ffd54f")
                 val COLOR_HOT = Color.parseColor("#d81b60")
+            }
+        }
+
+        fun getWeatherIconIdFromResource(code: String): Int? {
+            return when {
+                code.startsWith("01") -> R.drawable.weather_icon_01d
+                code.startsWith("02") -> R.drawable.weather_icon_02d
+                code.startsWith("03") -> R.drawable.weather_icon_03d
+                code.startsWith("04") -> R.drawable.weather_icon_04d
+                code.startsWith("09") -> R.drawable.weather_icon_09d
+                code.startsWith("10") -> R.drawable.weather_icon_10d
+                code.startsWith("11") -> R.drawable.weather_icon_11d
+                code.startsWith("13") -> R.drawable.weather_icon_13d
+                code.startsWith("50") -> R.drawable.weather_icon_50d
+                else -> null
             }
         }
 

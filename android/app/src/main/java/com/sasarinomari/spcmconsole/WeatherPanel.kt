@@ -1,6 +1,5 @@
 package com.sasarinomari.spcmconsole
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -31,14 +30,19 @@ class WeatherPanel : Fragment(R.layout.fragment_weather_panel) {
 
         api.getWeather { weather ->
             root.visibility = View.VISIBLE
-            SPCMConsole.downloadUrlToBitmap(weather.weatherIconUrl) {
+            val iconResId = WeatherGateway.getWeatherIconIdFromResource(weather.weatherIcon)
+            if (iconResId != null) weather_icon.setImageResource(iconResId)
+            else SPCMConsole.downloadUrlToBitmap(weather.weatherIconUrl) {
                 activity.runOnUiThread { weather_icon.setImageBitmap(it) }
             }
+
             weather_text.text = WeatherGateway.mapWeatherCode(weather.weather)
             temp_current.text = getString(R.string.temp, weather.temp.toString())
             temp_current.setTextColor(WeatherGateway.getTempColor((weather.temp)))
+            /*
             temp_diff.text = getString(R.string.tempdiff, WeatherGateway.getTempDiff(weather.minTemp, weather.maxTemp),
                 weather.minTemp.toInt(), weather.maxTemp.toInt())
+            */
         }
     }
 }

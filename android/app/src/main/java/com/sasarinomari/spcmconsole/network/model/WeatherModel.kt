@@ -5,8 +5,12 @@ import com.google.gson.annotations.SerializedName
 class WeatherModel {
     @SerializedName("weather")
     var weather: Int = -1
-    @SerializedName("weather_icon")
-    var weatherIconUrl: String = ""
+    @SerializedName("icon")
+    var weatherIcon: String = ""
+    val weatherIconUrl : String
+        get() {
+            return "http://openweathermap.org/img/wn/${weatherIcon}@2x.png"
+        }
     @SerializedName("date")
     var date: String? = null
 
