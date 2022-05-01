@@ -19,6 +19,9 @@ class NotificationGateway extends Gateway {
         Gateway.authentication(conn, () => {
             let query = `SELECT * FROM forecast_map WHERE \`date\`>='${modules.time().format("YYYY-MM-DD")}' ORDER BY \`date\` ASC LIMIT 10`;
             Gateway.query(query, conn, (result) => {
+                for(var i in result) {
+                    result[i].date = modules.time(result[i].date).format("YYYY-MM-DD");
+                }
                 conn.send(result);
             })
         });

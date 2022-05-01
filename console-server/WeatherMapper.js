@@ -226,12 +226,13 @@ class WeatherMapper {
     #recordWeather(location, weather, callback) {
         const param = [[
             location.lat, location.lon,
-            modules.time().format("YYYY-MM-DD hh:mm:ss"),
+            modules.time().format("YYYY-MM-DD"),
+            modules.time().format("hh:mm:ss"),
             weather.weather, weather.icon,
             weather.temp, weather.temp_min, weather.temp_max
         ]];
 
-        const query = 'INSERT INTO `weather_log` (`lat`, `lon`, `datetime`, `weather`, `icon`, `temp`, `temp_min`, `temp_max`) VALUES ?;';
+        const query = 'INSERT INTO `weather_log` (`lat`, `lon`, `date`, `time`, `weather`, `icon`, `temp`, `temp_min`, `temp_max`) VALUES ?;';
         modules.sql.query(query, [param], function(error, results, fields) {
             if (error) {
                 const content = `SQL 에러가 발생했습니다.\n${error.sqlMessage}\n\n쿼리: ${query}`;
