@@ -10,6 +10,7 @@ class ModuleManager {
     notifier;
     iptime;
     log;
+    time;
 
     constructor() { 
         this.temperature = require('./temperature');
@@ -23,6 +24,7 @@ class ModuleManager {
         this.notifier = require('./messaging/notifier');
         this.iptime = require("./iptime-api");
         this.log = require("./logger");
+        this.time = require("./time");
     }
 
 }

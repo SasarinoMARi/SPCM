@@ -9,7 +9,7 @@ class ScheduleGateway extends Gateway {
         modules.log.verbose(LOG_SUBJECT, `스케줄 새로고침 요청됨`, conn.ip);
         Gateway.authentication(conn, () => {
             conn.send("OK");
-            modules.scheduler.load();
+            modules.scheduler.loadSchedules();
         });
     }
     get(conn) {

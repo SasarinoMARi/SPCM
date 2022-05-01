@@ -68,3 +68,31 @@ CREATE TABLE `header_image` (
 	PRIMARY KEY (`idx`)
 )
 COLLATE='utf8_general_ci';
+
+CREATE TABLE `forecast_map` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`lat` FLOAT NOT NULL,
+	`lon` FLOAT NOT NULL,
+	`date` DATE NOT NULL UNIQUE,
+	`weather` INT NOT NULL,
+	`icon` VARCHAR(8) NOT NULL,
+	`temp` FLOAT NOT NULL,
+	`temp_min` FLOAT NOT NULL,
+	`temp_max` FLOAT NOT NULL,
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';
+
+CREATE TABLE `weather_log` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`lat` FLOAT NOT NULL,
+	`lon` FLOAT NOT NULL,
+	`datetime` DATETIME NULL,
+	`weather` INT NOT NULL,
+	`icon` VARCHAR(8) NOT NULL,
+	`temp` FLOAT NOT NULL,
+	`temp_min` FLOAT NOT NULL,
+	`temp_max` FLOAT NOT NULL,
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';
