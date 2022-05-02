@@ -20,7 +20,7 @@ class remoteServer {
 
         request.get(options, function (error, response, body) {
             if (error) {
-                log.error(log_header, `[establishment] failed : ${error}`, request_ip);
+                log.info(log_header, `[establishment] failed : ${error}`, request_ip);
             }
             else {
                 const statusCode = response && response.statusCode;
@@ -75,7 +75,7 @@ class remoteServer {
     
             request.get(options, function (error, response, body) {
                 if (error) {
-                    log.error(log_header, `[${path}] failed : ${error}`, request_ip);
+                    log.info(log_header, `[${path}] failed : ${error}`, request_ip);
                 }
                 else {
                     const statusCode = response && response.statusCode;

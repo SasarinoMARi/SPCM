@@ -142,9 +142,10 @@ class Twitter {
         const favorite_count = !is_retweet?tweet.favorite_count:null;
 
         var query = `INSERT INTO \`destroyed_tweet\` (text, is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count) 
-                     VALUES ('${this.#sql.escape(text)}',${is_mention},${is_retweet},'${created_at}','${destroyed_at}',${retweet_count},${favorite_count})`;
+                     VALUES (${this.#sql.escape(text)},${is_mention},${is_retweet},'${created_at}','${destroyed_at}',${retweet_count},${favorite_count})`;
         this.#sql.query(query, function(err, results, fields) {
             if(err) {
+                console.log(query);
                 log.debug(log_header, err.sqlMessage);
             }
         });
