@@ -46,7 +46,7 @@ class Twitter {
 
         this.#client.get('statuses/user_timeline', req, function (error, tweets, response) {
             if (error) {
-                log.error(log_header, error);
+                log.error(log_header, JSON.stringify(error));
                 return;
             }
     

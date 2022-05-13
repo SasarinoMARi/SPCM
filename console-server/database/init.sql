@@ -1,4 +1,5 @@
-create database spcm;
+CREATE DATABASE spcm;
+USE spcm;
 
 CREATE TABLE `log` (
 	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
