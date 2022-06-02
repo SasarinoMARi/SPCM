@@ -17,7 +17,7 @@ function establishment(callback) {
             const statusCode = response && response.statusCode;
 
             if (statusCode == 200) {
-                callback(body);
+                callback(body.replace(/\"/g, ''));
             }
             else {
                 console.log("error: " + statusCode);
@@ -37,6 +37,8 @@ function sendFcm(token, title, content) {
         }
     };
 
+
+    console.log(options);
     request.post(options, function (error, response, body) {
         if (error) {
             console.log("error : " + error);
