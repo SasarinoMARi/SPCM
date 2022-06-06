@@ -43,7 +43,7 @@ class Logger {
     warning         (subject, content, ip) { this.#general_logging(3, subject, content, ip); this.#notifyToAdmin(3, subject, content, ip) }
     error           (subject, content, ip) { this.#general_logging(4, subject, content, ip); this.#notifyToAdmin(4, subject, content, ip) }
     critical        (subject, content, ip) { this.#general_logging(5, subject, content, ip); this.#notifyToAdmin(5, subject, content, ip) }
-    sqlError        (subject, error, ip) { this.#general_logging(4, subject, error, ip); this.#notifyToAdmin(4, subject, content, ip) }
+    sqlError        (subject, error, ip) { this.#general_logging(4, subject, error, ip); this.#notifyToAdmin(4, subject, error, ip) }
     
     destroy         ()                     { sql.destroy() }
 }

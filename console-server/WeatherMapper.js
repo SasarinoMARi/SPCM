@@ -263,6 +263,67 @@ class WeatherMapper {
             this.#recordWeather(location, weather);
         });
     }
+
+    /**
+     * DB에서 현재 날씨를 가져오는 함수.
+     * sql 에러시 exception
+     * @param {*} callback 
+     */
+    getCurrentWeather(callback) {
+        let query = `SELECT *, (SELECT AVG(temp) FROM weather_log WHERE 
+                        \`date\` = DATE(SUBDATE(NOW(), INTERVAL 1 DAY) AND 
+                        \`time\` BETWEEN '08:55:00' AND '21:05:00')) AS temp_yesterday
+                    FROM weather_log
+                    ORDER BY idx DESC LIMIT 1 `;
+
+        modules.sql.query(query, (error, result, fields) => {
+            if (error) {
+                const content = `SQL 에러가 발생했습니다.\n${error.sqlMessage}\n\n쿼리: ${query}`;
+                console.log(content);
+                modules.log.sqlError(LOG_SUBJECT, content);
+                throw 'sqlError';
+            }
+
+            callback(result);
+        });
+    }
+
+    getWeatherString(code) {
+        if (200 <= code && code < 300) return "뇌우";
+        else if (300 <= code && code < 310) return "이슬비";
+        else if (310 <= code && code < 400) return "가랑비";
+        else if (500 <= code && code < 505) return "비";
+        else if (code == 511) return "우박"
+        else if (520 <= code && code < 600) return "소나니";
+        else if (600 <= code && code < 613) return "눈";
+        else if (613 <= code && code < 617) return "진눈깨비";
+        else if (620 <= code && code < 622) return "소낙눈";
+        else if (code == 622) return "폭설";
+        else if (code == 701) return "옅은 안개";
+        else if (code == 711) return "안개";
+        else if (code == 721) return "짙은 안개";
+        else if (731 <= code && code < 762) return "먼지";
+        else if (code == 762) return "화산재";
+        else if (771 <= code && code < 782) return "태풍";
+        else if (code == 800) return "쾌청";
+        else if (code == 801) return "살짝 흐림";
+        else if (code == 802) return "흐림";
+        else if (code == 803) return "꽤 흐림";
+        else if (code == 804) return "매우 흐림";
+        else return `알 수 없는 날씨 코드 ${code}`;
+    }
+
+    getClothString(temp) {
+        if (temp >= 27) return "반팔, 민소매 / 반바지"
+        else if (temp >= 23) return "반팔, 얇은 셔츠 / 얇은 바지"
+        else if (temp >= 20) return "얇은 가디건, 긴팔티 / 청바지"
+        else if (temp >= 17) return "얇은 니트, 맨투맨, 얇은 재킷 / 청바지"
+        else if (temp >= 12) return "자켓, 야상, 니트 /두꺼운 바지"
+        else if (temp >= 9) return "트렌치코트, 야상, 니트"
+        else if (temp >= 5) return "코드, 히트텍, 니트"
+        else return "패딩, 두꺼운 코트, 목도리"
+    }
+    
 }
 
 module.exports = new WeatherMapper();

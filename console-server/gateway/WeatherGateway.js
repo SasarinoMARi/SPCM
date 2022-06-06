@@ -1,5 +1,6 @@
 const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
+const weatherMapper = require('../WeatherMapper');
 
 const Gateway = require("./GatewayBase");
 class NotificationGateway extends Gateway {
@@ -7,15 +8,14 @@ class NotificationGateway extends Gateway {
 
     getWeather(conn) {
         Gateway.authentication(conn, () => {
-            let query = `SELECT *, (SELECT AVG(temp) FROM weather_log WHERE 
-                            \`date\` = DATE(SUBDATE(NOW(), INTERVAL 1 DAY) AND 
-                            \`time\` BETWEEN '08:55:00' AND '21:05:00')) AS temp_yesterday
-                        FROM weather_log
-                        ORDER BY idx DESC LIMIT 1 `;
-            Gateway.query(query, conn, (result) => {
-                if (result.length > 0) conn.send(result[0]);
-                else conn.send(null); 
-            })
+            try {
+                weatherMapper.fetchCurrentWeather((result) => {
+                    if (result.length > 0) conn.send(result[0]);
+                    else conn.send(null); 
+                });
+            } catch (e) {
+                connection.internalError();
+            }
         });
     }
 
