@@ -9,7 +9,7 @@ class NotificationGateway extends Gateway {
     getWeather(conn) {
         Gateway.authentication(conn, () => {
             try {
-                weatherMapper.fetchCurrentWeather((result) => {
+                weatherMapper.getCurrentWeather((result) => {
                     if (result.length > 0) conn.send(result[0]);
                     else conn.send(null); 
                 });
