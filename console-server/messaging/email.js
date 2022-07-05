@@ -11,6 +11,11 @@ var transporter = nodemailer.createTransport({
 
 module.exports = {
     send: function (title, body) {
+        // 지메일 legacy deprecated에 따른 임시 처리..
+        if (true) {
+            return;
+        }
+
         var mailOptions = {
             from: `"나루" ${process.env.MAIL_SENDER_ID}`,
             to: process.env.MAIL_RECEIVER_ID,

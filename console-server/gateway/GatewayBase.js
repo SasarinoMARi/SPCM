@@ -1,5 +1,6 @@
 const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
+const blacklist = require('../AutoBlock');
 
 class GatewayBase {
     static #sql = require('../database/sql.js');
@@ -10,10 +11,15 @@ class GatewayBase {
         let token = conn.token;
         if (!modules.token_manager.contains(token)) {
             conn.unauthorize();
-            return false;
         } else {
-            callback();
-            return true;
+            blacklist.checkIsBlocked(conn.getIpAddress(), {
+                success: function() {
+                    callback();
+                },
+                banned: function() {
+                    conn.unauthorize();
+                }
+            });
         }
     }
 

@@ -98,3 +98,13 @@ CREATE TABLE `weather_log` (
 	PRIMARY KEY (`idx`)
 )
 COLLATE='utf8_general_ci';
+
+CREATE TABLE `blacklist` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`created_at` DATETIME NOT NULL,
+	`address` VARCHAR(64) NOT NULL,
+	`description` TEXT DEFAULT NULL,
+	PRIMARY KEY (`idx`),
+	UNIQUE KEY (`address`)
+)
+COLLATE='utf8_general_ci';

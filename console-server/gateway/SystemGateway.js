@@ -1,5 +1,6 @@
 const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
+const blacklist = require('../AutoBlock');
 
 const Gateway = require("./GatewayBase");
 class SystemGateway extends Gateway {
@@ -10,6 +11,7 @@ class SystemGateway extends Gateway {
     default(conn) {
         conn.response.render("wtf.ejs");
         modules.log.critical(LOG_SUBJECT, `잘못된 경로로 접근 요청됨 : ${conn.request.originalUrl}`, conn.ip);
+        blacklist.addIntoBlacklist(conn.getIpAddress());
     }
 
     establishment(conn) {
