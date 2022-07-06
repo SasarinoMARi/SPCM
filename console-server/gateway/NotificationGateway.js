@@ -46,6 +46,15 @@ class NotificationGateway extends Gateway {
             modules.log.verbose(LOG_SUBJECT, `메일 발송 : ${body}`, conn.ip);
         });
     }
+
+    get(conn) {
+        Gateway.authentication(conn, () => {
+            const query = `SELECT * FROM notification ORDER BY idx DESC LIMIT 100`;
+            Gateway.query(query, conn, (result) => {
+                conn.send(result);
+            })
+        });
+    }
 }
 
 module.exports = new NotificationGateway();

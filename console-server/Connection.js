@@ -33,9 +33,13 @@ class Connection {
         this.response.statusCode = 403;
         this.response.send("UNAUTHORIZED");
 
-        // 블랙리스트 처리
-        var ip = this.getIpAddress();
-        blacklist.addIntoBlacklist(ip);
+        // 인증 실패시 블랙리스트 등록할 경우
+        // 앱 오래 켜놓아서 토큰 만료되는 경우에 밴 당함..
+        if (false) {
+            // 블랙리스트 처리
+            var ip = this.getIpAddress();
+            blacklist.addIntoBlacklist(ip);
+        }
     }
 }
 

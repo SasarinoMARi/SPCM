@@ -32,6 +32,7 @@ app.get('/header_image', (req, res, next) => gateways.system.header_image(new Co
 app.post('/noti/update_fcm_token', (req, res, next) => gateways.noti.updateFcmToken(new Connection(req, res)));
 app.post('/noti/send_fcm', (req, res, next) => gateways.noti.sendFcm(new Connection(req, res)));
 app.post('/noti/send_mail', (req, res, next) => gateways.noti.sendMail(new Connection(req, res)));
+app.get('/noti/get', (req, res, next) => gateways.noti.get(new Connection(req, res)));
 
 app.get('/power/wakeup', (req, res, next) => gateways.desktop.wakeup(new Connection(req, res)));
 app.get('/power/reboot', (req, res, next) => gateways.desktop.reboot(new Connection(req, res)));
@@ -53,6 +54,7 @@ app.post('/schedule/set', (req, res, next) => gateways.schedule.set(new Connecti
 
 app.get('/weather/get', (req, res, next) => gateways.weather.getWeather(new Connection(req, res)));
 app.get('/weather/forecast', (req, res, next) => gateways.weather.getForecast(new Connection(req, res)));
+
 
 app.use(express.static(__dirname + '/public'));
 app.use((req, res, next) => gateways.system.default(new Connection(req, res)));
