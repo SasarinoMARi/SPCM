@@ -50,6 +50,7 @@ class WeatherMapper {
      * @returns 
      */
     #getWeatherCodeByIcon(icon) {
+        if(!icon) return null;
         if(icon.startsWith('01')) return 800
         else if(icon.startsWith('02')) return 801
         else if(icon.startsWith('03')) return 802

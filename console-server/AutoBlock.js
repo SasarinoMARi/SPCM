@@ -39,7 +39,10 @@ class AutoBlock {
                     return;
 
                 console.log(err);
+                return;
             }
+
+            log.critical(log_header, "사용자가 블랙리스트에 추가됨", ip);
         });
     }
 }
