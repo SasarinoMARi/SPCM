@@ -13,13 +13,13 @@ class AutoBlock {
             return;
         }
 
-        sql.query(`SELECT * FROM blacklist where address='${ip}'`, function (err, schedules, fields) {
+        sql.query(`SELECT * FROM blacklist where address='${ip}'`, function (err, results, fields) {
             if (err) {
                 log.error(log_header, `error fetching blacklist: ${err.sqlMessage}`);
                 return;
             }
 
-            if (fields.length > 0) {
+            if (results.length > 0) {
                 callback.banned();
             } else {
                 callback.success();
