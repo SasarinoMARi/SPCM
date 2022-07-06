@@ -103,7 +103,7 @@ class remoteServer {
     startRdpServer(request_ip) { this.__generalCall(request_ip, "rdp_server/start"); }
     volume(request_ip, amount) { this.__generalCall(request_ip, "media/volume", {"amount": amount} ); }
     mute(request_ip, option) { this.__generalCall(request_ip, "media/mute", {"option": option} ); }
-    play(request_ip, src) { this.__generalCall(request_ip, "media/play", {"src": src}); }
+    play(request_ip, src) { if(!src) return; this.__generalCall(request_ip, "media/play", {"src": src}); }
 };
 
 module.exports = new remoteServer();
