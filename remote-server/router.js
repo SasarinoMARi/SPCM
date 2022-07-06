@@ -43,12 +43,22 @@ function execute(command) {
 
 // 접속자의 ipv4 주소를 반환
 function ipv4(req) {
-    // return req.headers['x-forwarded-for'] ||  req.connection.remoteAddress; // 프록시 중첩 헤더
-    return req.connection.remoteAddress;
+    var ip = req.connection.remoteAddress;
+    ip.replace("::ffff:192.168.0.", "localhost ");
+    if (ip.startsWith("::ffff:")) ip = ip.slice(7);
+    return ip;
 }
 
 // 로그인 유효성 검사
 function authorize(req, res) {
+    if (!ipv4(req).startsWith("192.168.0")) {
+        console.log("외부 대역에서 로그인 시도 발생!!");
+
+        res.statusCode = 403;
+        res.send("Unauthorized");
+        return false;
+    }
+
     let token = req.headers.token;
     logger.v(`new token: ${token.slice(0, 20)}...`);
     if(!tokenManager.contains(token)) {
