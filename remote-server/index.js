@@ -1,3 +1,5 @@
+require("node-hide-console-window").hideConsole();
+
 /*
  * 프로그램 진입점 파일
  */

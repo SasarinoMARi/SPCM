@@ -187,7 +187,8 @@ module.exports = {
                 res.send("Bad Request");
                 return;
             };
-            command(`start "${path.chrome}" ${src}`);
+            command(`"${path.chrome}" --profile-directory="Default" ${src}`);
+
             logger.d(`play ${src}`);
             res.send("OK");
         }
