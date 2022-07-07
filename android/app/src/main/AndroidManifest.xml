@@ -15,7 +15,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,10 +47,12 @@
 
         <activity
             android:name=".LogViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:clearTaskOnLaunch="true"/>
         <activity
             android:name=".FoodListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:clearTaskOnLaunch="true"/>
     </application>
 
 </manifest>
