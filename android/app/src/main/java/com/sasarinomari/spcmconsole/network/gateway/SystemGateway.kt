@@ -4,16 +4,21 @@ import android.util.Log
 import com.google.gson.JsonObject
 import com.sasarinomari.spcmconsole.network.APIClient
 import com.sasarinomari.spcmconsole.network.SPCMInterface
+import com.sasarinomari.spcmconsole.network.Token
 import com.sasarinomari.spcmconsole.network.model.LogResult
 import com.sasarinomari.spcmconsole.network.model.LookupResult
 import com.sasarinomari.spcmconsole.network.parameter.LogParameter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 internal class SystemGateway : GatewayBase() {
     companion object {
-        private var token: String? = null
+        private var token: Token? = null
+        private val lock = ReentrantLock()
+        private var isEstablishing = false;
     }
 
     /**
@@ -21,23 +26,30 @@ internal class SystemGateway : GatewayBase() {
      */
     fun disconnect() = null.also { token = it }
     fun establishment(client: APIClient, callback: (String) -> Unit) {
-        if(token == null) {
+        lock.lock() // isLocked 걸려있는데도 아래 코드 실행됨.. 이렇게 쓰는게 아닌가?
+        if (token == null || !token!!.isValid()) {
             val call = SPCMInterface.api.establishment(SPCMInterface.key)
             call.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
                         val result = response.body()!!
-                        token = result
+                        token = Token(result)
+                        lock.unlock()
                         callback(result)
+                    } else {
+                        lock.unlock()
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
+                    lock.unlock()
                     client.error(t.toString())
                 }
             })
+        } else {
+            lock.unlock()
+            callback(token?.token!!)
         }
-        else callback(token!!)
     }
 
     fun lookup(callback: (LookupResult) -> Unit) {

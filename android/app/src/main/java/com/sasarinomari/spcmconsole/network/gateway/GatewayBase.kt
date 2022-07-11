@@ -10,8 +10,6 @@ internal abstract class GatewayBase {
                          private val callback: ((T)->Unit)?,
                          private val recursive: () -> Unit): Callback<T> {
 
-        var recursiveCount = 0
-
         override fun onResponse(call: Call<T>, response: Response<T>) {
             when {
                 response.isSuccessful -> callback?.let { it(response.body()!!) }
@@ -19,16 +17,14 @@ internal abstract class GatewayBase {
                 response.code() == 403 -> {
                     client.disconnect()
 
-                    if (recursiveCount++ == 0)
-                        recursive()
+                    recursive()
                 }
 
                 else -> {
                     client.disconnect()
                     client.error("요청 실패(${response.code()}) : ${response.message()}")
 
-                    if (recursiveCount++ == 0)
-                        recursive()
+                    recursive()
                 }
             }
         }
