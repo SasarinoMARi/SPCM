@@ -172,6 +172,10 @@ class WeatherMapper {
         const param = [];
         for(var i in forecasts) {
             var weather = forecasts[i];
+
+            if (!weather.weather || !weather.icon || !weather.temp || !weather.temp_min || !weather.temp_max)
+                continue;
+
             param.push([
                 location.lat, location.lon,
                 weather.date,

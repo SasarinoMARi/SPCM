@@ -1,4 +1,4 @@
-const log_header = 'AutoBlock.js';
+const LOG_SUBJECT = require('path').basename(__filename);
 const log = require('./logger');
 const sql = require('./database/sql');
 const time = require('./time')
@@ -15,7 +15,7 @@ class AutoBlock {
 
         sql.query(`SELECT * FROM blacklist where address='${ip}'`, function (err, results, fields) {
             if (err) {
-                log.error(log_header, `error fetching blacklist: ${err.sqlMessage}`);
+                log.error(LOG_SUBJECT, `error fetching blacklist: ${err.sqlMessage}`);
                 return;
             }
 
@@ -28,21 +28,23 @@ class AutoBlock {
     }
 
     addIntoBlacklist(ip) {
-        ip = ip.replace('\'', '\\\'');
-
-        var query = `INSERT INTO \`blacklist\` (created_at, \`address\`) \
-            VALUES ('${time().format("YYYY-MM-DD HH:mm:ss")}','${ip}')`;
+        const addr = ip.replace('\'', '\\\'');
+        const date = time().format("YYYY-MM-DD HH:mm:ss");
+        var query = `INSERT INTO \`blacklist\` (last_connected, \`address\`) \
+            VALUES ('${date}','${addr}')
+            ON DUPLICATE KEY UPDATE last_connected='${date}', \`address\`='${addr}'`;
 
         sql.query(query, function(err, results, fields) {
             if (err) {
-                if (err.errno==1062) 
+                // DUPLICATE 에러
+                if (err.errno == 1062) 
                     return;
 
                 console.log(err);
                 return;
             }
 
-            log.critical(log_header, "사용자가 블랙리스트에 추가됨", ip);
+            log.critical(LOG_SUBJECT, "사용자가 블랙리스트에 추가됨", addr);
         });
     }
 }

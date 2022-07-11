@@ -101,7 +101,7 @@ COLLATE='utf8_general_ci';
 
 CREATE TABLE `blacklist` (
 	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`created_at` DATETIME NOT NULL,
+	`last_connected` DATETIME NOT NULL,
 	`address` VARCHAR(64) NOT NULL,
 	`description` TEXT DEFAULT NULL,
 	PRIMARY KEY (`idx`),
