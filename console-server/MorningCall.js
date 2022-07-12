@@ -1,18 +1,53 @@
+const morningcalls = [
+    "https://www.youtube.com/watch?v=oy6MDr6I6rM",
+    "https://www.youtube.com/watch?v=Z9DXOZUbmJ4&list=RDGMEMhCgTQvcskbGUxqI4Sn2QYw&start_radio=1&rv=XeI8E20ZUE4"
+];
+const precalls = [
+    "https://www.youtube.com/watch?v=nNIklOpkZ-A"
+];
+
 const log_header = 'MorningCall.js';
 const modules = require('./ModuleManager');
-const list = [
-    "https://www.youtube.com/watch?v=oy6MDr6I6rM",
-];
+const pc = require('./desktop-api');
 
 class MorningCall {
     constructor() { }
 
-    getMornincall() {
-        if (!list || list.length == 0)
+    // 깨우기 전에 예열
+    doPreCall() {
+        const url = this.decidePreCall();
+
+        if(!url)
+            return;
+            
+        pc.volume(30);
+        pc.play(url);
+    }
+
+    doMorningCall() {
+        const url = this.decideMorningCall();
+
+        if(!url)
+            return;
+
+        pc.volume(70);
+        pc.play(url);
+    }
+
+    decidePreCall() {
+        if (!precalls || precalls.length == 0)
             return null;
             
-        let i = this.#getRandomInt(0, list.length);
-        return list[i];
+        let i = this.#getRandomInt(0, precalls.length);
+        return precalls[i];
+    }
+
+    decideMorningCall() {
+        if (!morningcalls || morningcalls.length == 0)
+            return null;
+            
+        let i = this.#getRandomInt(0, morningcalls.length);
+        return morningcalls[i];
     }
 
     #getRandomInt(min, max) {
