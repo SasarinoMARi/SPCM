@@ -46,7 +46,7 @@ class Twitter {
 
         this.#client.get('statuses/user_timeline', req, function (error, tweets, response) {
             if (error) {
-                log.error(log_header, error);
+                log.error(log_header, JSON.stringify(error));
                 return;
             }
     
@@ -132,7 +132,7 @@ class Twitter {
     
     #writeCleanerLog(tweet) {
         if(!tweet) return;
-        const text = tweet.text;
+        const text = tweet.text.replace('\'', ('\\\''));
         if(!text) return;
         const is_retweet = tweet.retweeted;
         const is_mention = !is_retweet && text.includes("@");
@@ -141,10 +141,11 @@ class Twitter {
         const retweet_count = !is_retweet?tweet.retweet_count:null;
         const favorite_count = !is_retweet?tweet.favorite_count:null;
 
-        var query = `INSERT INTO \`destroyed_tweet\` (text, is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count) VALUES (${this.#sql.escape(text)},?,?,?,?,?,?)`;
-        var param = [is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count];
-        this.#sql.query(query, param, function(err, results, fields) {
+        var query = `INSERT INTO \`destroyed_tweet\` (text, is_mention, is_retweet, created_at, destroyed_at, retweet_count, favorite_count) 
+                     VALUES (${this.#sql.escape(text)},${is_mention},${is_retweet},'${created_at}','${destroyed_at}',${retweet_count},${favorite_count})`;
+        this.#sql.query(query, function(err, results, fields) {
             if(err) {
+                console.log(query);
                 log.debug(log_header, err.sqlMessage);
             }
         });

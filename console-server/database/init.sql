@@ -1,4 +1,5 @@
-create database spcm;
+CREATE DATABASE spcm;
+USE spcm;
 
 CREATE TABLE `log` (
 	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
@@ -66,5 +67,44 @@ CREATE TABLE `header_image` (
 	`url` TEXT NOT NULL COMMENT 'url',
 	`description` TEXT NULL DEFAULT NULL COMMENT '비고',
 	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';
+
+CREATE TABLE `forecast_map` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`lat` FLOAT NOT NULL,
+	`lon` FLOAT NOT NULL,
+	`date` DATE NOT NULL UNIQUE,
+	`weather` INT NOT NULL,
+	`icon` VARCHAR(8) NOT NULL,
+	`temp` FLOAT NOT NULL,
+	`temp_min` FLOAT NOT NULL,
+	`temp_max` FLOAT NOT NULL,
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';
+
+CREATE TABLE `weather_log` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '고유번호',
+	`lat` FLOAT NOT NULL,
+	`lon` FLOAT NOT NULL,
+	`date` DATE NOT NULL,
+	`time` TIME NOT NULL,
+	`weather` INT NOT NULL,
+	`icon` VARCHAR(8) NOT NULL,
+	`temp` FLOAT NOT NULL,
+	`temp_min` FLOAT NOT NULL,
+	`temp_max` FLOAT NOT NULL,
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';
+
+CREATE TABLE `blacklist` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`last_connected` DATETIME NOT NULL,
+	`address` VARCHAR(64) NOT NULL,
+	`description` TEXT DEFAULT NULL,
+	PRIMARY KEY (`idx`),
+	UNIQUE KEY (`address`)
 )
 COLLATE='utf8_general_ci';
