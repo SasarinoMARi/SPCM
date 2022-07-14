@@ -1,6 +1,7 @@
 const morningcalls = [
     "https://www.youtube.com/watch?v=oy6MDr6I6rM",
-    "https://www.youtube.com/watch?v=Z9DXOZUbmJ4&list=RDGMEMhCgTQvcskbGUxqI4Sn2QYw&start_radio=1&rv=XeI8E20ZUE4"
+    "https://www.youtube.com/watch?v=Z9DXOZUbmJ4&list=RDGMEMhCgTQvcskbGUxqI4Sn2QYw&start_radio=1&rv=XeI8E20ZUE4",
+    "https://www.youtube.com/watch?v=siNFnlqtd8M",
 ];
 const precalls = [
     "https://www.youtube.com/watch?v=nNIklOpkZ-A"
@@ -20,8 +21,8 @@ class MorningCall {
         if(!url)
             return;
             
-        pc.volume(30);
-        pc.play(url);
+        pc.volume("master", 30);
+        pc.play("master", url);
     }
 
     doMorningCall() {
@@ -30,8 +31,8 @@ class MorningCall {
         if(!url)
             return;
 
-        pc.volume(70);
-        pc.play(url);
+        pc.volume("master", 80);
+        pc.play("master", url);
     }
 
     decidePreCall() {
