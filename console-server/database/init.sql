@@ -108,3 +108,15 @@ CREATE TABLE `blacklist` (
 	UNIQUE KEY (`address`)
 )
 COLLATE='utf8_general_ci';
+
+CREATE TABLE `karaoke` (
+	`idx` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(20) NOT NULL,
+	`tune` TINYINT NOT NULL DEFAULT 0,
+	`number_ky` MEDIUMINT UNSIGNED DEFAULT NULL,
+	`number_tj` MEDIUMINT UNSIGNED DEFAULT NULL,
+	`description` VARCHAR(20) DEFAULT NULL,
+	`favorite` BIT DEFAULT 0,
+	PRIMARY KEY (`idx`)
+)
+COLLATE='utf8_general_ci';

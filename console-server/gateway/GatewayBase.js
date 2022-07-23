@@ -24,7 +24,8 @@ class GatewayBase {
     }
 
     static query(query, connection, callback) {
-        this.#sql.query(query, (error, result, fields) => {
+        let safeQuery = query.replace(';', '');
+        this.#sql.query(safeQuery, (error, result, fields) => {
             if (error) {
                 const content = `SQL 에러가 발생했습니다.\n${error.sqlMessage}\n\n쿼리: ${query}`;
                 modules.log.sqlError(LOG_SUBJECT, content);

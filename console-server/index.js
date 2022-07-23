@@ -13,6 +13,7 @@ const gateways = {
     food : require('./gateway/FoodGateway'),
     schedule : require('./gateway/ScheduleGateway'),
     weather : require('./gateway/WeatherGateway'),
+    karaoke : require('./gateway/KaraokeGateway'),
 };
 
 /*
@@ -54,6 +55,12 @@ app.post('/schedule/set', (req, res, next) => gateways.schedule.set(new Connecti
 
 app.get('/weather/get', (req, res, next) => gateways.weather.getWeather(new Connection(req, res)));
 app.get('/weather/forecast', (req, res, next) => gateways.weather.getForecast(new Connection(req, res)));
+
+app.get('/karaoke/list', (req, res, next) => gateways.karaoke.list(new Connection(req, res)));
+app.get('/karaoke/random', (req, res, next) => gateways.karaoke.random(new Connection(req, res)));
+app.post('/karaoke/add', (req, res, next) => gateways.karaoke.add(new Connection(req, res)));
+app.post('/karaoke/update', (req, res, next) => gateways.karaoke.update(new Connection(req, res)));
+app.post('/karaoke/delete', (req, res, next) => gateways.karaoke.delete(new Connection(req, res)));
 
 
 app.use(express.static(__dirname + '/public'));

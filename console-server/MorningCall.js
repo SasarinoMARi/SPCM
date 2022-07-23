@@ -21,7 +21,7 @@ class MorningCall {
         if(!url)
             return;
             
-        pc.volume("master", 30);
+        pc.volume("master", 70);
         pc.play("master", url);
     }
 
