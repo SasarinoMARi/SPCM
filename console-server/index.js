@@ -46,15 +46,19 @@ app.get('/media/volume', (req, res, next) => gateways.desktop.setVolume(new Conn
 app.get('/media/mute', (req, res, next) => gateways.desktop.mute(new Connection(req, res)));
 app.get('/media/play', (req, res, next) => gateways.desktop.play(new Connection(req, res)));
 
-app.get('/food/pick_random', (req, res, next) => gateways.food.pickRandom(new Connection(req, res)));
-app.get('/food/get', (req, res, next) => gateways.food.getFoods(new Connection(req, res)));
-
 app.get('/schedule/reload', (req, res, next) => gateways.schedule.reload(new Connection(req, res)));
 app.get('/schedule/get', (req, res, next) => gateways.schedule.get(new Connection(req, res)));
 app.post('/schedule/set', (req, res, next) => gateways.schedule.set(new Connection(req, res)));
 
 app.get('/weather/get', (req, res, next) => gateways.weather.getWeather(new Connection(req, res)));
 app.get('/weather/forecast', (req, res, next) => gateways.weather.getForecast(new Connection(req, res)));
+
+
+app.get('/food/list', (req, res, next) => gateways.food.list(new Connection(req, res)));
+app.get('/food/random', (req, res, next) => gateways.food.random(new Connection(req, res)));
+app.post('/food/add', (req, res, next) => gateways.food.add(new Connection(req, res)));
+app.post('/food/update', (req, res, next) => gateways.food.update(new Connection(req, res)));
+app.post('/food/delete', (req, res, next) => gateways.food.delete(new Connection(req, res)));
 
 app.get('/karaoke/list', (req, res, next) => gateways.karaoke.list(new Connection(req, res)));
 app.get('/karaoke/random', (req, res, next) => gateways.karaoke.random(new Connection(req, res)));

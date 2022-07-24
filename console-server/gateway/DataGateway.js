@@ -41,8 +41,8 @@ class DataGateway extends Gateway {
 
         Gateway.authentication(conn, () => {
             let query = `SELECT * FROM ${this.tableName} ORDER BY RAND() LIMIT ${pickCount}`;
-            Gateway.query(query, conn, (results) => {
-                conn.send(results);
+            Gateway.query(query, conn, (result) => {
+                conn.send(result);
             });
         });
     }
@@ -92,8 +92,8 @@ class DataGateway extends Gateway {
             // TODO: 로그
 
             let query = `UPDATE ${this.tableName} SET ${updateQuery.set} WHERE ${updateQuery.where}`;
-            Gateway.query(query, conn, (results) => {
-                conn.send(results);
+            Gateway.query(query, conn, (result) => {
+                conn.send(result);
             })
         });
     }
@@ -116,8 +116,8 @@ class DataGateway extends Gateway {
             // TODO: 로그
 
             let query = `DELETE FROM ${this.tableName} WHERE ${deleteQuery}`;
-            Gateway.query(query, conn, (results) => {
-                conn.send(results);
+            Gateway.query(query, conn, (result) => {
+                conn.send(result);
             })
         });
     }
@@ -135,7 +135,7 @@ class DataGateway extends Gateway {
      */
     #makeOrderbyQuery(orderByParameter) {
         if (!orderByParameter)
-            return null;
+            return "";
 
         let params = orderByParameter.split(",");
         if (params && params.length && params.length > 0) {

@@ -69,7 +69,7 @@ class SystemGateway extends Gateway {
             const content = conn.body.content;
 
             if (!level || !subject || !content) {
-                conn.unauthorize();
+                conn.internalError();
                 return;
             }
             
