@@ -1,8 +1,6 @@
 const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
-const blacklist = require('../AutoBlock');
-
-const Gateway = require("./GatewayBase");
+const Gateway = require("./../../GenericDataHelper/GatewayBase");
 class SystemGateway extends Gateway {
     lookup_ips = []; // lookup을 요청한 사용자의 ip 수집
 
@@ -11,7 +9,7 @@ class SystemGateway extends Gateway {
     default(conn) {
         conn.response.render("wtf.ejs");
         modules.log.critical(LOG_SUBJECT, `잘못된 경로로 접근 요청됨 : ${conn.request.originalUrl}`, conn.ip);
-        blacklist.addIntoBlacklist(conn.getIpAddress());
+        conn.addIntoBlacklist();
     }
 
     establishment(conn) {

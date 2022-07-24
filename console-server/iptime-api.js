@@ -4,7 +4,7 @@
 
 require("dotenv").config();
 const request = require('request');
-const log = require("./logger");
+const log = require("../GenericDataHelper/Logger").instance();
 const log_header = 'iptime-api.js';
 
 let host = process.env.IPTIME_CONSOLE;

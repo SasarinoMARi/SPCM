@@ -5,7 +5,8 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 const modules = require('./ModuleManager');
-const Connection = require("./Connection");
+const Connection = require("../GenericDataHelper/Connection");
+const GatewayBase = require("../GenericDataHelper/GatewayBase");
 const gateways = {
     system : require('./gateway/SystemGateway'),
     desktop : require('./gateway/DesktopGateway'),
@@ -21,6 +22,16 @@ const gateways = {
  */
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
+
+GatewayBase.setAuthenticationFunction((conn, callback) => {
+    let token = conn.token;
+    if (!modules.token_manager.contains(token)) {
+        conn.unauthorize();
+    } else {
+        callback();
+    }
+});
+
 
 /* 라우팅 테이블 정의 */
 app.get('/establishment', (req, res, next) => gateways.system.establishment(new Connection(req, res)));

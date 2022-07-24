@@ -1,0 +1,3 @@
+[submodule "GenericDataHelper-Nodejs"]
+	path = GenericDataHelper
+	url = https://github.com/GenericDataHelper/GenericDataHelper-Nodejs.git

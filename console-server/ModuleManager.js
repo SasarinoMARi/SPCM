@@ -19,12 +19,12 @@ class ModuleManager {
         this.desktop = require('./desktop-api');
         this.token_manager = require('../common/token-manager');
         this.secret = require('../common/secret');
-        this.logger = require('./logger');
-        this.sql = require('./database/sql.js');
         this.notifier = require('./messaging/notifier');
         this.iptime = require("./iptime-api");
-        this.log = require("./logger");
-        this.time = require("./time");
+        
+        this.sql = require('../GenericDataHelper/Sql.js').instance();
+        this.log = require("../GenericDataHelper/Logger").instance();
+        this.time = require("../GenericDataHelper/Time");
     }
 
 }

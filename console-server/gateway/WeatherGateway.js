@@ -2,7 +2,7 @@ const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
 const weatherMapper = require('../WeatherMapper');
 
-const Gateway = require("./GatewayBase");
+const Gateway = require("./../../GenericDataHelper/GatewayBase");
 class NotificationGateway extends Gateway {
     constructor() { super() }
 

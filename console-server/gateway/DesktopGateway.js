@@ -1,7 +1,7 @@
 const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
 
-const Gateway = require("./GatewayBase");
+const Gateway = require("./../../GenericDataHelper/GatewayBase");
 class DesktopGateway extends Gateway {
     constructor() { super() }
 

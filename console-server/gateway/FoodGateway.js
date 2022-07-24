@@ -1,7 +1,7 @@
 const LOG_SUBJECT = require('path').basename(__filename);
 const modules = require('../ModuleManager');
 
-const Gateway = require("./DataGateway");
+const Gateway = require("./../../GenericDataHelper/DataGateway");
 class FoodGateway extends Gateway {
     constructor() { super("food") }
 }

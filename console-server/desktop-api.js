@@ -5,7 +5,7 @@
 require("dotenv").config();
 const request = require('request');
 baseUrl = `${process.env.REMOTE_COMPUTER}/`;
-const log = require("./logger");
+const log = require("../GenericDataHelper/Logger");
 const log_header = "desktop-api.js";
 
 class remoteServer {

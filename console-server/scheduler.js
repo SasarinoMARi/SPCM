@@ -19,9 +19,10 @@
  *  └───────────────────────── second (0 - 59, OPTIONAL)
  */
 const log_header = 'scheduler.js';
-const log = require('./logger');
 const cron = require('node-schedule');
-const sql = require('./database/sql');
+const log = require('../GenericDataHelper/Logger').instance();
+const sql = require('../GenericDataHelper/Sql').instance();
+
 const notifier = require('./messaging/notifier')
 const shell = require('shelljs');
 const twitter = require('./twitter');

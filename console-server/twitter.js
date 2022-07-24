@@ -1,5 +1,4 @@
 require("dotenv").config();
-const log = require('./logger');
 const log_header = __filename;
 
 class Twitter {
@@ -13,8 +12,9 @@ class Twitter {
             access_token_secret: process.env.TWITTER_ACCESS_SECRET
         });
 
-        this.#time = require('./time');
-        this.#sql = require('./database/sql');
+        this.#time = require('../GenericDataHelper/Time');
+        this.#sql = require('../GenericDataHelper/Sql').instance();
+        this.#log = require('../GenericDataHelper/Logger').instance();
     }
     
     /**
@@ -46,7 +46,7 @@ class Twitter {
 
         this.#client.get('statuses/user_timeline', req, function (error, tweets, response) {
             if (error) {
-                log.error(log_header, JSON.stringify(error));
+                this.#log.error(log_header, JSON.stringify(error));
                 return;
             }
     
@@ -96,7 +96,7 @@ class Twitter {
         else {
             this.#client.post(`statuses/destroy/${tweet.id_str}.json`, function(error) {
                 if (error) {
-                    log.debug(log_header, error);
+                    this.#log.debug(log_header, error);
                 }
                 else {
                     this.#writeCleanerLog(tweet);
@@ -122,7 +122,9 @@ class Twitter {
         }
     
         // 일정 시간 지난 트윗만 삭제
-        var time_cut = 1000*60*60*2;
+        //var time_cut = 1000*60*60*6; // 6시간
+        // var time_cut = 1000*60*60*2; //2시간
+        var time_cut = 1000*60*30; // 30분
         if(Date.parse(tweet.created_at)+time_cut > this.#time()) {
             result = true;
         }
@@ -146,7 +148,7 @@ class Twitter {
         this.#sql.query(query, function(err, results, fields) {
             if(err) {
                 console.log(query);
-                log.debug(log_header, err.sqlMessage);
+                this.#log.debug(log_header, err.sqlMessage);
             }
         });
     }
