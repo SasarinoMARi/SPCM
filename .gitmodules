@@ -1,0 +1,3 @@
+[submodule "android/GenericDataHelper"]
+	path = android/GenericDataHelper
+	url = git@github.com:GenericDataHelper/GenericDataHelper-Android.git
