@@ -9,6 +9,7 @@ import com.sasarinomari.spcmconsole.network.gateway.ScheduleGateway
 import com.sasarinomari.spcmconsole.network.gateway.SystemGateway
 import com.sasarinomari.spcmconsole.network.parameter.*
 import com.sasarinomari.spcmconsole.network.model.*
+import sasarinomari.genericdatahelper.DataGateway
 
 abstract class APIClient() {
     abstract fun error(message: String)
@@ -47,11 +48,52 @@ abstract class APIClient() {
     fun getForecast(callback: (Array<WeatherModel>)->Unit) = WeatherGateway().getForecast(this, callback)
 
     class DataAPIClient internal constructor(private val parent: APIClient) {
-        fun list(tableName: String, callback:(Array<JsonObject>)->Unit) = DataGateway().list(parent, tableName, callback)
-        fun random(tableName: String, callback:(Array<JsonObject>)->Unit) = DataGateway().random(parent, tableName, callback)
-        fun add(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = DataGateway().add(parent, tableName, body, callback)
-        fun update(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = DataGateway().update(parent, tableName, body, callback)
-        fun delete(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = DataGateway().delete(parent, tableName, body, callback)
+        private val instance: DataGateway by lazy {
+            val i = DataGateway()
+            i.setBaseUrl(SPCMInterface.url)
+            i.beforeRequest {
+                parent.establishment { token ->
+                    i.clearCustomHeader()
+                    i.addCustomHeader("token", token)
+                }
+            }
+            i
+        }
+
+        fun list(tableName: String, callback:(Array<JsonObject>)->Unit) = instance.list(tableName,
+            object: GatewayBase.GeneralHandler<Array<JsonObject>>(parent, callback, {
+                // 재귀할 방법 찾기
+                // list(tableName, callback)
+            }) { }
+        )
+
+        fun random(tableName: String, callback:(Array<JsonObject>)->Unit) = instance.random(tableName,
+            object: GatewayBase.GeneralHandler<Array<JsonObject>>(parent, callback, {
+                // 재귀할 방법 찾기
+                // random(tableName, callback)
+            }) { }
+        )
+
+        fun add(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = instance.add(tableName, body,
+            object: GatewayBase.GeneralHandler<JsonObject>(parent, callback, {
+                // 재귀할 방법 찾기
+                // add(tableName, body, callback)
+            }) { }
+        )
+
+        fun update(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = instance.update(tableName, body,
+            object: GatewayBase.GeneralHandler<JsonObject>(parent, callback, {
+                // 재귀할 방법 찾기
+                // update(tableName, body, callback)
+            }) { }
+        )
+
+        fun delete(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = instance.delete(tableName, body,
+            object: GatewayBase.GeneralHandler<JsonObject>(parent, callback, {
+                // 재귀할 방법 찾기
+                // delete(tableName, body, callback)
+            }) { }
+        )
     }
     public val dataApi : DataAPIClient by lazy { DataAPIClient(this) }
 }

@@ -103,7 +103,7 @@ interface SPCMInterface {
 
         private val retrofit by lazy {
             Retrofit.Builder()
-                .baseUrl(Secret.SPCM_URL)
+                .baseUrl(url)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
@@ -113,6 +113,7 @@ interface SPCMInterface {
             retrofit.create(SPCMInterface::class.java)
         }
 
+        val url: String get() { return Secret.SPCM_URL }
         val key: String get() { return Secret.SPCM_KEY }
     }
 }
