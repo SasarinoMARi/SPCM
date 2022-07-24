@@ -67,6 +67,31 @@ interface SPCMInterface {
     fun getForecast(@Header("token") token:String): Call<Array<WeatherModel>>
 
 
+    @GET("{table_name}/list")
+    fun data_list(@Header("token") token:String,
+             @Path(value = "table_name", encoded = true) tableName: String) : Call<Array<JsonObject>>
+
+    @GET("{table_name}/random")
+    fun data_random(@Header("token") token:String,
+               @Path(value = "table_name", encoded = true) tableName: String,
+               @Header("pick_count") pickCount: Int = 1) : Call<Array<JsonObject>>
+
+    @POST("{table_name}/add")
+    fun data_add(@Header("token") token:String,
+            @Path(value = "table_name", encoded = true) tableName: String,
+            @Body body: JsonObject) : Call<JsonObject>
+
+    @POST("{table_name}/update")
+    fun data_update(@Header("token") token:String,
+               @Path(value = "table_name", encoded = true) tableName: String,
+               @Body body: JsonObject) : Call<JsonObject>
+
+    @POST("{table_name}/delete")
+    fun data_delete(@Header("token") token:String,
+               @Path(value = "table_name", encoded = true) tableName: String,
+               @Body body: JsonObject) : Call<JsonObject>
+
+
     companion object {
         private val gson = GsonBuilder()
             .setLenient()

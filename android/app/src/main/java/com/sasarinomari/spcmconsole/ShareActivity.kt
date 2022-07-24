@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.sasarinomari.spcmconsole.network.APIClient
 
 class ShareActivity : AppCompatActivity() {
-    private val api = object : APIClient(this) {
+    private val api = object : APIClient() {
         override fun error(message: String) {
             Toast.makeText(this@ShareActivity, message, Toast.LENGTH_LONG).show()
         }

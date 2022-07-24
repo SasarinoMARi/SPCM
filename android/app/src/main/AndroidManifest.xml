@@ -53,6 +53,10 @@
             android:name=".FoodListActivity"
             android:exported="false"
             android:clearTaskOnLaunch="true"/>
+        <activity
+            android:name=".KaraokeActivity"
+            android:exported="false"
+            android:clearTaskOnLaunch="true"/>
     </application>
 
 </manifest>

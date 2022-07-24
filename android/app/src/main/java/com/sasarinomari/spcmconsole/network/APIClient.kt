@@ -1,6 +1,6 @@
 package com.sasarinomari.spcmconsole.network
 
-import android.content.Context
+import com.google.gson.JsonObject
 import com.sasarinomari.spcmconsole.network.gateway.*
 import com.sasarinomari.spcmconsole.network.gateway.DesktopGateway
 import com.sasarinomari.spcmconsole.network.gateway.FoodGateway
@@ -10,7 +10,7 @@ import com.sasarinomari.spcmconsole.network.gateway.SystemGateway
 import com.sasarinomari.spcmconsole.network.parameter.*
 import com.sasarinomari.spcmconsole.network.model.*
 
-abstract class APIClient(val context: Context) {
+abstract class APIClient() {
     abstract fun error(message: String)
 
     fun establishment(callback: (String) -> Unit) = SystemGateway().establishment(this, callback)
@@ -45,4 +45,13 @@ abstract class APIClient(val context: Context) {
 
     fun getWeather(callback: (WeatherModel)->Unit) = WeatherGateway().getWeather(this, callback)
     fun getForecast(callback: (Array<WeatherModel>)->Unit) = WeatherGateway().getForecast(this, callback)
+
+    class DataAPIClient internal constructor(private val parent: APIClient) {
+        fun list(tableName: String, callback:(Array<JsonObject>)->Unit) = DataGateway().list(parent, tableName, callback)
+        fun random(tableName: String, callback:(Array<JsonObject>)->Unit) = DataGateway().random(parent, tableName, callback)
+        fun add(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = DataGateway().add(parent, tableName, body, callback)
+        fun update(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = DataGateway().update(parent, tableName, body, callback)
+        fun delete(tableName: String, body: JsonObject, callback:(JsonObject)->Unit) = DataGateway().delete(parent, tableName, body, callback)
+    }
+    public val dataApi : DataAPIClient by lazy { DataAPIClient(this) }
 }

@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
 
 
 class MainActivity : AppCompatActivity() {
-    private val api = object : APIClient(this) {
+    private val api = object : APIClient() {
         override fun error(message: String) {
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
         }
@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         }
         button_random_correct.setOnClickListener {
             val intent = Intent("com.sasarinomari.diary.random_correcting")
+            startActivity(intent)
+        }
+        button_karaoke.setOnClickListener {
+            val intent = Intent(this@MainActivity, KaraokeActivity::class.java)
             startActivity(intent)
         }
 

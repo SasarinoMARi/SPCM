@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_food_list.*
 import kotlinx.android.synthetic.main.item_food.view.*
 
 class FoodListActivity : AppCompatActivity() {
-    private val api = object : APIClient(this) {
+    private val api = object : APIClient() {
         override fun error(message: String) {
             Toast.makeText(this@FoodListActivity, message, Toast.LENGTH_LONG).show()
         }

@@ -10,7 +10,7 @@ import com.sasarinomari.spcmconsole.network.APIClient
 import kotlinx.android.synthetic.main.activity_remote_computer.*
 
 class RemoteComputerActivity : AppCompatActivity() {
-    private val api = object : APIClient(this) {
+    private val api = object : APIClient() {
         override fun error(message: String) {
             Toast.makeText(this@RemoteComputerActivity, message, Toast.LENGTH_LONG).show()
         }

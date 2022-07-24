@@ -15,7 +15,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
-        val api = object : APIClient(this) {
+        val api = object : APIClient() {
             override fun error(message: String) { }
         }
         api.updateFcmToken(token) { }

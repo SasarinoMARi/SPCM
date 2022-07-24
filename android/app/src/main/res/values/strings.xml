@@ -61,6 +61,7 @@
     <string name="cloth_recommend_over9">트렌치코트, 야상, 니트</string>
     <string name="cloth_recommend_over5">코드, 히트텍, 니트</string>
     <string name="cloth_recommend_under4">패딩, 두꺼운 코트, 목도리</string>
+    <string name="KaraokeHelper">노래방 헬퍼</string>
 
     
 </resources>

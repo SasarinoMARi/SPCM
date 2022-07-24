@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class LogViewActivity : AppCompatActivity() {
-    private val api = object : APIClient(this) {
+    private val api = object : APIClient() {
         override fun error(message: String) {
             Toast.makeText(this@LogViewActivity, message, Toast.LENGTH_LONG).show()
         }
