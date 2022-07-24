@@ -42,7 +42,11 @@ class FoodDispenserFragmentDialog(private val api: APIClient) : DialogFragment()
 
     @SuppressLint("SetTextI18n")
     private fun foodDispenser(view: View) {
-        api.pickRandomFood { food ->
+        api.pickRandomFood { foods ->
+            if (foods.isEmpty())
+                return@pickRandomFood
+
+            val food = foods[0]
             view.text_name.text = food.Name
             view.text_price.text = "₩${df.format(food.Price)}"
             view.text_store.text = food.Store

@@ -34,7 +34,7 @@ abstract class APIClient(val context: Context) {
     fun sendFcm(title: String, content: String, callback: ((Unit)->Unit)? = null) = NotificationGateway().sendFcm(NotifyParameter(title, content), this, callback)
     fun updateFcmToken(fcmid: String, callback: ((Unit)->Unit)? = null) = NotificationGateway().updateFcmToken(FcmTokenUpdateParameter(fcmid), this, callback)
 
-    fun pickRandomFood(callback:(FoodModel)->Unit) = FoodGateway().dispense(this, callback)
+    fun pickRandomFood(callback:(Array<FoodModel>)->Unit) = FoodGateway().dispense(this, callback)
     fun getFoodList(callback:(Array<FoodModel>)->Unit) = FoodGateway().getList(this, callback)
 
     fun getLogs(logLevel: Int, page: Int, callback:(Array<LogResult>)->Unit) = SystemGateway().getLogs(logLevel, page, this, callback)
