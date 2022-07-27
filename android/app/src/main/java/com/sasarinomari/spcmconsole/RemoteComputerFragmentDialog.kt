@@ -24,14 +24,14 @@ class RemoteComputerFragmentDialog(private val api: APIClient) : DialogFragment(
 
         rootView.button_power_on.setOnClickListener {
             api.wakeup {
-                Toast.makeText(context, getString(R.string.Confirm_Wakeup), Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.Confirm_Wakeup), Toast.LENGTH_LONG).show()
             }
             this.dismiss()
         }
 
         rootView.button_power_off.setOnClickListener {
             api.shutdown {
-                Toast.makeText(context, getString(R.string.Confirm_Shutdown), Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.Confirm_Shutdown), Toast.LENGTH_LONG).show()
             }
             this.dismiss()
         }
